@@ -62,7 +62,7 @@ def index():
 def detect_motion(frameCount):
     # grab global references to the video stream, output frame, and
     # lock variables
-    global vs, outputFrame, lock
+    global vs, outputFrame, lock, count
     # initialize the motion detector and the total number of frames
     # read thus far
     md = SingleMotionDetector(accumWeight=0.1)
@@ -97,8 +97,9 @@ def detect_motion(frameCount):
                 cv2.rectangle(frame, (minX, minY), (maxX, maxY),
                     (0, 0, 255), 2)
                 motion_detected = True
-                cv2.imwrite('image'+str(count)+'.jpg',frame)
-				count +1
+                cv2.imwrite('images/image'+str(count)+'.jpg',frame)
+                count += 1
+                time.sleep(0.5)
                 # out.write(frame)
             else:
                 motion_detected = False
