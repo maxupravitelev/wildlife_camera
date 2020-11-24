@@ -36,21 +36,21 @@ out = cv2.VideoWriter('output.avi',fourcc, 20.0, (640,480))
 
 count = 0
 
-while(cap.isOpened()):
-    ret, frame = cap.read()
-    if ret==True and motion_detected==True:
-        frame = cv2.flip(frame,0)
-        # cv2.imwrite('image'+str(count)+'.jpg',frame)
+# while(cap.isOpened()):
+#     ret, frame = cap.read()
+#     if ret==True and motion_detected==True:
+#         frame = cv2.flip(frame,0)
+#         # cv2.imwrite('image'+str(count)+'.jpg',frame)
 
 
-        # write the flipped frame
-        out.write(frame)
+#         # write the flipped frame
+#         out.write(frame)
 
-#        cv2.imshow('frame',frame)
-#        if cv2.waitKey(1) & 0xFF == ord('q'):
-#            break
-    else:
-        break
+# #        cv2.imshow('frame',frame)
+# #        if cv2.waitKey(1) & 0xFF == ord('q'):
+# #            break
+#     else:
+#         break
 
 
 
@@ -98,6 +98,7 @@ def detect_motion(frameCount):
                     (0, 0, 255), 2)
                 motion_detected = True
                 cv2.imwrite('image'+str(count)+'.jpg',frame)
+				count +1
                 # out.write(frame)
             else:
                 motion_detected = False
@@ -158,8 +159,3 @@ if __name__ == '__main__':
         threaded=True, use_reloader=False)
 # release the video stream pointer
 vs.stop()
-
-# Release everything if job is finished
-cap.release()
-out.release()
-cv2.destroyAllWindows()
