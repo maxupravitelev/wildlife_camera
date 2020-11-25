@@ -4,12 +4,14 @@ from imutils.video import VideoStream
 from flask import Response
 from flask import Flask
 from flask import render_template
+from PIL import Image, ImageDraw
 import threading
 import argparse
 import datetime
 import imutils
 import time
 import cv2
+import numpy
 
 # initialize the output frame and a lock used to ensure thread-safe
 # exchanges of the output frames (useful when multiple browsers/tabs
@@ -59,6 +61,8 @@ def index():
     # return the rendered template
     return render_template("index.html")
 
+
+
 def detect_motion(frameCount):
     # grab global references to the video stream, output frame, and
     # lock variables
@@ -67,6 +71,8 @@ def detect_motion(frameCount):
     # read thus far
     md = SingleMotionDetector(accumWeight=0.1)
     total = 0
+    gifDone = True
+    imageList = []
 
         # loop over frames from the video stream
     while True:
@@ -90,18 +96,30 @@ def detect_motion(frameCount):
             # detect motion in the image
             motion = md.detect(gray)
             # check to see if motion was found in the frame
+            
+            
             if motion is not None:
                 # unpack the tuple and draw the box surrounding the
                 # "motion area" on the output frame
                 (thresh, (minX, minY, maxX, maxY)) = motion
                 cv2.rectangle(frame, (minX, minY), (maxX, maxY),
                     (0, 0, 255), 2)
+                gifDone = False
+                imageList.append(frame)
+
                 motion_detected = True
                 cv2.imwrite('images/image'+str(count)+'.jpg',frame)
                 count += 1
                 time.sleep(0.5)
                 # out.write(frame)
+                # print(gifDone)
             else:
+                if gifDone == False:
+                    # print("yo")
+                    # imageListPIL = Image.fromarray(numpy.asarray(imageList))
+                    # imageList[0].save('out.gif', save_all=True, append_images=[imageList[1:]])    
+                    # gifDone = True
+                    imageList = []
                 motion_detected = False
         # update the background model and increment the total number
         # of frames read thus far
