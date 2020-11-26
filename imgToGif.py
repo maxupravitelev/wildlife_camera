@@ -23,4 +23,4 @@ def imgToGif(folderCount):
     images[0].save('gifs/out'+ str(folderCount) + '.gif',
                    save_all=True, append_images=images[1:], optimize=False, duration=80, loop=0)
 
-imgToGif(0)
+# imgToGif(0)
