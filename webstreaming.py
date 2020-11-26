@@ -12,6 +12,7 @@ import imutils
 import time
 import cv2
 import numpy
+import os
 
 # initialize the output frame and a lock used to ensure thread-safe
 # exchanges of the output frames (useful when multiple browsers/tabs
@@ -37,6 +38,7 @@ fourcc = cv2.VideoWriter_fourcc(*'XVID')
 out = cv2.VideoWriter('output.avi',fourcc, 20.0, (640,480))
 
 count = 0
+folderCount = 0
 
 # while(cap.isOpened()):
 #     ret, frame = cap.read()
@@ -66,7 +68,7 @@ def index():
 def detect_motion(frameCount):
     # grab global references to the video stream, output frame, and
     # lock variables
-    global vs, outputFrame, lock, count
+    global vs, outputFrame, lock, count, folderCount
     # initialize the motion detector and the total number of frames
     # read thus far
     md = SingleMotionDetector(accumWeight=0.1)
@@ -108,18 +110,28 @@ def detect_motion(frameCount):
                 imageList.append(frame)
 
                 motion_detected = True
-                cv2.imwrite('images/image'+str(count)+'.jpg',frame)
+                newFolder = 'gifs/images' + str(folderCount)
+                if not os.path.isdir(newFolder):
+                    os.makedirs(newFolder)
+                localPath = newFolder + '/image'+str(count)+'.jpg'                
+                # localPath = 'images/image'+str(count)+'.jpg'
+                print(localPath)
+                cv2.imwrite(localPath,frame)
                 count += 1
                 time.sleep(0.5)
                 # out.write(frame)
                 # print(gifDone)
             else:
                 if gifDone == False:
+                    folderCount +=1
+                    print(folderCount)
+                    count = 0
+                    gifDone = True
                     # print("yo")
                     # imageListPIL = Image.fromarray(numpy.asarray(imageList))
                     # imageList[0].save('out.gif', save_all=True, append_images=[imageList[1:]])    
                     # gifDone = True
-                    imageList = []
+                    # imageList = []
                 motion_detected = False
         # update the background model and increment the total number
         # of frames read thus far
