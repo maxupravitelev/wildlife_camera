@@ -1,5 +1,8 @@
 # import the necessary packages
 from pyimagesearch.motion_detection.SingleMotionDetector import SingleMotionDetector
+
+from imgToGif import imgToGif
+
 from imutils.video import VideoStream
 from flask import Response
 from flask import Flask
@@ -123,6 +126,7 @@ def detect_motion(frameCount):
                 # print(gifDone)
             else:
                 if gifDone == False:
+                    imgToGif(folderCount)
                     folderCount +=1
                     print(folderCount)
                     count = 0
