@@ -107,14 +107,14 @@ def detect_motion(frameCount):
                 cv2.imwrite(localPath,frame)
                 count += 1
                 #print(count)
-                #time.sleep(0.1)
+                #time.sleep(0.5)
                 # out.write(frame)
                 # print(gifDone)
             else:
                 if gifDone == False:
                     imgToGif(folderCount)
                     folderCount +=1
-                    print(folderCount)
+                    #print(folderCount)
                     count = 0
                     gifDone = True
                     # print("yo")

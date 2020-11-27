@@ -46,22 +46,22 @@ def imgToGif(folderCount):
 
 
         #print(img)
-    print(finalNumberList)
+    #print(finalNumberList)
 
-    for i in range(0, len(finalNumberList) - 1):
+    for i in range(0, len(finalNumberList), 1):
         if i < 10:
             for img in glob.glob("gifs/images" + str(folderCount) + "/image1000" + str(i) + "*.jpg"):
-                print(img)
+                #print(img)
                 newJpg = Image.open(img)
                 images.append(newJpg)
         if i >= 10 and i < 100: 
             for img in glob.glob("gifs/images" + str(folderCount) + "/image100" + str(i) + "*.jpg"):
-                print(img)
+                #print(img)
                 newJpg = Image.open(img)
                 images.append(newJpg)
-        if i >= 1000: 
+        if i >= 100: 
             for img in glob.glob("gifs/images" + str(folderCount) + "/image10" + str(i) + "*.jpg"):
-                print(img)
+                #print(img)
                 newJpg = Image.open(img)
                 images.append(newJpg)
 
