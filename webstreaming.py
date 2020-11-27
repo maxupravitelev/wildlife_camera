@@ -28,8 +28,8 @@ app = Flask(__name__)
 
 # initialize the video stream and allow the camera sensor to
 # warmup
-vs = VideoStream(usePiCamera=1).start()
-#vs = VideoStream(src=1).start()
+#vs = VideoStream(usePiCamera=1).start()
+vs = VideoStream(src=0).start()
 time.sleep(2.0)
 
 cap = cv2.VideoCapture(0)
@@ -53,8 +53,9 @@ def detect_motion(frameCount):
     global vs, outputFrame, lock, count, folderCount
     # initialize the motion detector and the total number of frames
     # read thus far
-    md = SingleMotionDetector(accumWeight=0.5)
+    md = SingleMotionDetector(accumWeight=0.1)
     total = 0
+
     gifDone = True
     imageList = []
 
@@ -95,11 +96,17 @@ def detect_motion(frameCount):
                 newFolder = 'gifs/images' + str(folderCount)
                 if not os.path.isdir(newFolder):
                     os.makedirs(newFolder)
-                localPath = newFolder + '/image'+str(count)+'.jpg'                
+                if count < 10:
+                    localPath = newFolder + '/image1000'+str(count)+'.jpg'                
+                if count >= 10 and count < 100: 
+                    localPath = newFolder + '/image100'+str(count)+'.jpg'                
+                if count >= 1000: 
+                    localPath = newFolder + '/image10'+str(count)+'.jpg'  
                 # localPath = 'images/image'+str(count)+'.jpg'
-                print(localPath)
+                #print(localPath)
                 cv2.imwrite(localPath,frame)
                 count += 1
+                #print(count)
                 #time.sleep(0.1)
                 # out.write(frame)
                 # print(gifDone)
