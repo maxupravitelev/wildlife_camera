@@ -28,11 +28,13 @@ app = Flask(__name__)
 
 # initialize the video stream and allow the camera sensor to
 # warmup
+vs = VideoStream(usePiCamera=1,resolution=(1296,730)).start()
 #vs = VideoStream(usePiCamera=1).start()
-vs = VideoStream(src=0).start()
+
+#vs = VideoStream(src=0).start()
 time.sleep(2.0)
 
-cap = cv2.VideoCapture(0)
+# cap = cv2.VideoCapture(0)
 
 motion_detected = False
 
@@ -53,7 +55,7 @@ def detect_motion(frameCount):
     global vs, outputFrame, lock, count, folderCount
     # initialize the motion detector and the total number of frames
     # read thus far
-    md = SingleMotionDetector(accumWeight=0.1)
+    md = SingleMotionDetector(accumWeight=0.2)
     total = 0
 
     gifDone = True
@@ -64,7 +66,7 @@ def detect_motion(frameCount):
         # read the next frame from the video stream, resize it,
         # convert the frame to grayscale, and blur it
         frame = vs.read()
-        frame = imutils.resize(frame, width=800)
+        #frame = imutils.resize(frame, width=800)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         gray = cv2.GaussianBlur(gray, (7, 7), 0)
 
