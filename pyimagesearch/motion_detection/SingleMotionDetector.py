@@ -2,6 +2,8 @@
 import numpy as np
 import imutils
 import cv2
+import time
+
 
 class SingleMotionDetector:
 	def __init__(self, accumWeight=0.5):
@@ -53,4 +55,5 @@ class SingleMotionDetector:
 			(maxX, maxY) = (max(maxX, x + w), max(maxY, y + h))
 		# otherwise, return a tuple of the thresholded image along
 		# with bounding box
+		time.sleep(0.02)
 		return (thresh, (minX, minY, maxX, maxY))
