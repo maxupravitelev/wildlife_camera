@@ -49,9 +49,9 @@ frame_height = int(cap.get(4))
 motionCounter = 0
 
 
-out = cv2.VideoWriter(str(count) +'output.avi', cv2.VideoWriter_fourcc('M','J','P','G'), 20.0, (frame_width,frame_height))
+#out = cv2.VideoWriter(str(count) +'output.avi', cv2.VideoWriter_fourcc('M','J','P','G'), 20.0, (frame_width,frame_height))
 
-writer = cv2.VideoWriter("output.avi",
+writer = cv2.VideoWriter("output"+ str(count) + ".avi",
 cv2.VideoWriter_fourcc(*"MJPG"), 30,(640,480))
 
 @app.route("/")
