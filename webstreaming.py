@@ -28,19 +28,31 @@ app = Flask(__name__)
 
 # initialize the video stream and allow the camera sensor to
 # warmup
-vs = VideoStream(usePiCamera=1,resolution=(1296,730)).start()
+#vs = VideoStream(usePiCamera=1,resolution=(1296,730)).start()
 #vs = VideoStream(usePiCamera=1).start()
 
-#vs = VideoStream(src=0).start()
+vs = VideoStream(src=0).start()
+#vs = VideoStream(src=0, resolution=(1296,730)).start()
+
 time.sleep(2.0)
 
-# cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(0)
 
 motion_detected = False
 
 count = 0
 folderCount = 0
 
+
+frame_width = int(cap.get(3))
+frame_height = int(cap.get(4))
+motionCounter = 0
+
+
+out = cv2.VideoWriter(str(count) +'output.avi', cv2.VideoWriter_fourcc('M','J','P','G'), 20.0, (frame_width,frame_height))
+
+writer = cv2.VideoWriter("output.avi",
+cv2.VideoWriter_fourcc(*"MJPG"), 30,(640,480))
 
 @app.route("/")
 def index():
@@ -52,7 +64,7 @@ def index():
 def detect_motion(frameCount):
     # grab global references to the video stream, output frame, and
     # lock variables
-    global vs, outputFrame, lock, count, folderCount
+    global writer, vs, outputFrame, lock, count, folderCount, motionCounter
     # initialize the motion detector and the total number of frames
     # read thus far
     md = SingleMotionDetector(accumWeight=0.2)
@@ -66,6 +78,7 @@ def detect_motion(frameCount):
         # read the next frame from the video stream, resize it,
         # convert the frame to grayscale, and blur it
         frame = vs.read()
+        frame2 = cap.read()
         #frame = imutils.resize(frame, width=800)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         gray = cv2.GaussianBlur(gray, (7, 7), 0)
@@ -86,45 +99,61 @@ def detect_motion(frameCount):
             
             
             if motion is not None:
-                # unpack the tuple and draw the box surrounding the
+
+               # unpack the tuple and draw the box surrounding the
                 # "motion area" on the output frame
                 (thresh, (minX, minY, maxX, maxY)) = motion
                 #cv2.rectangle(frame, (minX, minY), (maxX, maxY),
                 #    (0, 0, 255), 2)
                 gifDone = False
-                imageList.append(frame)
+                motionCounter = motionCounter + 1
+                #print(frame)
+                print(motionCounter)
+                #print(frame2)
+                #out.write(frame)
+                writer.write(frame)
 
-                motion_detected = True
-                newFolder = 'gifs/images' + str(folderCount)
-                if not os.path.isdir(newFolder):
-                    os.makedirs(newFolder)
-                if count < 10:
-                    localPath = newFolder + '/image1000'+str(count)+'.jpg'                
-                if count >= 10 and count < 100: 
-                    localPath = newFolder + '/image100'+str(count)+'.jpg'                
-                if count >= 1000: 
-                    localPath = newFolder + '/image10'+str(count)+'.jpg'  
-                # localPath = 'images/image'+str(count)+'.jpg'
-                #print(localPath)
-                cv2.imwrite(localPath,frame)
-                count += 1
-                #print(count)
-                #time.sleep(0.5)
-                # out.write(frame)
-                # print(gifDone)
             else:
                 if gifDone == False:
-                    imgToGif(folderCount)
-                    folderCount +=1
-                    #print(folderCount)
-                    count = 0
+                    motionCounter = 0
+                    count += 1
+                    #writer.release()
                     gifDone = True
-                    # print("yo")
-                    # imageListPIL = Image.fromarray(numpy.asarray(imageList))
-                    # imageList[0].save('out.gif', save_all=True, append_images=[imageList[1:]])    
-                    # gifDone = True
-                    # imageList = []
-                motion_detected = False
+                    #out.release()
+
+
+
+            #     # unpack the tuple and draw the box surrounding the
+            #     # "motion area" on the output frame
+            #     (thresh, (minX, minY, maxX, maxY)) = motion
+            #     #cv2.rectangle(frame, (minX, minY), (maxX, maxY),
+            #     #    (0, 0, 255), 2)
+            #     gifDone = False
+            #     imageList.append(frame)
+
+            #     motion_detected = True
+            #     newFolder = 'gifs/images' + str(folderCount)
+            #     if not os.path.isdir(newFolder):
+            #         os.makedirs(newFolder)
+            #     if count < 10:
+            #         localPath = newFolder + '/image1000'+str(count)+'.jpg'                
+            #     if count >= 10 and count < 100: 
+            #         localPath = newFolder + '/image100'+str(count)+'.jpg'                
+            #     if count >= 1000: 
+            #         localPath = newFolder + '/image10'+str(count)+'.jpg'  
+
+            #     cv2.imwrite(localPath,frame)
+            #     count += 1
+
+            # else:
+            #     if gifDone == False:
+            #         imgToGif(folderCount)
+            #         folderCount +=1
+            #         count = 0
+            #         gifDone = True
+
+            #     motion_detected = False
+
         # update the background model and increment the total number
         # of frames read thus far
         md.update(gray)
@@ -181,4 +210,5 @@ if __name__ == '__main__':
     app.run(host=args["ip"], port=args["port"], debug=True,
         threaded=True, use_reloader=False)
 # release the video stream pointer
+writer.release()
 vs.stop()
