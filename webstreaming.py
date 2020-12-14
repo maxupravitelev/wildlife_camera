@@ -28,10 +28,17 @@ app = Flask(__name__)
 
 # initialize the video stream and allow the camera sensor to
 # warmup
-#vs = VideoStream(usePiCamera=1,resolution=(1296,730)).start()
+
+#frame_width = 640
+#frame_height = 480
+
+frame_width = 1296
+frame_height = 730
+
+vs = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
 #vs = VideoStream(usePiCamera=1).start()
 
-vs = VideoStream(src=0).start()
+#vs = VideoStream(src=0).start()
 #vs = VideoStream(src=0, resolution=(1296,730)).start()
 
 time.sleep(2.0)
@@ -45,8 +52,8 @@ folderCount = 0
 
 motionCounter = 0
 
-writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi",
-cv2.VideoWriter_fourcc(*"MJPG"), 60,(640,480))
+#writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi",
+#cv2.VideoWriter_fourcc(*"MJPG"), 30,(frame_width,frame_height))
 
 @app.route("/")
 def index():
@@ -58,10 +65,10 @@ def index():
 def detect_motion(frameCount):
     # grab global references to the video stream, output frame, and
     # lock variables
-    global writer, vs, outputFrame, lock, count, folderCount, motionCounter
+    global writer, vs, outputFrame, lock, count, folderCount, motionCounter, frame_width, frame_height
     # initialize the motion detector and the total number of frames
     # read thus far
-    md = SingleMotionDetector(accumWeight=0.08)
+    md = SingleMotionDetector(accumWeight=0.1)
     total = 0
 
     gifDone = True
@@ -74,7 +81,7 @@ def detect_motion(frameCount):
         frame = vs.read()
         #frame = imutils.resize(frame, width=800)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        gray = cv2.GaussianBlur(gray, (7, 7), 0)
+        gray = cv2.GaussianBlur(gray, (49, 49), 0)
 
         # grab the current timestamp and draw it on the frame
         #timestamp = datetime.datetime.now()
@@ -93,61 +100,62 @@ def detect_motion(frameCount):
             
             if motion is not None:
 
-               # unpack the tuple and draw the box surrounding the
-                # "motion area" on the output frame
-                #(thresh, (minX, minY, maxX, maxY)) = motion
-                #cv2.rectangle(frame, (minX, minY), (maxX, maxY),
-                #    (0, 0, 255), 2)
-                gifDone = False
-                motionCounter = motionCounter + 1
-                #print(frame)
-                print(motionCounter)
-                #print(frame2)
-                #out.write(frame)
-                writer.write(frame)
-
-            else:
-                if gifDone == False and motionCounter >= 20:
-                    motionCounter = 0
-                    count += 1
-                    print("count: " + str(count))
-                    #writer.release()
-                    gifDone = True
-                    writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi", cv2.VideoWriter_fourcc(*"MJPG"), 60,(640,480))
-                    #out.release()
-
-
-
+            ###############################
+            
             #     # unpack the tuple and draw the box surrounding the
             #     # "motion area" on the output frame
-            #     (thresh, (minX, minY, maxX, maxY)) = motion
+            #     #(thresh, (minX, minY, maxX, maxY)) = motion
             #     #cv2.rectangle(frame, (minX, minY), (maxX, maxY),
             #     #    (0, 0, 255), 2)
             #     gifDone = False
-            #     imageList.append(frame)
-
-            #     motion_detected = True
-            #     newFolder = 'gifs/images' + str(folderCount)
-            #     if not os.path.isdir(newFolder):
-            #         os.makedirs(newFolder)
-            #     if count < 10:
-            #         localPath = newFolder + '/image1000'+str(count)+'.jpg'                
-            #     if count >= 10 and count < 100: 
-            #         localPath = newFolder + '/image100'+str(count)+'.jpg'                
-            #     if count >= 1000: 
-            #         localPath = newFolder + '/image10'+str(count)+'.jpg'  
-
-            #     cv2.imwrite(localPath,frame)
-            #     count += 1
+            #     motionCounter = motionCounter + 1
+            #     print(motionCounter)
+            #     writer.write(frame)
 
             # else:
             #     if gifDone == False:
-            #         imgToGif(folderCount)
-            #         folderCount +=1
-            #         count = 0
+            #         motionCounter = 0
+            #         count += 1
+            #         print("count: " + str(count))
+            #         #writer.release()
             #         gifDone = True
+            #         writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi", cv2.VideoWriter_fourcc(*"MJPG"), 60,(frame_width,frame_height))
+            #         #out.release()
 
-            #     motion_detected = False
+            ##########################
+
+                # unpack the tuple and draw the box surrounding the
+                # "motion area" on the output frame
+                (thresh, (minX, minY, maxX, maxY)) = motion
+                #cv2.rectangle(frame, (minX, minY), (maxX, maxY),
+                #    (0, 0, 255), 2)
+                gifDone = False
+                imageList.append(frame)
+
+                newFolder = 'gifs/images' + str(folderCount)
+                if not os.path.isdir(newFolder):
+                    os.makedirs(newFolder)
+                if count < 10:
+                    localPath = newFolder + '/image1000'+str(count)+'.jpg'                
+                if count >= 10 and count < 100: 
+                    localPath = newFolder + '/image100'+str(count)+'.jpg'                
+                if count >= 1000: 
+                    localPath = newFolder + '/image10'+str(count)+'.jpg'  
+                
+                print(count)
+                cv2.imwrite(localPath,frame)
+                count += 1
+
+            else:
+                if count < 6:
+                    count = 0
+                if gifDone == False and count >= 3:
+                    imgToGif(folderCount)
+                    folderCount +=1
+                    print("count: " + str(folderCount))
+
+                    count = 0
+                    gifDone = True
 
         # update the background model and increment the total number
         # of frames read thus far
@@ -205,5 +213,5 @@ if __name__ == '__main__':
     app.run(host=args["ip"], port=args["port"], debug=True,
         threaded=True, use_reloader=False)
 # release the video stream pointer
-writer.release()
+#writer.release()
 vs.stop()
