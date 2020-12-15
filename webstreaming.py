@@ -68,7 +68,7 @@ def detect_motion(frameCount):
     global writer, vs, outputFrame, lock, count, folderCount, motionCounter, frame_width, frame_height
     # initialize the motion detector and the total number of frames
     # read thus far
-    md = SingleMotionDetector(accumWeight=0.1)
+    md = SingleMotionDetector(accumWeight=0.25)
     total = 0
 
     gifDone = True
@@ -81,7 +81,7 @@ def detect_motion(frameCount):
         frame = vs.read()
         #frame = imutils.resize(frame, width=800)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        gray = cv2.GaussianBlur(gray, (49, 49), 0)
+        gray = cv2.GaussianBlur(gray, (23, 23), 0)
 
         # grab the current timestamp and draw it on the frame
         #timestamp = datetime.datetime.now()
@@ -126,7 +126,7 @@ def detect_motion(frameCount):
 
                 # unpack the tuple and draw the box surrounding the
                 # "motion area" on the output frame
-                (thresh, (minX, minY, maxX, maxY)) = motion
+                #(thresh, (minX, minY, maxX, maxY)) = motion
                 #cv2.rectangle(frame, (minX, minY), (maxX, maxY),
                 #    (0, 0, 255), 2)
                 gifDone = False
