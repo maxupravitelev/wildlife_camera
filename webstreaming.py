@@ -35,10 +35,10 @@ app = Flask(__name__)
 frame_width = 1296
 frame_height = 730
 
-vs = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
+#vs = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
 #vs = VideoStream(usePiCamera=1).start()
 
-#vs = VideoStream(src=0).start()
+vs = VideoStream(src=0).start()
 #vs = VideoStream(src=0, resolution=(1296,730)).start()
 
 time.sleep(2.0)
@@ -68,7 +68,7 @@ def detect_motion(frameCount):
     global writer, vs, outputFrame, lock, count, folderCount, motionCounter, frame_width, frame_height
     # initialize the motion detector and the total number of frames
     # read thus far
-    md = SingleMotionDetector(accumWeight=0.8)
+    md = SingleMotionDetector(accumWeight=0.5)
     total = 0
 
     gifDone = True
@@ -81,7 +81,7 @@ def detect_motion(frameCount):
         frame = vs.read()
         #frame = imutils.resize(frame, width=800)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        gray = cv2.GaussianBlur(gray, (39, 39), 0)
+        gray = cv2.GaussianBlur(gray, (7, 7), 0)
 
         # grab the current timestamp and draw it on the frame
         #timestamp = datetime.datetime.now()
@@ -147,8 +147,8 @@ def detect_motion(frameCount):
                 count += 1
 
             else:
-                if count < 6:
-                    count = 0
+                #if count < 6:
+                    #count = 0
                 if gifDone == False and count >= 3:
                     imgToGif(folderCount)
                     folderCount +=1
