@@ -68,7 +68,7 @@ def detect_motion(frameCount):
     global writer, vs, outputFrame, lock, count, folderCount, motionCounter, frame_width, frame_height
     # initialize the motion detector and the total number of frames
     # read thus far
-    md = SingleMotionDetector(accumWeight=0.25)
+    md = SingleMotionDetector(accumWeight=0.8)
     total = 0
 
     gifDone = True
@@ -81,7 +81,7 @@ def detect_motion(frameCount):
         frame = vs.read()
         #frame = imutils.resize(frame, width=800)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        gray = cv2.GaussianBlur(gray, (23, 23), 0)
+        gray = cv2.GaussianBlur(gray, (39, 39), 0)
 
         # grab the current timestamp and draw it on the frame
         #timestamp = datetime.datetime.now()
