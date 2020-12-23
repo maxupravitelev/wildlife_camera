@@ -98,39 +98,30 @@ def detect_motion(mode):
             motion = md.detect(gray)
             # check to see if motion was found in the frame
             
-            
-            if motion is not None:
+            if mode=="avi":
 
-            ###############################
-            
-            #     # unpack the tuple and draw the box surrounding the
-            #     # "motion area" on the output frame
-            #     #(thresh, (minX, minY, maxX, maxY)) = motion
-            #     #cv2.rectangle(frame, (minX, minY), (maxX, maxY),
-            #     #    (0, 0, 255), 2)
-            #     gifDone = False
-            #     motionCounter = motionCounter + 1
-            #     print(motionCounter)
-            #     writer.write(frame)
+                if motion is not None:
 
-            # else:
-            #     if gifDone == False:
-            #         motionCounter = 0
-            #         count += 1
-            #         print("count: " + str(count))
-            #         #writer.release()
-            #         gifDone = True
-            #         writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi", cv2.VideoWriter_fourcc(*"MJPG"), 60,(frame_width,frame_height))
-            #         #out.release()
+                    gifDone = False
+                    motionCounter = motionCounter + 1
+                    print(motionCounter)
+                    writer.write(frame)
 
-            ##########################
+                else:
+                    if gifDone == False:
+                        motionCounter = 0
+                        count += 1
+                        print("count: " + str(count))
+                        #writer.release()
+                        gifDone = True
+                        writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi", cv2.VideoWriter_fourcc(*"MJPG"), 60,(frame_width,frame_height))
+                        #out.release()
 
-                # unpack the tuple and draw the box surrounding the
-                # "motion area" on the output frame
-                #(thresh, (minX, minY, maxX, maxY)) = motion
-                #cv2.rectangle(frame, (minX, minY), (maxX, maxY),
-                #    (0, 0, 255), 2)
-                if mode == "gif":
+
+             
+            if mode == "gif":
+                if motion is not None:
+
                     gifDone = False
                     imageList.append(frame)
 
@@ -148,16 +139,16 @@ def detect_motion(mode):
                     cv2.imwrite(localPath,frame)
                     count += 1
 
-            else:
-                #if count < 6:
-                    #count = 0
-                if gifDone == False and count >= 3:
-                    imgToGif(folderCount)
-                    folderCount +=1
-                    print("count: " + str(folderCount))
+                else:
+                    #if count < 6:
+                        #count = 0
+                    if gifDone == False and count >= 3:
+                        imgToGif(folderCount)
+                        folderCount +=1
+                        print("count: " + str(folderCount))
 
-                    count = 0
-                    gifDone = True
+                        count = 0
+                        gifDone = True
 
         # update the background model and increment the total number
         # of frames read thus far
