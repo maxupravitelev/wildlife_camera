@@ -74,6 +74,7 @@ def detect_motion(mode):
 
     gifDone = True
     imageList = []
+    inactivityCounter = 0
 
         # loop over frames from the video stream
     while True:
@@ -112,7 +113,7 @@ def detect_motion(mode):
                         motionCounter = 0
                         count += 1
                         print("count: " + str(count))
-                        #writer.release()
+                        writer.release()
                         gifDone = True
                         writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi", cv2.VideoWriter_fourcc(*"MJPG"), 60,(frame_width,frame_height))
                         #out.release()
@@ -138,11 +139,15 @@ def detect_motion(mode):
                     print(count)
                     cv2.imwrite(localPath,frame)
                     count += 1
+                    #time.sleep(0.1)
+                    inactivityCounter = 0
 
                 else:
+                    inactivityCounter += 1
+                    # print(newCounter)
                     #if count < 6:
                         #count = 0
-                    if gifDone == False and count >= 3:
+                    if gifDone == False and count >= 3 and inactivityCounter > 500:
                         imgToGif(folderCount)
                         folderCount +=1
                         print("count: " + str(folderCount))
