@@ -62,7 +62,7 @@ def index():
 
 
 
-def detect_motion(frameCount):
+def detect_motion(mode):
     # grab global references to the video stream, output frame, and
     # lock variables
     global writer, vs, outputFrame, lock, count, folderCount, motionCounter, frame_width, frame_height
@@ -70,6 +70,7 @@ def detect_motion(frameCount):
     # read thus far
     md = SingleMotionDetector(accumWeight=0.5)
     total = 0
+    frameCount = 32
 
     gifDone = True
     imageList = []
@@ -129,22 +130,23 @@ def detect_motion(frameCount):
                 #(thresh, (minX, minY, maxX, maxY)) = motion
                 #cv2.rectangle(frame, (minX, minY), (maxX, maxY),
                 #    (0, 0, 255), 2)
-                gifDone = False
-                imageList.append(frame)
+                if mode == "gif":
+                    gifDone = False
+                    imageList.append(frame)
 
-                newFolder = 'gifs/images' + str(folderCount)
-                if not os.path.isdir(newFolder):
-                    os.makedirs(newFolder)
-                if count < 10:
-                    localPath = newFolder + '/image1000'+str(count)+'.jpg'                
-                if count >= 10 and count < 100: 
-                    localPath = newFolder + '/image100'+str(count)+'.jpg'                
-                if count >= 1000: 
-                    localPath = newFolder + '/image10'+str(count)+'.jpg'  
+                    newFolder = 'gifs/images' + str(folderCount)
+                    if not os.path.isdir(newFolder):
+                        os.makedirs(newFolder)
+                    if count < 10:
+                        localPath = newFolder + '/image1000'+str(count)+'.jpg'                
+                    if count >= 10 and count < 100: 
+                        localPath = newFolder + '/image100'+str(count)+'.jpg'                
+                    if count >= 1000: 
+                        localPath = newFolder + '/image10'+str(count)+'.jpg'  
                 
-                print(count)
-                cv2.imwrite(localPath,frame)
-                count += 1
+                    print(count)
+                    cv2.imwrite(localPath,frame)
+                    count += 1
 
             else:
                 #if count < 6:
@@ -201,12 +203,12 @@ if __name__ == '__main__':
         help="ip address of the device")
     ap.add_argument("-o", "--port", type=int, required=True,
         help="ephemeral port number of the server (1024 to 65535)")
-    ap.add_argument("-f", "--frame-count", type=int, default=32,
-        help="# of frames used to construct the background model")
+    ap.add_argument("--mode", type=str, default="gif",
+        help="# of frames used to construct the background model")        
     args = vars(ap.parse_args())
     # start a thread that will perform motion detection
     t = threading.Thread(target=detect_motion, args=(
-        args["frame_count"],))
+        args["mode"],))
     t.daemon = True
     t.start()
     # start the flask app
