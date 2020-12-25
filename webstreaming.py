@@ -112,7 +112,7 @@ def detect_motion(mode):
 
                 else:
                     inactivityCounter += 1
-                    if gifDone == False and motionCounter >= 3 and inactivityCounter > 500:
+                    if gifDone == False and motionCounter >= 3 and inactivityCounter > 200:
                         
                         motionCounter = 0
                         count += 1
