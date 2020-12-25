@@ -52,8 +52,8 @@ folderCount = 0
 
 motionCounter = 0
 
-#writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi",
-#cv2.VideoWriter_fourcc(*"MJPG"), 30,(frame_width,frame_height))
+writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi",
+cv2.VideoWriter_fourcc(*"MJPG"), 30,(frame_width,frame_height))
 
 @app.route("/")
 def index():
@@ -107,9 +107,13 @@ def detect_motion(mode):
                     motionCounter = motionCounter + 1
                     print(motionCounter)
                     writer.write(frame)
+                    inactivityCounter = 0
+
 
                 else:
-                    if gifDone == False:
+                    inactivityCounter += 1
+                    if gifDone == False and motionCounter >= 3 and inactivityCounter > 500:
+                        
                         motionCounter = 0
                         count += 1
                         print("count: " + str(count))
