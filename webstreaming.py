@@ -39,7 +39,11 @@ vs = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
 #vs = VideoStream(usePiCamera=1).start()
 
 #vs = VideoStream(src=0).start()
+<<<<<<< HEAD
 #vs = VideoStream(src=0, resolution=(1296,730)).start()
+=======
+vs = VideoStream(src=0, resolution=(frame_width,frame_height)).start()
+>>>>>>> e091750bb539a37c052fb44c788fd3e3bea805c2
 
 time.sleep(2.0)
 
