@@ -1,4 +1,7 @@
 import cv2
+from imgToGif import imgToGif
+
+from imutils.video import VideoStream
 
 background_image=None
 count = 0
@@ -6,10 +9,12 @@ count = 0
 frame_width = 1296
 frame_height = 730
 
-cap=cv2.VideoCapture(0)
+cap = VideoStream(src=0, resolution=(frame_width,frame_height)).start()
 
-cap.set(cv2.CAP_PROP_FRAME_WIDTH, frame_width)
-cap.set(cv2.CAP_PROP_FRAME_HEIGHT, frame_height)
+# cap=cv2.VideoCapture(0)
+
+# cap.set(cv2.CAP_PROP_FRAME_WIDTH, frame_width)
+# cap.set(cv2.CAP_PROP_FRAME_HEIGHT, frame_height)
 
 writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi",
 cv2.VideoWriter_fourcc(*"MJPG"), 30,(frame_width,frame_height))
@@ -19,7 +24,9 @@ inactivityCounter = 0
 motionCounter = 0
 
 while True:
-    ret, frame = cap.read()
+    #ret, frame = cap.read()
+    frame = cap.read()
+
     gray_frame=cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
     gray_frame=cv2.GaussianBlur(gray_frame,(25,25),0)
 
@@ -81,7 +88,8 @@ while True:
         break
 
 writer.release()
-cap.release()
+#cap.release()
+cap.stop()
 cv2.destroyAllWindows
 
 # Built upon:
