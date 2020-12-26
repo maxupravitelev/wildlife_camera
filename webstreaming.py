@@ -38,8 +38,8 @@ frame_height = 730
 #vs = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
 #vs = VideoStream(usePiCamera=1).start()
 
-vs = VideoStream(src=0).start()
-#vs = VideoStream(src=0, resolution=(1296,730)).start()
+#vs = VideoStream(src=0).start()
+vs = VideoStream(src=0, resolution=(frame_width,frame_height)).start()
 
 time.sleep(2.0)
 
