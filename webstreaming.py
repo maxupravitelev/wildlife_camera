@@ -35,10 +35,10 @@ app = Flask(__name__)
 frame_width = 1296
 frame_height = 730
 
-#vs = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
+vs = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
 #vs = VideoStream(usePiCamera=1).start()
 
-vs = VideoStream(src=0).start()
+#vs = VideoStream(src=0).start()
 #vs = VideoStream(src=0, resolution=(1296,730)).start()
 
 time.sleep(2.0)
@@ -53,7 +53,7 @@ folderCount = 0
 motionCounter = 0
 
 writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi",
-cv2.VideoWriter_fourcc(*"MJPG"), 30,(frame_width,frame_height))
+cv2.VideoWriter_fourcc(*"MJPG"), 49,(frame_width,frame_height))
 
 @app.route("/")
 def index():
@@ -104,19 +104,22 @@ def detect_motion(mode):
                 if motion is not None:
 
                     gifDone = False
-                    motionCounter = motionCounter + 1
-                    print(motionCounter)
+                    #motionCounter = motionCounter + 1
+                    #print(motionCounter)
                     writer.write(frame)
                     inactivityCounter = 0
 
 
                 else:
-                    inactivityCounter += 1
-                    if gifDone == False and motionCounter >= 3 and inactivityCounter > 200:
+                    if inactivityCounter <= 100:
+                        inactivityCounter += 1
+                    if gifDone == False and inactivityCounter > 100:
+
+#                    if gifDone == False and motionCounter >= 3 and inactivityCounter > 100:
                         
-                        motionCounter = 0
+                        #motionCounter = 0
                         count += 1
-                        print("count: " + str(count))
+                        #print("count: " + str(count))
                         writer.release()
                         gifDone = True
                         writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi", cv2.VideoWriter_fourcc(*"MJPG"), 60,(frame_width,frame_height))
@@ -151,7 +154,7 @@ def detect_motion(mode):
                     # print(newCounter)
                     #if count < 6:
                         #count = 0
-                    if gifDone == False and count >= 3 and inactivityCounter > 500:
+                    if gifDone == False and count >= 3 and inactivityCounter > 50:
                         imgToGif(folderCount)
                         folderCount +=1
                         print("count: " + str(folderCount))
@@ -215,5 +218,5 @@ if __name__ == '__main__':
     app.run(host=args["ip"], port=args["port"], debug=True,
         threaded=True, use_reloader=False)
 # release the video stream pointer
-#writer.release()
+writer.release()
 vs.stop()
