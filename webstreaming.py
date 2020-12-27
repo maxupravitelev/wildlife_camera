@@ -35,7 +35,7 @@ app = Flask(__name__)
 frame_width = 1296
 frame_height = 730
 
-vs = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
+#vs = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
 #vs = VideoStream(usePiCamera=1).start()
 
 #vs = VideoStream(src=0).start()
