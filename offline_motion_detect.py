@@ -4,12 +4,16 @@ from imgToGif import imgToGif
 from imutils.video import VideoStream
 
 import os
+import time
+
 
 background_image=None
 count = 0
 
 frame_width = 1296
 frame_height = 730
+# frame_height = 736
+
 
 cap = VideoStream(src=0, resolution=(frame_width,frame_height)).start()
 #cap = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
@@ -19,8 +23,11 @@ cap = VideoStream(src=0, resolution=(frame_width,frame_height)).start()
 # cap.set(cv2.CAP_PROP_FRAME_WIDTH, frame_width)
 # cap.set(cv2.CAP_PROP_FRAME_HEIGHT, frame_height)
 
-writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi",
-cv2.VideoWriter_fourcc(*"MJPG"), 30,(frame_width,frame_height))
+time.sleep(2.0)
+
+
+#writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi",
+#cv2.VideoWriter_fourcc(*"MJPG"), 30,(frame_width,frame_height))
 
 gifDone = True
 inactivityCounter = 0
@@ -56,7 +63,7 @@ while True:
 
     if contours is not None:
         for contour in contours:
-            if cv2.contourArea(contour) > 5000:
+            if cv2.contourArea(contour) > 20:
                 movement_detected = True
                 #(x, y, w, h)=cv2.boundingRect(contour)
                 #cv2.rectangle(frame, (x, y), (x+w, y+h), (255,255,255), 3)
@@ -99,11 +106,11 @@ while True:
             if count >= 1000: 
                 localPath = newFolder + '/image10'+str(count)+'.jpg'  
                 
-            print(count)
+            #print(count)
             cv2.imwrite(localPath,frame)
             count += 1
             #time.sleep(0.1)
-            inactivityCounter = 0
+            # inactivityCounter = 0
 
         else:
             inactivityCounter += 1
@@ -118,6 +125,7 @@ while True:
                 print("count: " + str(folderCount))
 
                 count = 0
+                inactivitaCounter = 0
                 gifDone = True
                             
 
@@ -156,7 +164,7 @@ while True:
     if key==ord('x'):
         break
 
-writer.release()
+#writer.release()
 #cap.release()
 cap.stop()
 cv2.destroyAllWindows
