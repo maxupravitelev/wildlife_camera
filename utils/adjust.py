@@ -78,10 +78,7 @@ if __name__ == '__main__':
     ap.add_argument("--mode", type=str, default="gif",
         help="# of frames used to construct the background model")        
     args = vars(ap.parse_args())
-    # start a thread that will perform motion detection
-    t = threading.Thread(target=generate)
-    t.daemon = True
-    t.start()
+
     # start the flask app
     app.run(host=args["ip"], port=args["port"], debug=True,
         threaded=True, use_reloader=False)
