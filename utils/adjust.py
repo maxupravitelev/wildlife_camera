@@ -6,7 +6,6 @@ from imgToGif import imgToGif
 from imutils.video import VideoStream
 from flask import Response
 from flask import Flask
-from flask import render_template
 from PIL import Image, ImageDraw
 import threading
 import argparse
@@ -84,25 +83,10 @@ def video_feed():
     return Response(generate(),
         mimetype = "multipart/x-mixed-replace; boundary=frame")
 
-# check to see if this is the main thread of execution
+# start the flask app
 if __name__ == '__main__':
-    # construct the argument parser and parse command line arguments
-    ap = argparse.ArgumentParser()
-    ap.add_argument("-i", "--ip", type=str, required=True,
-        help="ip address of the device")
-    ap.add_argument("-o", "--port", type=int, required=True,
-        help="ephemeral port number of the server (1024 to 65535)")
-    ap.add_argument("--mode", type=str, default="gif",
-        help="# of frames used to construct the background model")        
-    args = vars(ap.parse_args())
-    # start a thread that will perform motion detection
-    # t = threading.Thread(target=detect_motion, args=(
-    #     args["mode"],))
-    # t.daemon = True
-    # t.start()
-    # start the flask app
-    app.run(host=args["ip"], port=args["port"], debug=True,
+
+    app.run(host="0.0.0.0", port="8000", debug=True,
         threaded=True, use_reloader=False)
 # release the video stream pointer
-writer.release()
 vs.stop()
