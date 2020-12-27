@@ -1,7 +1,13 @@
+# import the necessary packages
+from pyimagesearch.motion_detection.SingleMotionDetector import SingleMotionDetector
+
+from imgToGif import imgToGif
+
 from imutils.video import VideoStream
 from flask import Response
 from flask import Flask
 from flask import render_template
+from PIL import Image, ImageDraw
 import threading
 import argparse
 import datetime
@@ -39,6 +45,15 @@ time.sleep(2.0)
 
 #cap = cv2.VideoCapture(0)
 
+motion_detected = False
+
+count = 0
+folderCount = 0
+
+motionCounter = 0
+
+writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi",
+cv2.VideoWriter_fourcc(*"MJPG"), 49,(frame_width,frame_height))
 
 def generate():
     # grab global references to the output frame and lock variables
@@ -46,9 +61,11 @@ def generate():
     # loop over frames from the output stream
     while True:
         # wait until the lock is acquired
+        frame = vs.read()
         with lock:
             # check if the output frame is available, otherwise skip
             # the iteration of the loop
+            outputFrame = frame.copy()
             if outputFrame is None:
                 continue
             # encode the frame in JPEG format
@@ -78,9 +95,14 @@ if __name__ == '__main__':
     ap.add_argument("--mode", type=str, default="gif",
         help="# of frames used to construct the background model")        
     args = vars(ap.parse_args())
-
+    # start a thread that will perform motion detection
+    # t = threading.Thread(target=detect_motion, args=(
+    #     args["mode"],))
+    # t.daemon = True
+    # t.start()
     # start the flask app
     app.run(host=args["ip"], port=args["port"], debug=True,
         threaded=True, use_reloader=False)
 # release the video stream pointer
+writer.release()
 vs.stop()
