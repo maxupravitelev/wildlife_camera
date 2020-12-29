@@ -41,9 +41,9 @@ cap = VideoStream(src=0, resolution=(frame_width,frame_height)).start()
 
 time.sleep(2.0)
 
-
-writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi",
-cv2.VideoWriter_fourcc(*"MJPG"), 30,(frame_width,frame_height))
+if mode == "avi":
+    writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi",
+    cv2.VideoWriter_fourcc(*"MJPG"), 30,(frame_width,frame_height))
 
 gifDone = True
 inactivityCounter = 0
@@ -172,7 +172,7 @@ while True:
 
     #cv2.namedWindow('Video feed', cv2.WINDOW_FREERATIO)
     #cv2.setWindowProperty('Video feed', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-    #xcv2.imshow('Video feed', cv2.flip(frame, 1))
+    #cv2.imshow('Video feed', cv2.flip(frame, 1))
 
     cv2.imshow("gray_frame Frame",gray_frame)
     # cv2.imshow("Delta Frame",delta)
@@ -186,7 +186,8 @@ while True:
     if key==ord('x'):
         break
 
-#writer.release()
+if mode == "avi":
+    writer.release()
 #cap.release()
 cap.stop()
 cv2.destroyAllWindows
