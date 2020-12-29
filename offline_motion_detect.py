@@ -15,10 +15,15 @@ frame_height = 730
 # frame_height = 736
 
 
-cap = VideoStream(src=0, resolution=(frame_width,frame_height)).start()
+#cap = VideoStream(src=0, resolution=(frame_width,frame_height)).start()
 #cap = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
+cap = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
 
-# cap=cv2.VideoCapture(0)
+#cap=cv2.VideoCapture(0)
+
+# cap = VideoStream(src=0).start()
+# cap = VideoStream(src=0, resolution=(1296,730)).start()
+
 
 # cap.set(cv2.CAP_PROP_FRAME_WIDTH, frame_width)
 # cap.set(cv2.CAP_PROP_FRAME_HEIGHT, frame_height)
@@ -26,14 +31,16 @@ cap = VideoStream(src=0, resolution=(frame_width,frame_height)).start()
 time.sleep(2.0)
 
 
-#writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi",
-#cv2.VideoWriter_fourcc(*"MJPG"), 30,(frame_width,frame_height))
+writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi",
+cv2.VideoWriter_fourcc(*"MJPG"), 30,(frame_width,frame_height))
 
 gifDone = True
 inactivityCounter = 0
 motionCounter = 0
 
-mode = "gif"
+# mode = "gif"
+mode = "avi"
+
 
 imageList = []
 
@@ -49,6 +56,7 @@ while True:
     gray_frame=cv2.GaussianBlur(gray_frame,(25,25),0)
 
     if background_image is None:
+        print("Reference background image was resetted. Count: " + str(count))
         background_image=gray_frame
         continue
 
@@ -80,7 +88,7 @@ while True:
 
         else:
             inactivityCounter += 1
-            if gifDone == False and motionCounter >= 3 and inactivityCounter > 200:
+            if gifDone == False and motionCounter >= 3 and inactivityCounter > 5:
                             
                 motionCounter = 0
                 count += 1
@@ -89,6 +97,8 @@ while True:
                 gifDone = True
                 writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi", cv2.VideoWriter_fourcc(*"MJPG"), 60,(frame_width,frame_height))
                 #out.release()
+                background_image = None
+                inactivityCounter = 0
     else: 
         
         if movement_detected == True:
