@@ -6,6 +6,17 @@ from imutils.video import VideoStream
 import os
 import time
 
+import argparse
+
+parser = argparse.ArgumentParser()
+
+
+parser.add_argument("--mode", type=str, default="gif",
+        help="run in gif or avi mode") 
+
+args = vars(parser.parse_args())
+
+mode = args["mode"]
 
 background_image=None
 count = 0
@@ -15,9 +26,9 @@ frame_height = 730
 # frame_height = 736
 
 
-#cap = VideoStream(src=0, resolution=(frame_width,frame_height)).start()
+cap = VideoStream(src=0, resolution=(frame_width,frame_height)).start()
 #cap = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
-cap = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
+#cap = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
 
 #cap=cv2.VideoCapture(0)
 
@@ -37,9 +48,6 @@ cv2.VideoWriter_fourcc(*"MJPG"), 30,(frame_width,frame_height))
 gifDone = True
 inactivityCounter = 0
 motionCounter = 0
-
-# mode = "gif"
-mode = "avi"
 
 
 imageList = []
@@ -71,10 +79,10 @@ while True:
 
     if contours is not None:
         for contour in contours:
-            if cv2.contourArea(contour) > 5:
+            if cv2.contourArea(contour) > 20:
                 movement_detected = True
-                #(x, y, w, h)=cv2.boundingRect(contour)
-                #cv2.rectangle(frame, (x, y), (x+w, y+h), (255,255,255), 3)
+                (x, y, w, h)=cv2.boundingRect(contour)
+                cv2.rectangle(frame, (x, y), (x+w, y+h), (255,255,255), 3)
                 continue       
    
     if mode == "avi":
@@ -127,7 +135,7 @@ while True:
             # print(newCounter)
             #if count < 6:
             #count = 0
-            if gifDone == False and count >= 3 and inactivityCounter > 30:
+            if gifDone == False and count >= 3 and inactivityCounter > 0:
 
             # if gifDone == False and count >= 8:
                 imgToGif(folderCount)
@@ -138,6 +146,7 @@ while True:
                 inactivitaCounter = 0
                 gifDone = True
                 background_image = None
+                
                             
 
     # (contours,_)=cv2.findContours(threshold,cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -154,7 +163,7 @@ while True:
     # cv2.rectangle(frame, (x, y), (x+w, y+h), (255,255,255), 2)
 
     #### preview capture   
-    #cv2.imshow("Color Frame",frame)
+    # cv2.imshow("Color Frame",frame)
 
 #    image = cv2.rectangle(image, start_point, end_point, color, thickness) 
 
@@ -165,10 +174,12 @@ while True:
     #cv2.setWindowProperty('Video feed', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
     #xcv2.imshow('Video feed', cv2.flip(frame, 1))
 
-    #cv2.imshow("gray_frame Frame",gray_frame)
-    #cv2.imshow("Delta Frame",delta)
-    #cv2.imshow("Threshold Frame",threshold)
-    
+    cv2.imshow("gray_frame Frame",gray_frame)
+    # cv2.imshow("Delta Frame",delta)
+    cv2.imshow("Threshold Frame",threshold)
+    if background_image is not None:
+        cv2.imshow("background image",background_image)
+
 
     key=cv2.waitKey(1)
 
