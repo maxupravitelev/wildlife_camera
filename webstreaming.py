@@ -52,8 +52,8 @@ folderCount = 0
 
 motionCounter = 0
 
-writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi",
-cv2.VideoWriter_fourcc(*"MJPG"), 49,(frame_width,frame_height))
+# writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi",
+# cv2.VideoWriter_fourcc(*"MJPG"), 49,(frame_width,frame_height))
 
 @app.route("/")
 def index():
@@ -143,24 +143,25 @@ def detect_motion(mode):
                     if count >= 1000: 
                         localPath = newFolder + '/image10'+str(count)+'.jpg'  
                 
-                    print(count)
+                    #print(count)
                     cv2.imwrite(localPath,frame)
                     count += 1
                     #time.sleep(0.1)
-                    inactivityCounter = 0
+                   
 
                 else:
                     inactivityCounter += 1
                     # print(newCounter)
                     #if count < 6:
                         #count = 0
-                    if gifDone == False and count >= 3 and inactivityCounter > 50:
+                    if gifDone == False and count >= 3 and inactivityCounter > 10:
                         imgToGif(folderCount)
                         folderCount +=1
                         print("count: " + str(folderCount))
 
                         count = 0
                         gifDone = True
+                        inactivityCounter = 0
 
         # update the background model and increment the total number
         # of frames read thus far
@@ -218,5 +219,5 @@ if __name__ == '__main__':
     app.run(host=args["ip"], port=args["port"], debug=True,
         threaded=True, use_reloader=False)
 # release the video stream pointer
-writer.release()
+#writer.release()
 vs.stop()

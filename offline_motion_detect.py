@@ -28,7 +28,6 @@ frame_height = 730
 
 cap = VideoStream(src=0, resolution=(frame_width,frame_height)).start()
 #cap = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
-#cap = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
 
 #cap=cv2.VideoCapture(0)
 
@@ -79,10 +78,10 @@ while True:
 
     if contours is not None:
         for contour in contours:
-            if cv2.contourArea(contour) > 20:
+            if cv2.contourArea(contour) > 30:
                 movement_detected = True
-                (x, y, w, h)=cv2.boundingRect(contour)
-                cv2.rectangle(frame, (x, y), (x+w, y+h), (255,255,255), 3)
+                #(x, y, w, h)=cv2.boundingRect(contour)
+                #cv2.rectangle(frame, (x, y), (x+w, y+h), (255,255,255), 3)
                 continue       
    
     if mode == "avi":
@@ -174,11 +173,11 @@ while True:
     #cv2.setWindowProperty('Video feed', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
     #cv2.imshow('Video feed', cv2.flip(frame, 1))
 
-    cv2.imshow("gray_frame Frame",gray_frame)
+    #cv2.imshow("gray_frame Frame",gray_frame)
     # cv2.imshow("Delta Frame",delta)
-    cv2.imshow("Threshold Frame",threshold)
-    if background_image is not None:
-        cv2.imshow("background image",background_image)
+    #cv2.imshow("Threshold Frame",threshold)
+    #if background_image is not None:
+    #    cv2.imshow("background image",background_image)
 
 
     key=cv2.waitKey(1)
