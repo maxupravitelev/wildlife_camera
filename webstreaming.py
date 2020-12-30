@@ -35,7 +35,7 @@ app = Flask(__name__)
 frame_width = 1296
 frame_height = 730
 
-#vs = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
+vs = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
 #vs = VideoStream(usePiCamera=1).start()
 
 #vs = VideoStream(src=0).start()
@@ -73,8 +73,8 @@ def detect_motion(mode):
     frameCount = 32
 
     gifDone = True
-    imageList = []
     inactivityCounter = 0
+    localPath = ""
 
         # loop over frames from the video stream
     while True:
@@ -131,11 +131,11 @@ def detect_motion(mode):
                 if motion is not None:
 
                     gifDone = False
-                    imageList.append(frame)
 
                     newFolder = 'gifs/images' + str(folderCount)
                     if not os.path.isdir(newFolder):
                         os.makedirs(newFolder)
+                        
                     if count < 10:
                         localPath = newFolder + '/image1000'+str(count)+'.jpg'                
                     if count >= 10 and count < 100: 
@@ -150,7 +150,12 @@ def detect_motion(mode):
                    
 
                 else:
-                    inactivityCounter += 1
+                    if inactivityCounter <= 10:
+                        inactivityCounter += 1
+                        if localPath is not "":
+                            print(inactivityCounter)
+                            cv2.imwrite(localPath,frame)
+                            count += 1
                     # print(newCounter)
                     #if count < 6:
                         #count = 0

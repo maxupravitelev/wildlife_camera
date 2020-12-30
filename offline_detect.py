@@ -8,8 +8,8 @@ import time
 
 import argparse
 
+## parse args from command line
 parser = argparse.ArgumentParser()
-
 
 parser.add_argument("--mode", type=str, default="gif",
         help="run in gif or avi mode") 
@@ -34,7 +34,6 @@ cap = VideoStream(src=0, resolution=(frame_width,frame_height)).start()
 # cap = VideoStream(src=0).start()
 # cap = VideoStream(src=0, resolution=(1296,730)).start()
 
-
 # cap.set(cv2.CAP_PROP_FRAME_WIDTH, frame_width)
 # cap.set(cv2.CAP_PROP_FRAME_HEIGHT, frame_height)
 
@@ -47,7 +46,6 @@ if mode == "avi":
 gifDone = True
 inactivityCounter = 0
 motionCounter = 0
-
 
 imageList = []
 
@@ -78,7 +76,7 @@ while True:
 
     if contours is not None:
         for contour in contours:
-            if cv2.contourArea(contour) > 30:
+            if cv2.contourArea(contour) > 6000:
                 movement_detected = True
                 #(x, y, w, h)=cv2.boundingRect(contour)
                 #cv2.rectangle(frame, (x, y), (x+w, y+h), (255,255,255), 3)
@@ -146,12 +144,6 @@ while True:
                 gifDone = True
                 background_image = None
                 
-                            
-
-    # (contours,_)=cv2.findContours(threshold,cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
-
-
     # for contour in contours:
     #     if cv2.contourArea(contour) < 8000:
     #         continue
@@ -174,7 +166,7 @@ while True:
     #cv2.imshow('Video feed', cv2.flip(frame, 1))
 
     #cv2.imshow("gray_frame Frame",gray_frame)
-    # cv2.imshow("Delta Frame",delta)
+    #cv2.imshow("Delta Frame",delta)
     #cv2.imshow("Threshold Frame",threshold)
     #if background_image is not None:
     #    cv2.imshow("background image",background_image)
