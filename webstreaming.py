@@ -35,10 +35,10 @@ app = Flask(__name__)
 frame_width = 1296
 frame_height = 730
 
-#vs = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
+vs = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
 #vs = VideoStream(usePiCamera=1).start()
 
-vs = VideoStream(src=0).start()
+#vs = VideoStream(src=0).start()
 #vs = VideoStream(src=0, resolution=(1296,730)).start()
 
 time.sleep(2.0)
@@ -161,7 +161,7 @@ def detect_motion(mode):
 
                 else:
                     #print(inactivityCounter)
-                    if inactivityCounter <= 100:
+                    if inactivityCounter <= 10:
                         inactivityCounter += 1
                         # if localPath != "":
                         # print(inactivityCounter)
@@ -181,7 +181,7 @@ def detect_motion(mode):
                     # print(newCounter)
                     #if count < 6:
                         #count = 0
-                    if gifDone == False and inactivityCounter > 100:
+                    if gifDone == False and inactivityCounter > 10:
 
                     # if gifDone == False and count >= 3 and inactivityCounter > 100:
 
@@ -201,7 +201,7 @@ def detect_motion(mode):
                         imgToGif(folderCount)
                         folderCount +=1
                         print("count: " + str(folderCount))
-
+                        imageList = []
                         # count = 0
                         gifDone = True
                         #inactivityCounter = 0
