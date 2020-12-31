@@ -66,6 +66,6 @@ def imgToGif(folderCount):
                 images.append(newJpg)
 
     images[0].save('gifs/out'+ str(folderCount) + '.gif',
-                   save_all=True, append_images=images[1:], optimize=True, duration=60, loop=0)
+                   save_all=True, append_images=images[1:], optimize=True, duration=20, loop=0)
 
 # imgToGif(0)

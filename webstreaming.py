@@ -147,7 +147,7 @@ def detect_motion(mode):
                         localPath = newFolder + '/image1000'+str(count)+'.jpg'                
                     if count >= 10 and count < 100: 
                         localPath = newFolder + '/image100'+str(count)+'.jpg'                
-                    if count >= 1000: 
+                    if count >= 100: 
                         localPath = newFolder + '/image10'+str(count)+'.jpg'  
                 
                     #print(count)
@@ -159,25 +159,26 @@ def detect_motion(mode):
 
                 else:
                     #print(inactivityCounter)
-                    if inactivityCounter <= 175:
+                    if inactivityCounter <= 5:
                         inactivityCounter += 1
                         # if localPath != "":
-                        #     print(inactivityCounter)
-                    if count < 10:
-                        localPath = newFolder + '/image1000'+str(count)+'.jpg'                
-                    if count >= 10 and count < 100: 
-                        localPath = newFolder + '/image100'+str(count)+'.jpg'                
-                    if count >= 1000: 
-                        localPath = newFolder + '/image10'+str(count)+'.jpg'  
+                        #print(inactivityCounter)
+                        if count < 10:
+                            localPath = newFolder + '/image1000'+str(count)+'.jpg'                
+                        if count >= 10 and count < 100: 
+                            localPath = newFolder + '/image100'+str(count)+'.jpg'                
+                        if count >= 100: 
+                            localPath = newFolder + '/image10'+str(count)+'.jpg'  
 
                         cv2.imwrite(localPath,frame)
+                        #print(localPath)
                         count += 1
                         continue
  
                     # print(newCounter)
                     #if count < 6:
                         #count = 0
-                    if gifDone == False and count >= 3 and inactivityCounter > 175:
+                    if gifDone == False and count >= 3 and inactivityCounter > 5:
                         imgToGif(folderCount)
                         folderCount +=1
                         print("count: " + str(folderCount))
