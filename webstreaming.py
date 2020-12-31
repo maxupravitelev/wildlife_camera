@@ -16,6 +16,9 @@ import time
 import cv2
 import numpy
 import os
+import collections 
+
+import numpy as np
 
 # initialize the output frame and a lock used to ensure thread-safe
 # exchanges of the output frames (useful when multiple browsers/tabs
@@ -135,60 +138,46 @@ def detect_motion(mode):
 
              
             if mode == "gif":
+                # print(motion)
                 if motion is not None:
-
+                    inactivityCounter = 0
                     gifDone = False
+
+                    imageListIndex = len(imageList)
+                    
+                    if imageListIndex != 0:
+                        lastElement = imageList[imageListIndex - 1]
+
+                        if np.array_equal(lastElement,frame):
+                            continue
 
                     imageList.append(frame)
 
-                    # newFolder = 'gifs/images' + str(folderCount)
-                    # if not os.path.isdir(newFolder):
-                    #     os.makedirs(newFolder)
-                        
-                    # if count < 10:
-                    #     localPath = newFolder + '/image1000'+str(count)+'.jpg'                
-                    # if count >= 10 and count < 100: 
-                    #     localPath = newFolder + '/image100'+str(count)+'.jpg'                
-                    # if count >= 100: 
-                    #     localPath = newFolder + '/image10'+str(count)+'.jpg'  
-                
-                    # #print(count)
-                    # cv2.imwrite(localPath,frame)
-                    # count += 1
-                    #time.sleep(0.1)
-                    inactivityCounter = 0
-                   
-
                 else:
                     #print(inactivityCounter)
-                    if inactivityCounter <= 10:
+                    if inactivityCounter <= 125:
                         inactivityCounter += 1
-                        # if localPath != "":
                         # print(inactivityCounter)
-                        imageList.append(frame)
-                        # if count < 10:
-                        #     localPath = newFolder + '/image1000'+str(count)+'.jpg'                
-                        # if count >= 10 and count < 100: 
-                        #     localPath = newFolder + '/image100'+str(count)+'.jpg'                
-                        # if count >= 100: 
-                        #     localPath = newFolder + '/image10'+str(count)+'.jpg'  
-
-                        # cv2.imwrite(localPath,frame)
-                        # #print(localPath)
-                        # count += 1
+                        # frame = vs.read()
+                        # if np.array_equal(imageList[-1:],frame):
+                        # if (imageList[-1:]==frame).all():
+                            # print("same")
+                            # continue
+                        # imageList.append(frame)
+                        
                         continue
  
                     # print(newCounter)
                     #if count < 6:
                         #count = 0
-                    if gifDone == False and inactivityCounter > 10:
+                    if gifDone == False and inactivityCounter > 125:
 
                     # if gifDone == False and count >= 3 and inactivityCounter > 100:
 
                         newFolder = 'gifs/images' + str(folderCount)
                         if not os.path.isdir(newFolder):
                             os.makedirs(newFolder)
-                        # print(imageList)
+                        # print(str(len(imageList)))
                         for num, image in enumerate(imageList, start=0):
                             if num < 10:
                                 localPath = newFolder + '/image1000'+str(num)+'.jpg'                
