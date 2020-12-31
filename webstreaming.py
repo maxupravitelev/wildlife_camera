@@ -75,6 +75,8 @@ def detect_motion(mode):
     gifDone = True
     inactivityCounter = 0
 
+    imageList = []
+
     newFolder = 'gifs/images' + str(folderCount)
     if not os.path.isdir(newFolder):
         os.makedirs(newFolder)
@@ -137,53 +139,70 @@ def detect_motion(mode):
 
                     gifDone = False
 
+                    imageList.append(frame)
 
-
-                    newFolder = 'gifs/images' + str(folderCount)
-                    if not os.path.isdir(newFolder):
-                        os.makedirs(newFolder)
+                    # newFolder = 'gifs/images' + str(folderCount)
+                    # if not os.path.isdir(newFolder):
+                    #     os.makedirs(newFolder)
                         
-                    if count < 10:
-                        localPath = newFolder + '/image1000'+str(count)+'.jpg'                
-                    if count >= 10 and count < 100: 
-                        localPath = newFolder + '/image100'+str(count)+'.jpg'                
-                    if count >= 100: 
-                        localPath = newFolder + '/image10'+str(count)+'.jpg'  
+                    # if count < 10:
+                    #     localPath = newFolder + '/image1000'+str(count)+'.jpg'                
+                    # if count >= 10 and count < 100: 
+                    #     localPath = newFolder + '/image100'+str(count)+'.jpg'                
+                    # if count >= 100: 
+                    #     localPath = newFolder + '/image10'+str(count)+'.jpg'  
                 
-                    #print(count)
-                    cv2.imwrite(localPath,frame)
-                    count += 1
+                    # #print(count)
+                    # cv2.imwrite(localPath,frame)
+                    # count += 1
                     #time.sleep(0.1)
                     inactivityCounter = 0
                    
 
                 else:
                     #print(inactivityCounter)
-                    if inactivityCounter <= 5:
+                    if inactivityCounter <= 100:
                         inactivityCounter += 1
                         # if localPath != "":
-                        #print(inactivityCounter)
-                        if count < 10:
-                            localPath = newFolder + '/image1000'+str(count)+'.jpg'                
-                        if count >= 10 and count < 100: 
-                            localPath = newFolder + '/image100'+str(count)+'.jpg'                
-                        if count >= 100: 
-                            localPath = newFolder + '/image10'+str(count)+'.jpg'  
+                        # print(inactivityCounter)
+                        imageList.append(frame)
+                        # if count < 10:
+                        #     localPath = newFolder + '/image1000'+str(count)+'.jpg'                
+                        # if count >= 10 and count < 100: 
+                        #     localPath = newFolder + '/image100'+str(count)+'.jpg'                
+                        # if count >= 100: 
+                        #     localPath = newFolder + '/image10'+str(count)+'.jpg'  
 
-                        cv2.imwrite(localPath,frame)
-                        #print(localPath)
-                        count += 1
+                        # cv2.imwrite(localPath,frame)
+                        # #print(localPath)
+                        # count += 1
                         continue
  
                     # print(newCounter)
                     #if count < 6:
                         #count = 0
-                    if gifDone == False and count >= 3 and inactivityCounter > 5:
+                    if gifDone == False and inactivityCounter > 100:
+
+                    # if gifDone == False and count >= 3 and inactivityCounter > 100:
+
+                        newFolder = 'gifs/images' + str(folderCount)
+                        if not os.path.isdir(newFolder):
+                            os.makedirs(newFolder)
+                        # print(imageList)
+                        for num, image in enumerate(imageList, start=0):
+                            if num < 10:
+                                localPath = newFolder + '/image1000'+str(num)+'.jpg'                
+                            if num >= 10 and num < 100: 
+                                localPath = newFolder + '/image100'+str(num)+'.jpg'                
+                            if num >= 100: 
+                                localPath = newFolder + '/image10'+str(num)+'.jpg'
+                            cv2.imwrite(localPath,image)  
+
                         imgToGif(folderCount)
                         folderCount +=1
                         print("count: " + str(folderCount))
 
-                        count = 0
+                        # count = 0
                         gifDone = True
                         #inactivityCounter = 0
 
