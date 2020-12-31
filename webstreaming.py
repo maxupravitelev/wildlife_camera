@@ -1,7 +1,7 @@
 # import the necessary packages
 from pyimagesearch.motion_detection.SingleMotionDetector import SingleMotionDetector
 
-from imgToGif import imgToGif
+from functions.imgToGif import imgToGif
 
 from imutils.video import VideoStream
 from flask import Response

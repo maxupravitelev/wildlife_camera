@@ -1,5 +1,5 @@
 import cv2
-from imgToGif import imgToGif
+from functions.imgToGif import imgToGif
 
 from imutils.video import VideoStream
 

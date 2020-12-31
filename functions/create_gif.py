@@ -1,6 +1,6 @@
 import cv2
 import os
-from .. import imgToGif
+from ... import imgToGif
                
 
 
