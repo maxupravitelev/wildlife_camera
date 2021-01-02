@@ -50,10 +50,10 @@ mode = args["mode"]
 frame_width = 1296
 frame_height = 730
 
-vs = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
+#vs = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
 #vs = VideoStream(usePiCamera=1).start()
 
-#vs = VideoStream(src=0).start()
+vs = VideoStream(src=0).start()
 #vs = VideoStream(src=0, resolution=(1296,730)).start()
 
 # warmup
@@ -68,9 +68,12 @@ folderCount = 0
 
 motionCounter = 0
 
+# read frame for getting the correct frame.shape dimensions
+frame = vs.read()
+
 if mode == "avi":
     writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi",
-    cv2.VideoWriter_fourcc(*"MJPG"), 30,(frame_width,frame_height))
+    cv2.VideoWriter_fourcc(*"MJPG"), 30,(frame.shape[1],frame.shape[0]))
 
 @app.route("/")
 def index():
@@ -146,7 +149,7 @@ def detect_motion(mode):
                         #print("count: " + str(count))
                         writer.release()
                         gifDone = True
-                        writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi", cv2.VideoWriter_fourcc(*"MJPG"), 60,(frame_width,frame_height))
+                        writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi", cv2.VideoWriter_fourcc(*"MJPG"), 60,(frame.shape[1],frame.shape[0]))
                         #out.release()
 
 
