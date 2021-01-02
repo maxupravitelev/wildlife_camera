@@ -38,8 +38,8 @@ app = Flask(__name__)
 frame_width = 1296
 frame_height = 730
 
-vs = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
-#vs = VideoStream(usePiCamera=1).start()
+#vs = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
+vs = VideoStream(usePiCamera=1).start()
 
 #vs = VideoStream(src=0).start()
 #vs = VideoStream(src=0, resolution=(1296,730)).start()
@@ -155,7 +155,7 @@ def detect_motion(mode):
 
                 else:
                     #print(inactivityCounter)
-                    if inactivityCounter <= 125:
+                    if inactivityCounter <= 15:
                         inactivityCounter += 1
                         # print(inactivityCounter)
                         # frame = vs.read()
@@ -170,7 +170,7 @@ def detect_motion(mode):
                     # print(newCounter)
                     #if count < 6:
                         #count = 0
-                    if gifDone == False and inactivityCounter > 125:
+                    if gifDone == False and inactivityCounter > 15:
 
                     # if gifDone == False and count >= 3 and inactivityCounter > 100:
 
