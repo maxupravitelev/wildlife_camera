@@ -26,7 +26,7 @@ import numpy as np
 outputFrame = None
 lock = threading.Lock()
 
-# initialize flask 
+# initialize a flask object
 app = Flask(__name__)
 
 # parse args from command line
@@ -40,6 +40,8 @@ ap.add_argument("--mode", type=str, default="gif",
 args = vars(ap.parse_args())
 
 mode = args["mode"]
+
+# initialize the video stream and allow the camera sensor to
 
 
 #frame_width = 640
@@ -76,14 +78,12 @@ print("Frame resolution: " + str(frame.shape))
 
 if mode == "avi":
     writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi",
-    cv2.VideoWriter_fourcc(*"MJPG"), 60,(frame.shape[1],frame.shape[0]))
+    cv2.VideoWriter_fourcc(*"MJPG"), 49,(frame.shape[1],frame.shape[0]))
 
 @app.route("/")
 def index():
     # return the rendered template
     return render_template("index.html")
-
-
 
 def detect_motion(mode):
     # grab global references to the video stream, output frame, and
@@ -131,12 +131,26 @@ def detect_motion(mode):
             
             if mode=="avi":
 
-                create_avi(motion, frame, gifDone, inactivityCounter)
+                if motion is not None:
 
-                    
+                    gifDone = False
+                    #motionCounter += 1
+                    writer.write(frame)
+                    inactivityCounter = 0
 
+                else:
 
-             
+                    if inactivityCounter <= 40:
+                        inactivityCounter += 1
+                        # writer.write(frame)
+                        continue
+
+                    if gifDone == False and inactivityCounter > 40:
+                        count += 1
+                        print("count: " + str(count))
+                        gifDone = True
+                        writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi", cv2.VideoWriter_fourcc(*"MJPG"), 49,(frame.shape[1],frame.shape[0]))
+
             if mode == "gif":
                 # print(motion)
                 if motion is not None:
@@ -224,37 +238,6 @@ def generate():
         yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + 
             bytearray(encodedImage) + b'\r\n')
 
-def create_avi(motion, frame, gifDone, inactivityCounter):
-
-    global writer, vs, count, motionCounter
-    
-
-    
-
-    if motion is not None:
-        gifDone = False
-        #motionCounter = motionCounter + 1
-        #print(motionCounter)
-        writer.write(frame)
-        inactivityCounter = 0
-
-
-    else:
-        if inactivityCounter <= 40:
-            inactivityCounter += 1
-            # writer.write(frame)
-
-        if gifDone == False and inactivityCounter > 40:
-
-            #if gifDone == False and motionCounter >= 3 and inactivityCounter > 100:
-            
-            #motionCounter = 0
-            count += 1
-            #print("count: " + str(count))
-            writer.release()
-            gifDone = True
-            writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi", cv2.VideoWriter_fourcc(*"MJPG"), 60,(frame.shape[1],frame.shape[0]))
-            #out.release()
 
 @app.route("/video_feed")
 def video_feed():
