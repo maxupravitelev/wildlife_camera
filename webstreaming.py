@@ -29,8 +29,20 @@ lock = threading.Lock()
 # initialize a flask object
 app = Flask(__name__)
 
+# parse args from command line
+ap = argparse.ArgumentParser()
+ap.add_argument("-i", "--ip", type=str, required=True,
+    help="ip address of the device")
+ap.add_argument("-o", "--port", type=int, required=True,
+    help="ephemeral port number of the server (1024 to 65535)")
+ap.add_argument("--mode", type=str, default="gif",
+    help="run in gif or avi mode")        
+args = vars(ap.parse_args())
+
+mode = args["mode"]
+
 # initialize the video stream and allow the camera sensor to
-# warmup
+
 
 #frame_width = 640
 #frame_height = 480
@@ -38,12 +50,13 @@ app = Flask(__name__)
 frame_width = 1296
 frame_height = 730
 
-#vs = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
-vs = VideoStream(usePiCamera=1).start()
+vs = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
+#vs = VideoStream(usePiCamera=1).start()
 
 #vs = VideoStream(src=0).start()
 #vs = VideoStream(src=0, resolution=(1296,730)).start()
 
+# warmup
 time.sleep(2.0)
 
 #cap = cv2.VideoCapture(0)
@@ -55,8 +68,9 @@ folderCount = 0
 
 motionCounter = 0
 
-# writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi",
-# cv2.VideoWriter_fourcc(*"MJPG"), 49,(frame_width,frame_height))
+if mode == "avi":
+    writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi",
+    cv2.VideoWriter_fourcc(*"MJPG"), 30,(frame_width,frame_height))
 
 @app.route("/")
 def index():
@@ -231,17 +245,12 @@ def video_feed():
     return Response(generate(),
         mimetype = "multipart/x-mixed-replace; boundary=frame")
 
+
+
 # check to see if this is the main thread of execution
 if __name__ == '__main__':
     # construct the argument parser and parse command line arguments
-    ap = argparse.ArgumentParser()
-    ap.add_argument("-i", "--ip", type=str, required=True,
-        help="ip address of the device")
-    ap.add_argument("-o", "--port", type=int, required=True,
-        help="ephemeral port number of the server (1024 to 65535)")
-    ap.add_argument("--mode", type=str, default="gif",
-        help="run in gif or avi mode")        
-    args = vars(ap.parse_args())
+    
     # start a thread that will perform motion detection
     t = threading.Thread(target=detect_motion, args=(
         args["mode"],))
@@ -250,6 +259,9 @@ if __name__ == '__main__':
     # start the flask app
     app.run(host=args["ip"], port=args["port"], debug=True,
         threaded=True, use_reloader=False)
-# release the video stream pointer
-#writer.release()
+
+# clean up
+
+if mode == "avi":
+    writer.release()
 vs.stop()
