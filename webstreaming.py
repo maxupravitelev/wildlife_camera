@@ -50,10 +50,10 @@ mode = args["mode"]
 frame_width = 1296
 frame_height = 730
 
-#vs = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
+vs = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
 #vs = VideoStream(usePiCamera=1).start()
 
-vs = VideoStream(src=0).start()
+#vs = VideoStream(src=0).start()
 #vs = VideoStream(src=0, resolution=(1296,730)).start()
 
 # warmup
@@ -138,9 +138,10 @@ def detect_motion(mode):
 
 
                 else:
-                    if inactivityCounter <= 100:
+                    if inactivityCounter <= 40:
                         inactivityCounter += 1
-                    if gifDone == False and inactivityCounter > 100:
+                        writer.write(frame)
+                    if gifDone == False and inactivityCounter > 40:
 
 #                    if gifDone == False and motionCounter >= 3 and inactivityCounter > 100:
                         
