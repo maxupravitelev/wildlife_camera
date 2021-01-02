@@ -8,6 +8,8 @@ import time
 
 import argparse
 
+import numpy as np
+
 ## parse args from command line
 parser = argparse.ArgumentParser()
 
@@ -39,9 +41,11 @@ cap = VideoStream(src=0, resolution=(frame_width,frame_height)).start()
 
 time.sleep(2.0)
 
+frame = cap.read()
+
 if mode == "avi":
     writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi",
-    cv2.VideoWriter_fourcc(*"MJPG"), 30,(frame_width,frame_height))
+    cv2.VideoWriter_fourcc(*"MJPG"), 30,(frame.shape[1],frame.shape[0]))
 
 gifDone = True
 inactivityCounter = 0
@@ -63,7 +67,10 @@ while True:
     if background_image is None:
         print("Reference background image was resetted. Count: " + str(count))
         background_image=gray_frame
+        movement_detected = False
         continue
+
+    # print(movement_detected)
 
     delta=cv2.absdiff(background_image,gray_frame)
     threshold=cv2.threshold(delta, 30, 255, cv2.THRESH_BINARY)[1]
@@ -80,8 +87,12 @@ while True:
                 movement_detected = True
                 #(x, y, w, h)=cv2.boundingRect(contour)
                 #cv2.rectangle(frame, (x, y), (x+w, y+h), (255,255,255), 3)
-                continue       
+                continue
+            else: 
+                movement_detected = False       
    
+    # print(movement_detected)
+
     if mode == "avi":
 
         if movement_detected == True:
@@ -104,45 +115,51 @@ while True:
                 #out.release()
                 background_image = None
                 inactivityCounter = 0
-    else: 
+
+    if mode == "gif":
         
         if movement_detected == True:
-            #print(count)
+            inactivityCounter = 0
             gifDone = False
+
+            imageListIndex = len(imageList)
+            
+            if imageListIndex != 0:
+                lastElement = imageList[imageListIndex - 1]
+
+                if np.array_equal(lastElement,frame):
+                    continue
+
             imageList.append(frame)
 
-            newFolder = 'gifs/images' + str(folderCount)
-            if not os.path.isdir(newFolder):
-                os.makedirs(newFolder)
-            if count < 10:
-                localPath = newFolder + '/image1000'+str(count)+'.jpg'                
-            if count >= 10 and count < 100: 
-                localPath = newFolder + '/image100'+str(count)+'.jpg'                
-            if count >= 1000: 
-                localPath = newFolder + '/image10'+str(count)+'.jpg'  
-                
-            #print(count)
-            cv2.imwrite(localPath,frame)
-            count += 1
-            #time.sleep(0.1)
-            # inactivityCounter = 0
-
         else:
-            inactivityCounter += 1
-            # print(newCounter)
-            #if count < 6:
-            #count = 0
-            if gifDone == False and count >= 3 and inactivityCounter > 0:
+            if inactivityCounter <= 15:
+                inactivityCounter += 1                
+                continue
 
-            # if gifDone == False and count >= 8:
+            if gifDone == False and inactivityCounter > 15:
+
+                newFolder = 'gifs/images' + str(folderCount)
+                if not os.path.isdir(newFolder):
+                    os.makedirs(newFolder)
+                # print(str(len(imageList)))
+                for num, image in enumerate(imageList, start=0):
+                    if num < 10:
+                        localPath = newFolder + '/image1000'+str(num)+'.jpg'                
+                    if num >= 10 and num < 100: 
+                        localPath = newFolder + '/image100'+str(num)+'.jpg'                
+                    if num >= 100: 
+                        localPath = newFolder + '/image10'+str(num)+'.jpg'
+                    cv2.imwrite(localPath,image)  
+
                 imgToGif(folderCount)
                 folderCount +=1
                 print("count: " + str(folderCount))
-
-                count = 0
-                inactivitaCounter = 0
+                imageList = []
+                # count = 0
                 gifDone = True
                 background_image = None
+                #inactivityCounter = 0
                 
     # for contour in contours:
     #     if cv2.contourArea(contour) < 8000:
