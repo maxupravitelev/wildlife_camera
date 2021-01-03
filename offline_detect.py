@@ -1,6 +1,7 @@
 import cv2
 from functions.imgToGif import imgToGif
 
+
 from imutils.video import VideoStream
 
 import os
@@ -9,6 +10,8 @@ import time
 import argparse
 
 import numpy as np
+
+
 
 ## parse args from command line
 parser = argparse.ArgumentParser()
@@ -63,6 +66,8 @@ while True:
 
     gray_frame=cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
     gray_frame=cv2.GaussianBlur(gray_frame,(25,25),0)
+
+    
 
     if background_image is None:
         print("Reference background image was resetted. Count: " + str(count))

@@ -2,6 +2,7 @@
 from pyimagesearch.motion_detection.SingleMotionDetector import SingleMotionDetector
 
 from functions.imgToGif import imgToGif
+from functions.create_avi import File_writer
 
 from imutils.video import VideoStream
 from flask import Response
@@ -71,14 +72,7 @@ folderCount = 0
 
 motionCounter = 0
 
-# read frame to get the correct frame.shape dimensions for writer
-frame = vs.read()
 
-print("Frame resolution: " + str(frame.shape))
-
-if mode == "avi":
-    writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi",
-    cv2.VideoWriter_fourcc(*"MJPG"), 49,(frame.shape[1],frame.shape[0]))
 
 @app.route("/")
 def index():
@@ -92,6 +86,18 @@ def detect_motion(mode):
     # initialize the motion detector and the total number of frames
     # read thus far
     md = SingleMotionDetector(accumWeight=0.5)
+
+# read frame to get the correct frame.shape dimensions for writer
+    frame = vs.read()
+
+    print("Frame resolution: " + str(frame.shape))
+
+    if mode == "avi":
+        writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi",
+        cv2.VideoWriter_fourcc(*"MJPG"), 49,(frame.shape[1],frame.shape[0]))
+
+    file_writer = File_writer(frame)
+
     total = 0
     frameCount = 32
 
@@ -131,25 +137,27 @@ def detect_motion(mode):
             
             if mode=="avi":
 
-                if motion is not None:
+                file_writer.create_avi(motion, frame)
 
-                    gifDone = False
-                    #motionCounter += 1
-                    writer.write(frame)
-                    inactivityCounter = 0
+                # if motion is not None:
 
-                else:
+                #     gifDone = False
+                #     #motionCounter += 1
+                #     writer.write(frame)
+                #     inactivityCounter = 0
 
-                    if inactivityCounter <= 40:
-                        inactivityCounter += 1
-                        # writer.write(frame)
-                        continue
+                # else:
 
-                    if gifDone == False and inactivityCounter > 40:
-                        count += 1
-                        print("count: " + str(count))
-                        gifDone = True
-                        writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi", cv2.VideoWriter_fourcc(*"MJPG"), 49,(frame.shape[1],frame.shape[0]))
+                #     if inactivityCounter <= 40:
+                #         inactivityCounter += 1
+                #         # writer.write(frame)
+                #         continue
+
+                #     if gifDone == False and inactivityCounter > 40:
+                #         count += 1
+                #         print("count: " + str(count))
+                #         gifDone = True
+                #         writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi", cv2.VideoWriter_fourcc(*"MJPG"), 49,(frame.shape[1],frame.shape[0]))
 
             if mode == "gif":
                 # print(motion)
