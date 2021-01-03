@@ -41,7 +41,7 @@ ap.add_argument("--mode", type=str, default="gif",
     help="run in gif or avi mode")        
 args = vars(ap.parse_args())
 
-mode = args["mode"]
+#mode = args["mode"]
 
 # initialize the video stream and allow the camera sensor to
 
@@ -66,14 +66,6 @@ time.sleep(2.0)
 
 #cap = cv2.VideoCapture(0)
 
-motion_detected = False
-
-count = 0
-folderCount = 0
-
-motionCounter = 0
-
-
 
 @app.route("/")
 def index():
@@ -83,12 +75,13 @@ def index():
 def detect_motion(mode):
     # grab global references to the video stream, output frame, and
     # lock variables
-    global writer, vs, outputFrame, lock, count, folderCount, motionCounter, frame_width, frame_height
+    global vs, outputFrame, lock
+
     # initialize the motion detector and the total number of frames
     # read thus far
     md = SingleMotionDetector(accumWeight=0.5)
 
-# read frame to get the correct frame.shape dimensions for writer
+    # read frame to get the correct frame.shape dimensions for writer
     frame = vs.read()
 
     print("Frame resolution: " + str(frame.shape))
@@ -96,27 +89,13 @@ def detect_motion(mode):
     if mode == "avi":
         avi_writer = Avi_writer(frame)
 
-        # writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi",
-        # cv2.VideoWriter_fourcc(*"MJPG"), 49,(frame.shape[1],frame.shape[0]))
-
-    
 
     total = 0
     frameCount = 32
 
-    gifDone = True
-    inactivityCounter = 0
-
-    imageList = []
-
     if mode == "gif":
         gif_writer = Gif_writer()
 
-    # newFolder = 'gifs/images' + str(folderCount)
-    # if not os.path.isdir(newFolder):
-    #     os.makedirs(newFolder)
-
-    # localPath = newFolder + '/image1000'+str(count)+'.jpg'   
 
         # loop over frames from the video stream
     while True:
@@ -142,87 +121,10 @@ def detect_motion(mode):
             # check to see if motion was found in the frame
             
             if mode=="avi":
-
                 avi_writer.create_avi(motion, frame)
-
-                # if motion is not None:
-
-                #     gifDone = False
-                #     #motionCounter += 1
-                #     writer.write(frame)
-                #     inactivityCounter = 0
-
-                # else:
-
-                #     if inactivityCounter <= 40:
-                #         inactivityCounter += 1
-                #         # writer.write(frame)
-                #         continue
-
-                #     if gifDone == False and inactivityCounter > 40:
-                #         count += 1
-                #         print("count: " + str(count))
-                #         gifDone = True
-                #         writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi", cv2.VideoWriter_fourcc(*"MJPG"), 49,(frame.shape[1],frame.shape[0]))
-
+                
             if mode == "gif":
-                # print(motion)
                 gif_writer.create_gif(motion, frame)
-                # if motion is not None:
-                #     inactivityCounter = 0
-                #     gifDone = False
-
-                #     imageListIndex = len(imageList)
-                    
-                #     if imageListIndex != 0:
-                #         lastElement = imageList[imageListIndex - 1]
-
-                #         if np.array_equal(lastElement,frame):
-                #             continue
-
-                #     imageList.append(frame)
-
-                # else:
-                #     #print(inactivityCounter)
-                #     if inactivityCounter <= 15:
-                #         inactivityCounter += 1
-                #         # print(inactivityCounter)
-                #         # frame = vs.read()
-                #         # if np.array_equal(imageList[-1:],frame):
-                #         # if (imageList[-1:]==frame).all():
-                #             # print("same")
-                #             # continue
-                #         # imageList.append(frame)
-                        
-                #         continue
- 
-                #     # print(newCounter)
-                #     #if count < 6:
-                #         #count = 0
-                #     if gifDone == False and inactivityCounter > 15:
-
-                #     # if gifDone == False and count >= 3 and inactivityCounter > 100:
-
-                #         newFolder = 'gifs/images' + str(folderCount)
-                #         if not os.path.isdir(newFolder):
-                #             os.makedirs(newFolder)
-                #         # print(str(len(imageList)))
-                #         for num, image in enumerate(imageList, start=0):
-                #             if num < 10:
-                #                 localPath = newFolder + '/image1000'+str(num)+'.jpg'                
-                #             if num >= 10 and num < 100: 
-                #                 localPath = newFolder + '/image100'+str(num)+'.jpg'                
-                #             if num >= 100: 
-                #                 localPath = newFolder + '/image10'+str(num)+'.jpg'
-                #             cv2.imwrite(localPath,image)  
-
-                #         imgToGif(folderCount)
-                #         folderCount +=1
-                #         print("count: " + str(folderCount))
-                #         imageList = []
-                #         # count = 0
-                #         gifDone = True
-                #         #inactivityCounter = 0
 
         # update the background model and increment the total number
         # of frames read thus far
@@ -265,7 +167,6 @@ def video_feed():
 
 # check to see if this is the main thread of execution
 if __name__ == '__main__':
-    # construct the argument parser and parse command line arguments
     
     # start a thread that will perform motion detection
     t = threading.Thread(target=detect_motion, args=(
@@ -278,6 +179,6 @@ if __name__ == '__main__':
 
 # clean up
 
-if mode == "avi":
-    writer.release()
+# if mode == "avi":
+#     writer.release()
 vs.stop()

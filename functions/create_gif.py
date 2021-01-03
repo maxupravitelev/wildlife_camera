@@ -17,6 +17,8 @@ class Gif_writer:
 
         self.image_list = []
 
+        self.inactivity_limit = 175
+
         
     def create_gif(self, motion, frame):
 
@@ -37,7 +39,7 @@ class Gif_writer:
 
         else:
             #print(inactivityCounter)
-            if self.inactivityCounter <= 15:
+            if self.inactivityCounter <= self.inactivity_limit:
                 self.inactivityCounter += 1
                 # print(inactivityCounter)
                 # frame = vs.read()
@@ -52,14 +54,14 @@ class Gif_writer:
             # print(newCounter)
             #if count < 6:
                 #count = 0
-            if self.file_done == False and self.inactivityCounter > 15:
+            if self.file_done == False and self.inactivityCounter > self.inactivity_limit:
 
             # if self.file_done == False and count >= 3 and inactivityCounter > 100:
 
                 newFolder = 'gifs/images' + str(self.folderCount)
                 if not os.path.isdir(newFolder):
                     os.makedirs(newFolder)
-                print(str(len(self.image_list)))
+                # print(str(len(self.image_list)))
                 for num, image in enumerate(self.image_list, start=0):
                     if num < 10:
                         localPath = newFolder + '/image1000'+str(num)+'.jpg'                

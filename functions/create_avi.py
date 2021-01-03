@@ -17,6 +17,9 @@ class Avi_writer:
 
         self.writer = cv2.VideoWriter("avi/output"+ str(self.count) + ".avi", cv2.VideoWriter_fourcc(*"MJPG"), 49,(self.frame_width,self.frame_height))
         
+        self.inactivity_limit = 175
+
+
     def create_avi(self, motion, frame):
 
         
@@ -29,11 +32,11 @@ class Avi_writer:
 
 
         else:
-            if self.inactivityCounter <= 40:
+            if self.inactivityCounter <= self.inactivity_limit:
                 self.inactivityCounter += 1
                 # writer.write(frame)
                 #print(self.inactivityCounter)
-            if self.file_done == False and self.inactivityCounter > 40:
+            if self.file_done == False and self.inactivityCounter > self.inactivity_limit:
                 #print("test")
                 print((self.frame_width,self.frame_height))
                 #if file_done == False and motionCounter >= 3 and inactivityCounter > 100:
