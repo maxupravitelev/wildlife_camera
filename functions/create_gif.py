@@ -1,13 +1,13 @@
 import cv2
 import os
-from imgToGif import imgToGif
+from functions.imgToGif import imgToGif
 import numpy as np
 
 
 class Gif_writer:
-    def __init__(self ):
+    def __init__(self):
 
-        self.file_done = False
+        self.file_done = True
 
         self.folderCount = 0
 
@@ -25,15 +25,15 @@ class Gif_writer:
             self.inactivityCounter = 0
             self.file_done = False
 
-            imageListIndex = len(imageList)
+            imageListIndex = len(self.image_list)
             
             if imageListIndex != 0:
-                lastElement = imageList[imageListIndex - 1]
+                lastElement = self.image_list[imageListIndex - 1]
 
                 if np.array_equal(lastElement,frame):
                     return
 
-            self.imageList.append(frame)
+            self.image_list.append(frame)
 
         else:
             #print(inactivityCounter)
@@ -59,8 +59,8 @@ class Gif_writer:
                 newFolder = 'gifs/images' + str(self.folderCount)
                 if not os.path.isdir(newFolder):
                     os.makedirs(newFolder)
-                # print(str(len(imageList)))
-                for num, image in enumerate(imageList, start=0):
+                print(str(len(self.image_list)))
+                for num, image in enumerate(self.image_list, start=0):
                     if num < 10:
                         localPath = newFolder + '/image1000'+str(num)+'.jpg'                
                     if num >= 10 and num < 100: 
@@ -72,7 +72,7 @@ class Gif_writer:
                 imgToGif(self.folderCount)
                 self.folderCount +=1
                 print("count: " + str(self.folderCount))
-                self.imageList = []
+                self.image_list = []
                 # count = 0
                 self.file_done = True
                 #inactivityCounter = 0

@@ -2,7 +2,8 @@
 from pyimagesearch.motion_detection.SingleMotionDetector import SingleMotionDetector
 
 from functions.imgToGif import imgToGif
-from functions.create_avi import File_writer
+from functions.create_avi import Avi_writer
+from functions.create_gif import Gif_writer
 
 from imutils.video import VideoStream
 from flask import Response
@@ -93,10 +94,12 @@ def detect_motion(mode):
     print("Frame resolution: " + str(frame.shape))
 
     if mode == "avi":
-        writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi",
-        cv2.VideoWriter_fourcc(*"MJPG"), 49,(frame.shape[1],frame.shape[0]))
+        avi_writer = Avi_writer(frame)
 
-    file_writer = File_writer(frame)
+        # writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi",
+        # cv2.VideoWriter_fourcc(*"MJPG"), 49,(frame.shape[1],frame.shape[0]))
+
+    
 
     total = 0
     frameCount = 32
@@ -106,11 +109,14 @@ def detect_motion(mode):
 
     imageList = []
 
-    newFolder = 'gifs/images' + str(folderCount)
-    if not os.path.isdir(newFolder):
-        os.makedirs(newFolder)
+    if mode == "gif":
+        gif_writer = Gif_writer()
 
-    localPath = newFolder + '/image1000'+str(count)+'.jpg'   
+    # newFolder = 'gifs/images' + str(folderCount)
+    # if not os.path.isdir(newFolder):
+    #     os.makedirs(newFolder)
+
+    # localPath = newFolder + '/image1000'+str(count)+'.jpg'   
 
         # loop over frames from the video stream
     while True:
@@ -137,7 +143,7 @@ def detect_motion(mode):
             
             if mode=="avi":
 
-                file_writer.create_avi(motion, frame)
+                avi_writer.create_avi(motion, frame)
 
                 # if motion is not None:
 
@@ -161,61 +167,62 @@ def detect_motion(mode):
 
             if mode == "gif":
                 # print(motion)
-                if motion is not None:
-                    inactivityCounter = 0
-                    gifDone = False
+                gif_writer.create_gif(motion, frame)
+                # if motion is not None:
+                #     inactivityCounter = 0
+                #     gifDone = False
 
-                    imageListIndex = len(imageList)
+                #     imageListIndex = len(imageList)
                     
-                    if imageListIndex != 0:
-                        lastElement = imageList[imageListIndex - 1]
+                #     if imageListIndex != 0:
+                #         lastElement = imageList[imageListIndex - 1]
 
-                        if np.array_equal(lastElement,frame):
-                            continue
+                #         if np.array_equal(lastElement,frame):
+                #             continue
 
-                    imageList.append(frame)
+                #     imageList.append(frame)
 
-                else:
-                    #print(inactivityCounter)
-                    if inactivityCounter <= 15:
-                        inactivityCounter += 1
-                        # print(inactivityCounter)
-                        # frame = vs.read()
-                        # if np.array_equal(imageList[-1:],frame):
-                        # if (imageList[-1:]==frame).all():
-                            # print("same")
-                            # continue
-                        # imageList.append(frame)
+                # else:
+                #     #print(inactivityCounter)
+                #     if inactivityCounter <= 15:
+                #         inactivityCounter += 1
+                #         # print(inactivityCounter)
+                #         # frame = vs.read()
+                #         # if np.array_equal(imageList[-1:],frame):
+                #         # if (imageList[-1:]==frame).all():
+                #             # print("same")
+                #             # continue
+                #         # imageList.append(frame)
                         
-                        continue
+                #         continue
  
-                    # print(newCounter)
-                    #if count < 6:
-                        #count = 0
-                    if gifDone == False and inactivityCounter > 15:
+                #     # print(newCounter)
+                #     #if count < 6:
+                #         #count = 0
+                #     if gifDone == False and inactivityCounter > 15:
 
-                    # if gifDone == False and count >= 3 and inactivityCounter > 100:
+                #     # if gifDone == False and count >= 3 and inactivityCounter > 100:
 
-                        newFolder = 'gifs/images' + str(folderCount)
-                        if not os.path.isdir(newFolder):
-                            os.makedirs(newFolder)
-                        # print(str(len(imageList)))
-                        for num, image in enumerate(imageList, start=0):
-                            if num < 10:
-                                localPath = newFolder + '/image1000'+str(num)+'.jpg'                
-                            if num >= 10 and num < 100: 
-                                localPath = newFolder + '/image100'+str(num)+'.jpg'                
-                            if num >= 100: 
-                                localPath = newFolder + '/image10'+str(num)+'.jpg'
-                            cv2.imwrite(localPath,image)  
+                #         newFolder = 'gifs/images' + str(folderCount)
+                #         if not os.path.isdir(newFolder):
+                #             os.makedirs(newFolder)
+                #         # print(str(len(imageList)))
+                #         for num, image in enumerate(imageList, start=0):
+                #             if num < 10:
+                #                 localPath = newFolder + '/image1000'+str(num)+'.jpg'                
+                #             if num >= 10 and num < 100: 
+                #                 localPath = newFolder + '/image100'+str(num)+'.jpg'                
+                #             if num >= 100: 
+                #                 localPath = newFolder + '/image10'+str(num)+'.jpg'
+                #             cv2.imwrite(localPath,image)  
 
-                        imgToGif(folderCount)
-                        folderCount +=1
-                        print("count: " + str(folderCount))
-                        imageList = []
-                        # count = 0
-                        gifDone = True
-                        #inactivityCounter = 0
+                #         imgToGif(folderCount)
+                #         folderCount +=1
+                #         print("count: " + str(folderCount))
+                #         imageList = []
+                #         # count = 0
+                #         gifDone = True
+                #         #inactivityCounter = 0
 
         # update the background model and increment the total number
         # of frames read thus far
