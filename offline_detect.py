@@ -41,33 +41,14 @@ cap = VideoStream(src=0, resolution=(frame_width,frame_height)).start()
 # cap = VideoStream(src=0).start()
 # cap = VideoStream(src=0, resolution=(1296,730)).start()
 
-# cap.set(cv2.CAP_PROP_FRAME_WIDTH, frame_width)
-# cap.set(cv2.CAP_PROP_FRAME_HEIGHT, frame_height)
 
 time.sleep(2.0)
 
 frame = cap.read()
 
 if mode == "avi":
-    writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi",
-    cv2.VideoWriter_fourcc(*"MJPG"), 30,(frame.shape[1],frame.shape[0]))
-
-gifDone = True
-inactivityCounter = 0
-motionCounter = 0
-
-imageList = []
-
-folderCount = 0
-
-movement_detected = False
-
-if mode == "avi":
     avi_writer = Avi_writer(frame)
 
-
-total = 0
-frameCount = 32
 
 if mode == "gif":
     gif_writer = Gif_writer()

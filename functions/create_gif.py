@@ -24,6 +24,7 @@ class Gif_writer:
 
         
         if motion is True:
+            # print("write to gif")
             self.inactivityCounter = 0
             self.file_done = False
 
@@ -41,7 +42,6 @@ class Gif_writer:
             #print(inactivityCounter)
             if self.inactivityCounter <= self.inactivity_limit:
                 self.inactivityCounter += 1
-                # print(inactivityCounter)
                 # frame = vs.read()
                 # if np.array_equal(imageList[-1:],frame):
                 # if (imageList[-1:]==frame).all():
@@ -56,7 +56,8 @@ class Gif_writer:
                 #count = 0
             if self.file_done == False and self.inactivityCounter > self.inactivity_limit:
 
-            # if self.file_done == False and count >= 3 and inactivityCounter > 100:
+            # if self.file_done == False a                # print(self.inactivityCounter)
+nd count >= 3 and inactivityCounter > 100:
 
                 newFolder = 'gifs/images' + str(self.folderCount)
                 if not os.path.isdir(newFolder):
@@ -77,4 +78,5 @@ class Gif_writer:
                 self.image_list = []
                 # count = 0
                 self.file_done = True
+
                 #inactivityCounter = 0
