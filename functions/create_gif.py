@@ -42,12 +42,22 @@ class Gif_writer:
             #print(inactivityCounter)
             if self.inactivityCounter <= self.inactivity_limit:
                 self.inactivityCounter += 1
+                # print(self.inactivityCounter)
                 # frame = vs.read()
                 # if np.array_equal(imageList[-1:],frame):
                 # if (imageList[-1:]==frame).all():
                     # print("same")
                     # continue
                 # imageList.append(frame)
+                imageListIndex = len(self.image_list)
+
+                if imageListIndex != 0:
+                    lastElement = self.image_list[imageListIndex - 1]
+
+                    if np.array_equal(lastElement,frame):
+                        return
+
+                self.image_list.append(frame)
                 
                 return
 
@@ -56,8 +66,7 @@ class Gif_writer:
                 #count = 0
             if self.file_done == False and self.inactivityCounter > self.inactivity_limit:
 
-            # if self.file_done == False a                # print(self.inactivityCounter)
-nd count >= 3 and inactivityCounter > 100:
+            # if self.file_done == False and count >= 3 and inactivityCounter > 100:
 
                 newFolder = 'gifs/images' + str(self.folderCount)
                 if not os.path.isdir(newFolder):
