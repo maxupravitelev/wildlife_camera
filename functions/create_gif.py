@@ -23,7 +23,7 @@ class Gif_writer:
     def create_gif(self, motion, frame):
 
         
-        if motion is not None:
+        if motion is True:
             self.inactivityCounter = 0
             self.file_done = False
 

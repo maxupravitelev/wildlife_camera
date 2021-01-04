@@ -23,7 +23,7 @@ class Avi_writer:
     def create_avi(self, motion, frame):
 
         
-        if motion is not None:
+        if motion is True:
             self.file_done = False
             #motionCounter = motionCounter + 1
             #print(motionCounter)

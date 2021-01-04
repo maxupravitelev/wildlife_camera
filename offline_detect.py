@@ -3,6 +3,8 @@ from functions.imgToGif import imgToGif
 
 
 from imutils.video import VideoStream
+from functions.create_avi import Avi_writer
+from functions.create_gif import Gif_writer
 
 import os
 import time
@@ -60,6 +62,16 @@ folderCount = 0
 
 movement_detected = False
 
+if mode == "avi":
+    avi_writer = Avi_writer(frame)
+
+
+total = 0
+frameCount = 32
+
+if mode == "gif":
+    gif_writer = Gif_writer()
+
 while True:
     #ret, frame = cap.read()
     frame = cap.read()
@@ -100,71 +112,76 @@ while True:
 
     if mode == "avi":
 
-        if movement_detected == True:
-            gifDone = False
-            motionCounter = motionCounter + 1
-            # print(motionCounter)
-            writer.write(frame)
-            inactivityCounter = 0
+        avi_writer.create_avi(movement_detected, frame)
 
-        else:
-            inactivityCounter += 1
-            if gifDone == False and motionCounter >= 3 and inactivityCounter > 5:
+        # if movement_detected == True:
+        #     gifDone = False
+        #     motionCounter = motionCounter + 1
+        #     # print(motionCounter)
+        #     writer.write(frame)
+        #     inactivityCounter = 0
+
+        # else:
+        #     inactivityCounter += 1
+        #     if gifDone == False and motionCounter >= 3 and inactivityCounter > 5:
                             
-                motionCounter = 0
-                count += 1
-                print("count: " + str(count))
-                writer.release()
-                gifDone = True
-                writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi", cv2.VideoWriter_fourcc(*"MJPG"), 60,(frame_width,frame_height))
-                #out.release()
-                background_image = None
-                inactivityCounter = 0
+        #         motionCounter = 0
+        #         count += 1
+        #         print("count: " + str(count))
+        #         writer.release()
+        #         gifDone = True
+        #         writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi", cv2.VideoWriter_fourcc(*"MJPG"), 60,(frame_width,frame_height))
+        #         #out.release()
+        #         background_image = None
+        #         inactivityCounter = 0
 
     if mode == "gif":
+        gif_writer.create_gif(movement_detected, frame)
+        if movement_detected is True:
+            background_image = None
         
-        if movement_detected == True:
-            inactivityCounter = 0
-            gifDone = False
+        # if movement_detected == True:
+        #     inactivityCounter = 0
+        #     gifDone = False
 
-            imageListIndex = len(imageList)
+        #     imageListIndex = len(imageList)
             
-            if imageListIndex != 0:
-                lastElement = imageList[imageListIndex - 1]
+        #     if imageListIndex != 0:
+        #         lastElement = imageList[imageListIndex - 1]
 
-                if np.array_equal(lastElement,frame):
-                    continue
+        #         if np.array_equal(lastElement,frame):
+        #             continue
 
-            imageList.append(frame)
+        #     imageList.append(frame)
 
-        else:
-            if inactivityCounter <= 15:
-                inactivityCounter += 1                
-                continue
+        # else:
+        #     if inactivityCounter <= 15:
+        #         inactivityCounter += 1                
+        #         continue
 
-            if gifDone == False and inactivityCounter > 15:
+        #     if gifDone == False and inactivityCounter > 15:
 
-                newFolder = 'gifs/images' + str(folderCount)
-                if not os.path.isdir(newFolder):
-                    os.makedirs(newFolder)
-                # print(str(len(imageList)))
-                for num, image in enumerate(imageList, start=0):
-                    if num < 10:
-                        localPath = newFolder + '/image1000'+str(num)+'.jpg'                
-                    if num >= 10 and num < 100: 
-                        localPath = newFolder + '/image100'+str(num)+'.jpg'                
-                    if num >= 100: 
-                        localPath = newFolder + '/image10'+str(num)+'.jpg'
-                    cv2.imwrite(localPath,image)  
+        #         newFolder = 'gifs/images' + str(folderCount)
+        #         if not os.path.isdir(newFolder):
+        #             os.makedirs(newFolder)
+        #         # print(str(len(imageList)))
+        #         for num, image in enumerate(imageList, start=0):
+        #             if num < 10:
+        #                 localPath = newFolder + '/image1000'+str(num)+'.jpg'                
+        #             if num >= 10 and num < 100: 
+        #                 localPath = newFolder + '/image100'+str(num)+'.jpg'                
+        #             if num >= 100: 
+        #                 localPath = newFolder + '/image10'+str(num)+'.jpg'
+        #             cv2.imwrite(localPath,image)  
 
-                imgToGif(folderCount)
-                folderCount +=1
-                print("count: " + str(folderCount))
-                imageList = []
-                # count = 0
-                gifDone = True
-                background_image = None
-                #inactivityCounter = 0
+        #         imgToGif(folderCount)
+        #         folderCount +=1
+        #         print("count: " + str(folderCount))
+        #         imageList = []
+        #         # count = 0
+        #         gifDone = True
+        #         background_image = None
+        #         #inactivityCounter = 0
                 
     # for contour in contours:
     #     if cv2.contourArea(contour) < 8000:

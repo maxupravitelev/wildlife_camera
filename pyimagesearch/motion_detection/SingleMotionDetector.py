@@ -43,7 +43,7 @@ class SingleMotionDetector:
 
 		# if no contours were found, return None
 		if cnts[1] is None:
-			return None
+			return False
 		else:
 			#time.sleep(0.02)
-			return 1
+			return True
