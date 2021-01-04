@@ -14,7 +14,6 @@ import argparse
 import numpy as np
 
 
-
 ## parse args from command line
 parser = argparse.ArgumentParser()
 
@@ -33,8 +32,8 @@ frame_height = 730
 # frame_height = 736
 
 
-cap = VideoStream(src=0, resolution=(frame_width,frame_height)).start()
-#cap = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
+#cap = VideoStream(src=0, resolution=(frame_width,frame_height)).start()
+cap = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
 
 #cap=cv2.VideoCapture(0)
 
@@ -63,7 +62,7 @@ while True:
     
 
     if background_image is None:
-        print("Reference background image was resetted. Count: " + str(count))
+        # print("Reference background image was resetted. Count: " + str(count))
         background_image=gray_frame
         movement_detected = False
         continue
@@ -81,10 +80,11 @@ while True:
 
     if contours is not None:
         for contour in contours:
+            # print(cv2.contourArea(contour))
             if cv2.contourArea(contour) > 6000:
                 movement_detected = True
-                #(x, y, w, h)=cv2.boundingRect(contour)
-                #cv2.rectangle(frame, (x, y), (x+w, y+h), (255,255,255), 3)
+                # (x, y, w, h)=cv2.boundingRect(contour)
+                # cv2.rectangle(frame, (x, y), (x+w, y+h), (255,255,255), 3)
                 continue
             else: 
                 movement_detected = False       
@@ -94,75 +94,20 @@ while True:
     if mode == "avi":
 
         avi_writer.create_avi(movement_detected, frame)
-
-        # if movement_detected == True:
-        #     gifDone = False
-        #     motionCounter = motionCounter + 1
-        #     # print(motionCounter)
-        #     writer.write(frame)
-        #     inactivityCounter = 0
-
-        # else:
-        #     inactivityCounter += 1
-        #     if gifDone == False and motionCounter >= 3 and inactivityCounter > 5:
-                            
-        #         motionCounter = 0
-        #         count += 1
-        #         print("count: " + str(count))
-        #         writer.release()
-        #         gifDone = True
-        #         writer = cv2.VideoWriter("avi/output"+ str(count) + ".avi", cv2.VideoWriter_fourcc(*"MJPG"), 60,(frame_width,frame_height))
-        #         #out.release()
-        #         background_image = None
-        #         inactivityCounter = 0
+        if contours != None:
+        # if movement_detected is True:
+            #print(background_image)
+            background_image = None
+       
 
     if mode == "gif":
         gif_writer.create_gif(movement_detected, frame)
-        if movement_detected is True:
+        if contours != []:
+        # if movement_detected is True:
+            #print(background_image)
             background_image = None
-        
-        # if movement_detected == True:
-        #     inactivityCounter = 0
-        #     gifDone = False
-
-        #     imageListIndex = len(imageList)
             
-        #     if imageListIndex != 0:
-        #         lastElement = imageList[imageListIndex - 1]
-
-        #         if np.array_equal(lastElement,frame):
-        #             continue
-
-        #     imageList.append(frame)
-
-        # else:
-        #     if inactivityCounter <= 15:
-        #         inactivityCounter += 1                
-        #         continue
-
-        #     if gifDone == False and inactivityCounter > 15:
-
-        #         newFolder = 'gifs/images' + str(folderCount)
-        #         if not os.path.isdir(newFolder):
-        #             os.makedirs(newFolder)
-        #         # print(str(len(imageList)))
-        #         for num, image in enumerate(imageList, start=0):
-        #             if num < 10:
-        #                 localPath = newFolder + '/image1000'+str(num)+'.jpg'                
-        #             if num >= 10 and num < 100: 
-        #                 localPath = newFolder + '/image100'+str(num)+'.jpg'                
-        #             if num >= 100: 
-        #                 localPath = newFolder + '/image10'+str(num)+'.jpg'
-        #             cv2.imwrite(localPath,image)  
-
-        #         imgToGif(folderCount)
-        #         folderCount +=1
-        #         print("count: " + str(folderCount))
-        #         imageList = []
-        #         # count = 0
-        #         gifDone = True
-        #         background_image = None
-        #         #inactivityCounter = 0
+        
                 
     # for contour in contours:
     #     if cv2.contourArea(contour) < 8000:
@@ -187,8 +132,8 @@ while True:
 
     #cv2.imshow("gray_frame Frame",gray_frame)
     #cv2.imshow("Delta Frame",delta)
-    #cv2.imshow("Threshold Frame",threshold)
-    #if background_image is not None:
+    # cv2.imshow("Threshold Frame",threshold)
+    # if background_image is not None:
     #    cv2.imshow("background image",background_image)
 
 
