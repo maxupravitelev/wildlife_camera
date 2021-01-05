@@ -39,10 +39,9 @@ class Gif_writer:
             self.image_list.append(frame)
 
         else:
-            print(inactivityCounter)
-            if self.inactivityCounter <= self.inactivity_limit:
+            if self.file_done == False and self.inactivityCounter <= self.inactivity_limit:
                 self.inactivityCounter += 1
-                # print(self.inactivityCounter)
+                print(self.inactivityCounter)
                 # frame = vs.read()
                 # if np.array_equal(imageList[-1:],frame):
                 # if (imageList[-1:]==frame).all():
