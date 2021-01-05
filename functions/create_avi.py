@@ -15,7 +15,7 @@ class Avi_writer:
 
         self.frame_width = frame_on_startup.shape[1]
 
-        self.fps = 20
+        self.fps = 30
 
         self.writer = cv2.VideoWriter("avi/output"+ str(self.count) + ".avi", cv2.VideoWriter_fourcc(*"MJPG"), self.fps,(self.frame_width,self.frame_height))
         

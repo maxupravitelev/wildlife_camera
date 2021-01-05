@@ -45,6 +45,8 @@ time.sleep(2.0)
 
 frame = cap.read()
 
+print("Frame resolution: " + str(frame.shape))
+
 if mode == "avi":
     avi_writer = Avi_writer(frame)
 
@@ -77,17 +79,22 @@ while True:
 
     if contours == []: 
         movement_detected = False
+    else:
+        movement_detected = True
 
-    if contours is not None:
-        for contour in contours:
-            # print(cv2.contourArea(contour))
-            if cv2.contourArea(contour) > 6000:
-                movement_detected = True
-                # (x, y, w, h)=cv2.boundingRect(contour)
-                # cv2.rectangle(frame, (x, y), (x+w, y+h), (255,255,255), 3)
-                continue
-            else: 
-                movement_detected = False       
+    # if contours == []: 
+    #     movement_detected = False
+
+    # if contours is not None:
+    #     for contour in contours:
+    #         # print(cv2.contourArea(contour))
+    #         if cv2.contourArea(contour) >= 0:
+    #             movement_detected = True
+    #             # (x, y, w, h)=cv2.boundingRect(contour)
+    #             # cv2.rectangle(frame, (x, y), (x+w, y+h), (255,255,255), 3)
+    #             continue
+    #         else: 
+    #             movement_detected = False       
    
     # print(movement_detected)
 
@@ -147,6 +154,3 @@ if mode == "avi":
 #cap.release()
 cap.stop()
 cv2.destroyAllWindows
-
-# Built upon:
-# https://github.com/arindomjit/Motion_Detected_Alarm/blob/master/motion_detector.py
