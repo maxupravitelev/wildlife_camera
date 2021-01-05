@@ -25,12 +25,9 @@ args = vars(parser.parse_args())
 mode = args["mode"]
 
 background_image=None
-count = 0
 
 frame_width = 1296
 frame_height = 730
-# frame_height = 736
-
 
 cap = VideoStream(src=0, resolution=(frame_width,frame_height)).start()
 #cap = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
@@ -49,9 +46,8 @@ print("Frame resolution: " + str(frame.shape))
 
 if mode == "avi":
     avi_writer = Avi_writer(frame)
-
-
-if mode == "gif":
+else: 
+# if mode == "gif":
     gif_writer = Gif_writer()
 
 while True:
@@ -66,10 +62,7 @@ while True:
     gray_frame=cv2.GaussianBlur(gray_frame,(25,25),0)
 
     if gif_writer.background_image is None:
-        # print("Reference background image was resetted. Count: " + str(count))
         gif_writer.background_image=gray_frame
-        movement_detected = False
-        continue
 
     # print(movement_detected)
 
@@ -116,34 +109,29 @@ while True:
         #     #print(background_image)
         #     background_image = None
             
+
+    if mode == "debug":
+
+        # draw rectangle around movement area
+        for contour in contours:
+            if cv2.contourArea(contour) < 8000:
+                continue
+            (x, y, w, h)=cv2.boundingRect(contour)
+            cv2.rectangle(frame, (x, y), (x+w, y+h), (255,255,255), 10)
+
+        # view color frame
+        cv2.imshow("video feed", frame)
+
+        # view gray_frame
+        cv2.imshow("gray_frame", gray_frame)
+
+        # view delta between background and gray_frame
+
+        cv2.imshow("delta", delta)
         
-                
-    # for contour in contours:
-    #     if cv2.contourArea(contour) < 8000:
-    #         continue
-    #     (x, y, w, h)=cv2.boundingRect(contour)
-    #     cv2.rectangle(frame, (x, y), (x+w, y+h), (255,255,255), 10)
-
-    # (x, y, w, h)=cv2.boundingRect(contour)
-    # cv2.rectangle(frame, (x, y), (x+w, y+h), (255,255,255), 2)
-
-    #### preview capture   
-    # cv2.imshow("Color Frame",frame)
-
-#    image = cv2.rectangle(image, start_point, end_point, color, thickness) 
-
-    # image = cv2.rectangle(frame, (0,0), (600,), (0,0,0), -1)
-    # cv2.imshow('Video feed', image)
-
-    #cv2.namedWindow('Video feed', cv2.WINDOW_FREERATIO)
-    #cv2.setWindowProperty('Video feed', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-    #cv2.imshow('Video feed', cv2.flip(frame, 1))
-
-    #cv2.imshow("gray_frame Frame",gray_frame)
-    #cv2.imshow("Delta Frame",delta)
-    # cv2.imshow("Threshold Frame",threshold)
-    # if background_image is not None:
-    #    cv2.imshow("background image",background_image)
+        # view threshold of delta frame
+        cv2.imshow("threshold", threshold)
+        
 
 
     key=cv2.waitKey(1)
