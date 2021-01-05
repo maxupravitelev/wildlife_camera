@@ -19,7 +19,7 @@ class Gif_writer:
 
         self.inactivity_limit = 175
 
-        
+        self.background_image = None
 
         
     def create_gif(self, motion, frame):
@@ -30,13 +30,13 @@ class Gif_writer:
             self.inactivityCounter = 0
             self.file_done = False
 
-            #imageListIndex = len(self.image_list)
+            imageListIndex = len(self.image_list)
             
-            # if imageListIndex != 0:
-            #     lastElement = self.image_list[imageListIndex - 1]
+            if imageListIndex != 0:
+                lastElement = self.image_list[imageListIndex - 1]
 
-            #     if np.array_equal(lastElement,frame):
-            #         return
+                if np.array_equal(lastElement,frame):
+                    return
 
             self.image_list.append(frame)
 
@@ -89,5 +89,6 @@ class Gif_writer:
                 self.image_list = []
                 # count = 0
                 self.file_done = True
+                self.background_image = None
 
                 #inactivityCounter = 0

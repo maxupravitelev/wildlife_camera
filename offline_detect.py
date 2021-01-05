@@ -61,17 +61,15 @@ while True:
     gray_frame=cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
     gray_frame=cv2.GaussianBlur(gray_frame,(25,25),0)
 
-    
-
-    if background_image is None:
+    if gif_writer.background_image is None:
         # print("Reference background image was resetted. Count: " + str(count))
-        background_image=gray_frame
+        gif_writer.background_image=gray_frame
         movement_detected = False
         continue
 
     # print(movement_detected)
 
-    delta=cv2.absdiff(background_image,gray_frame)
+    delta=cv2.absdiff(gif_writer.background_image,gray_frame)
     threshold=cv2.threshold(delta, 30, 255, cv2.THRESH_BINARY)[1]
     #cnts = cv2.findContours(threshold.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
     
@@ -109,10 +107,10 @@ while True:
 
     if mode == "gif":
         gif_writer.create_gif(movement_detected, frame)
-        if contours != []:
-        # if movement_detected is True:
-            #print(background_image)
-            background_image = None
+        # if contours != []:
+        # # if movement_detected is True:
+        #     #print(background_image)
+        #     background_image = None
             
         
                 
