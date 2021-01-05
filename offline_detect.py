@@ -59,7 +59,7 @@ while True:
         continue
 
     gray_frame=cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
-    gray_frame=cv2.GaussianBlur(gray_frame,(25,25),0)
+    gray_frame=cv2.GaussianBlur(gray_frame,(7,7),0)
 
     if gif_writer.background_image is None:
         gif_writer.background_image=gray_frame
@@ -103,13 +103,11 @@ while True:
        
 
     if mode == "gif":
-        gif_writer.create_gif(movement_detected, frame)
-        # if contours != []:
-        # # if movement_detected is True:
-        #     #print(background_image)
-        #     background_image = None
-            
 
+        # handle creating gifs from frames
+        gif_writer.create_gif(movement_detected, frame)
+
+            
     if mode == "debug":
 
         # draw rectangle around movement area
@@ -141,6 +139,7 @@ while True:
 
 if mode == "avi":
     writer.release()
+
 #cap.release()
 cap.stop()
 cv2.destroyAllWindows
