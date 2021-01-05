@@ -39,7 +39,7 @@ class Gif_writer:
             self.image_list.append(frame)
 
         else:
-            #print(inactivityCounter)
+            print(inactivityCounter)
             if self.inactivityCounter <= self.inactivity_limit:
                 self.inactivityCounter += 1
                 # print(self.inactivityCounter)

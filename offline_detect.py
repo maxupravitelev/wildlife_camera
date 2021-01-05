@@ -32,8 +32,8 @@ frame_height = 730
 # frame_height = 736
 
 
-#cap = VideoStream(src=0, resolution=(frame_width,frame_height)).start()
-cap = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
+cap = VideoStream(src=0, resolution=(frame_width,frame_height)).start()
+#cap = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
 
 #cap=cv2.VideoCapture(0)
 
