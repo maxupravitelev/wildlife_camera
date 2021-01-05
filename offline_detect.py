@@ -56,7 +56,11 @@ if mode == "gif":
 
 while True:
     #ret, frame = cap.read()
+    last_frame = frame.copy()
     frame = cap.read()
+
+    if np.array_equal(last_frame,frame):
+        continue
 
     gray_frame=cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
     gray_frame=cv2.GaussianBlur(gray_frame,(25,25),0)

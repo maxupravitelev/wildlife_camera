@@ -17,7 +17,7 @@ class Gif_writer:
 
         self.image_list = []
 
-        self.inactivity_limit = 175
+        self.inactivity_limit = 2
 
         self.background_image = None
 
@@ -30,13 +30,13 @@ class Gif_writer:
             self.inactivityCounter = 0
             self.file_done = False
 
-            imageListIndex = len(self.image_list)
+            # imageListIndex = len(self.image_list)
             
-            if imageListIndex != 0:
-                lastElement = self.image_list[imageListIndex - 1]
+            # if imageListIndex != 0:
+            #     lastElement = self.image_list[imageListIndex - 1]
 
-                if np.array_equal(lastElement,frame):
-                    return
+            #     if np.array_equal(lastElement,frame):
+            #         return
 
             self.image_list.append(frame)
 
@@ -50,13 +50,13 @@ class Gif_writer:
                     # print("same")
                     # continue
                 # imageList.append(frame)
-                imageListIndex = len(self.image_list)
+                # imageListIndex = len(self.image_list)
 
-                if imageListIndex != 0:
-                    lastElement = self.image_list[imageListIndex - 1]
+                # if imageListIndex != 0:
+                #     lastElement = self.image_list[imageListIndex - 1]
 
-                    if np.array_equal(lastElement,frame):
-                        return
+                #     if np.array_equal(lastElement,frame):
+                #         return
 
                 self.image_list.append(frame)
                 
