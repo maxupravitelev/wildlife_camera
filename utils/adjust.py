@@ -5,6 +5,8 @@ from imutils.video import VideoStream
 from flask import Response
 from flask import Flask
 
+from picamera.array import PiRGBArray
+from picamera import PiCamera
 
 # initialize the output frame and a lock used to ensure thread-safe
 # exchanges of the output frames (useful when multiple browsers/tabs
@@ -19,14 +21,25 @@ app = Flask(__name__)
 #frame_width = 640
 #frame_height = 480
 
-frame_width = 1296
-frame_height = 730
+# frame_width = 1296
+# frame_height = 730
+
+frame_width = 1280
+frame_height = 720
+
+camera = PiCamera()
+camera.resolution = (frame_width, frame_height)
+camera.framerate = 30
+camera.awb_mode = 'fluorescent'
+camera.awb_gains = 4
+#camera.exposure_mode = 'off'
+cap = PiRGBArray(camera, size=(frame_width, frame_height))
 
 #vs = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
 #vs = VideoStream(usePiCamera=1).start()
 
 #vs = VideoStream(src=0).start()
-vs = VideoStream(src=0, resolution=(1296,730)).start()
+#vs = VideoStream(src=0, resolution=(1296,730)).start()
 
 # warmup
 time.sleep(2.0)
@@ -50,11 +63,29 @@ def generate():
         yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + 
             bytearray(encodedImage) + b'\r\n')
 
+def generate_picam():
+
+    global outputFrame
+
+    for image in camera.capture_continuous(cap, format="bgr", use_video_port=True):
+
+        outputFrame = image.array
+        if outputFrame is None:
+            continue
+        # encode the frame in JPEG format
+        (flag, encodedImage) = cv2.imencode(".jpg", outputFrame)
+        # ensure the frame was successfully encoded
+        if not flag:
+                continue
+        # yield the output frame in the byte format
+        yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + 
+            bytearray(encodedImage) + b'\r\n')
+
 @app.route("/")
 def video_feed():
     # return the response generated along with the specific media
     # type (mime type)
-    return Response(generate(),
+    return Response(generate_picam(),
         mimetype = "multipart/x-mixed-replace; boundary=frame")
 
 # start the flask app
@@ -63,4 +94,5 @@ if __name__ == '__main__':
         threaded=True, use_reloader=False)
 
 # release the video stream pointer
-vs.stop()
+cap.close()
+#vs.stop()

@@ -37,6 +37,9 @@ frame_height = 720
 camera = PiCamera()
 camera.resolution = (frame_width, frame_height)
 camera.framerate = 30
+camera.awb_mode = 'fluorescent'
+camera.awb_gains = 4
+camera.exposure_mode = 'off'
 cap = PiRGBArray(camera, size=(frame_width, frame_height))
 
 # frame_width = 640
