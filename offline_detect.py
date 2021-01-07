@@ -36,10 +36,10 @@ frame_height = 720
 
 camera = PiCamera()
 camera.resolution = (frame_width, frame_height)
-camera.framerate = 30
-camera.awb_mode = 'fluorescent'
-camera.awb_gains = 4
-camera.exposure_mode = 'off'
+camera.framerate = 50
+camera.awb_mode = 'off'
+camera.awb_gains = 1.3
+#camera.exposure_mode = 'off'
 cap = PiRGBArray(camera, size=(frame_width, frame_height))
 
 # frame_width = 640
@@ -74,8 +74,14 @@ for image in camera.capture_continuous(cap, format="bgr", use_video_port=True):
     # and occupied/unoccupied text
     frame = image.array
     # show the frame
+
+    cap.truncate(0)
+    cap.seek(0)
+    
     gray_frame=cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
     gray_frame=cv2.GaussianBlur(gray_frame,(7,7),0)
+
+
 
     if gif_writer.background_image is None:
         gif_writer.background_image=gray_frame
@@ -101,6 +107,7 @@ for image in camera.capture_continuous(cap, format="bgr", use_video_port=True):
     key = cv2.waitKey(1) & 0xFF
     # clear the stream in preparation for the next frame
     cap.truncate(0)
+    cap.seek(0)
     # if the `q` key was pressed, break from the loop
     if key == ord("q"):
         break
@@ -196,5 +203,6 @@ if mode == "avi":
     writer.release()
 
 #cap.release()
-cap.stop()
+#cap.stop()
+cap.close()
 cv2.destroyAllWindows

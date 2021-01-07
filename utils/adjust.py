@@ -27,15 +27,16 @@ app = Flask(__name__)
 frame_width = 1280
 frame_height = 720
 
-camera = PiCamera()
-camera.resolution = (frame_width, frame_height)
-camera.framerate = 30
-camera.awb_mode = 'fluorescent'
-camera.awb_gains = 4
-#camera.exposure_mode = 'off'
-cap = PiRGBArray(camera, size=(frame_width, frame_height))
+# picamera settings https://picamera.readthedocs.io/en/release-1.10/api_camera.html
+# camera = PiCamera()
+# camera.resolution = (frame_width, frame_height)
+# camera.framerate = 30
+# camera.awb_mode = 'off'
+# camera.awb_gains = 1.3
+# #camera.exposure_mode = 'off'
+# cap = PiRGBArray(camera, size=(frame_width, frame_height))
 
-#vs = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
+vs = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
 #vs = VideoStream(usePiCamera=1).start()
 
 #vs = VideoStream(src=0).start()
@@ -85,7 +86,7 @@ def generate_picam():
 def video_feed():
     # return the response generated along with the specific media
     # type (mime type)
-    return Response(generate_picam(),
+    return Response(generate(),
         mimetype = "multipart/x-mixed-replace; boundary=frame")
 
 # start the flask app
@@ -95,4 +96,4 @@ if __name__ == '__main__':
 
 # release the video stream pointer
 cap.close()
-#vs.stop()
+vs.stop()
