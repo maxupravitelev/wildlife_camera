@@ -28,15 +28,15 @@ mode = args["mode"]
 
 background_image=None
 
-# frame_width = 1296
-# frame_height = 730
+frame_width = 1296
+frame_height = 730
 
-frame_width = 1280
-frame_height = 720
+# frame_width = 1280
+# frame_height = 720
 
 camera = PiCamera()
 camera.resolution = (frame_width, frame_height)
-camera.framerate = 50
+camera.framerate = 30
 camera.awb_mode = 'off'
 camera.awb_gains = 1.3
 #camera.exposure_mode = 'off'
@@ -60,7 +60,10 @@ time.sleep(2.0)
 
 #ret, frame = cap.read()
 
-#print("Frame resolution: " + str(frame.shape))
+# print("Frame resolution: " + str(frame.shape))
+
+contour_threshold = (frame_height * frame_height / 1000)
+print(contour_threshold)
 
 if mode == "avi":
     avi_writer = Avi_writer(frame)
@@ -78,10 +81,10 @@ for image in camera.capture_continuous(cap, format="bgr", use_video_port=True):
     cap.truncate(0)
     cap.seek(0)
     
+    gauss_blur_factor = 25
+
     gray_frame=cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
-    gray_frame=cv2.GaussianBlur(gray_frame,(7,7),0)
-
-
+    gray_frame=cv2.GaussianBlur(gray_frame,(gauss_blur_factor,gauss_blur_factor),0)
 
     if gif_writer.background_image is None:
         gif_writer.background_image=gray_frame
@@ -97,7 +100,19 @@ for image in camera.capture_continuous(cap, format="bgr", use_video_port=True):
     if contours == []: 
         movement_detected = False
     else:
-        movement_detected = True
+        # movement_detected = True
+        # print("contours shape: " )
+        
+        for contour in contours:
+            # print(cv2.contourArea(contour))
+            if cv2.contourArea(contour) >= contour_threshold:
+                movement_detected = True
+                print(cv2.contourArea(contour))
+            else:
+                movement_detected = False
+                # (x, y, w, h)=cv2.boundingRect(contour)
+                # cv2.rectangle(frame, (x, y), (x+w, y+h), (255,255,255), 3)
+                # continue
 
     if mode == "gif":
 
@@ -105,9 +120,7 @@ for image in camera.capture_continuous(cap, format="bgr", use_video_port=True):
         gif_writer.create_gif(movement_detected, frame)
 
     key = cv2.waitKey(1) & 0xFF
-    # clear the stream in preparation for the next frame
-    cap.truncate(0)
-    cap.seek(0)
+
     # if the `q` key was pressed, break from the loop
     if key == ord("q"):
         break
@@ -204,5 +217,6 @@ if mode == "avi":
 
 #cap.release()
 #cap.stop()
-cap.close()
+# cap.close()
+camera.close()
 cv2.destroyAllWindows
