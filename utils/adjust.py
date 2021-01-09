@@ -89,8 +89,14 @@ def generate():
                 for contour in contours:
                     # print(cv2.contourArea(contour))
                     if cv2.contourArea(contour) >= 0:
+                        
                         (x, y, w, h)=cv2.boundingRect(contour)
+                        
                         cv2.rectangle(outputFrame, (x, y), (x+w, y+h), (255,255,255), 3)
+                        
+                        cv2.putText(outputFrame, str(cv2.contourArea(contour)), (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (255, 255, 255), 1)
+                # background_image = None
+
 
         # encode the frame in JPEG format
         (flag, encodedImage) = cv2.imencode(".jpg", outputFrame)
@@ -99,7 +105,6 @@ def generate():
                 continue
         # yield the output frame in the byte format
 
-        background_image = None
 
         yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + 
             bytearray(encodedImage) + b'\r\n')
