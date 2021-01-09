@@ -98,6 +98,9 @@ def generate():
         if not flag:
                 continue
         # yield the output frame in the byte format
+
+        background_image = None
+
         yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + 
             bytearray(encodedImage) + b'\r\n')
 
