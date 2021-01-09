@@ -5,8 +5,20 @@ from imutils.video import VideoStream
 from flask import Response
 from flask import Flask
 
-from picamera.array import PiRGBArray
-from picamera import PiCamera
+# from picamera.array import PiRGBArray
+# from picamera import PiCamera
+
+import argparse
+
+## parse args from command line
+parser = argparse.ArgumentParser()
+
+parser.add_argument("--mode", type=str, default="gif",
+        help="run in gif or avi mode") 
+
+args = vars(parser.parse_args())
+
+mode = args["mode"]
 
 # initialize the output frame and a lock used to ensure thread-safe
 # exchanges of the output frames (useful when multiple browsers/tabs
@@ -36,18 +48,20 @@ frame_height = 720
 # #camera.exposure_mode = 'off'
 # cap = PiRGBArray(camera, size=(frame_width, frame_height))
 
-vs = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
+#vs = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
 #vs = VideoStream(usePiCamera=1).start()
 
-#vs = VideoStream(src=0).start()
+vs = VideoStream(src=0).start()
 #vs = VideoStream(src=0, resolution=(1296,730)).start()
 
 # warmup
 time.sleep(2.0)
 
+background_image = None
+
 def generate():
     # grab global references to the output frame and lock variables
-    global outputFrame
+    global outputFrame, background_image
     # loop over frames from the output stream
     while True:
         # check if the output frame is available, otherwise skip
@@ -55,6 +69,29 @@ def generate():
         outputFrame = vs.read()
         if outputFrame is None:
             continue
+
+
+
+        if mode == "bbox":
+
+            gray_frame=cv2.cvtColor(outputFrame,cv2.COLOR_BGR2GRAY)
+            gray_frame=cv2.GaussianBlur(gray_frame,(7,7),0)
+
+            if background_image is None:
+                background_image=gray_frame
+
+            delta=cv2.absdiff(background_image,gray_frame)
+            threshold=cv2.threshold(delta, 30, 255, cv2.THRESH_BINARY)[1]
+
+            (contours,_)=cv2.findContours(threshold,cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+            if contours is not None:
+                for contour in contours:
+                    # print(cv2.contourArea(contour))
+                    if cv2.contourArea(contour) >= 0:
+                        (x, y, w, h)=cv2.boundingRect(contour)
+                        cv2.rectangle(outputFrame, (x, y), (x+w, y+h), (255,255,255), 3)
+
         # encode the frame in JPEG format
         (flag, encodedImage) = cv2.imencode(".jpg", outputFrame)
         # ensure the frame was successfully encoded
