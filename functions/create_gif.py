@@ -13,9 +13,11 @@ class Gif_writer:
 
         self.inactivityCounter = 0
 
+        self.image_counter = 0
+
         self.image_list = []
 
-        self.inactivity_limit = 2
+        self.inactivity_limit = 8
 
         self.background_image = None
 
@@ -27,14 +29,20 @@ class Gif_writer:
             self.inactivityCounter = 0
             self.file_done = False
 
+
+ 
             self.image_list.append(frame)
+            self.image_counter += 1
+            print("Image count: " + str(self.image_counter))
 
         else:
             if self.file_done == False and self.inactivityCounter <= self.inactivity_limit:
                 self.inactivityCounter += 1
 
                 self.image_list.append(frame)
-                
+                self.image_counter += 1
+                print("Image count: " + str(self.image_counter))
+
                 print("Append while inactive. Count: " + str(self.inactivityCounter))
 
             if self.file_done == False and self.inactivityCounter > self.inactivity_limit:
@@ -64,5 +72,7 @@ class Gif_writer:
                 
                 # reset values to handle next gif
                 self.image_list = []
+                self.image_counter = 0
+
                 self.file_done = True
                 self.background_image = None
