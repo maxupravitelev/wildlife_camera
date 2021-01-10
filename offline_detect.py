@@ -28,24 +28,26 @@ mode = args["mode"]
 
 bbox_mode = False
 
-background_image=None
+background_image = None
 
-frame_width = 1296
-frame_height = 736
+# frame_width = 1296
+# frame_height = 736
 
 # frame_width = 1280
 # frame_height = 720
 
+frame_width = 640
+frame_height = 480
+
 camera = PiCamera()
 camera.resolution = (frame_width, frame_height)
 camera.framerate = 49
-# camera.awb_mode = 'off'
-# camera.awb_gains = 1.3
-#camera.exposure_mode = 'off'
+camera.awb_mode = 'off'
+camera.awb_gains = 1.3
+# camera.exposure_mode = 'off'
 cap = PiRGBArray(camera, size=(frame_width, frame_height))
 
-# frame_width = 640
-# frame_height = 480
+
 
 #cap = VideoStream(src=0, resolution=(frame_width,frame_height)).start()
 #cap = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
@@ -64,8 +66,12 @@ time.sleep(2.0)
 
 # print("Frame resolution: " + str(frame.shape))
 
-contour_threshold = int((frame_height * frame_height / 1000) * 1)
-print(contour_threshold)
+detection_area = 0.005
+
+contour_threshold = int((frame_height * frame_height) * (detection_area))
+
+print("Total area: " + str(frame_width * frame_height) + " (frame width: " + str(frame_width) + " x " + "frame height: " + str(frame_height) + ")")
+print("Detection area: " + str(contour_threshold) + " (" + str(detection_area * 100) + " % of total area")
 
 if mode == "avi":
     avi_writer = Avi_writer(frame)
@@ -119,7 +125,7 @@ for image in camera.capture_continuous(cap, format="bgr", use_video_port=True):
                     
                     cv2.putText(frame, str(cv2.contourArea(contour)), (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (255, 255, 255), 1)
 
-                gif_writer.create_gif(movement_detected, frame)
+                #gif_writer.create_gif(movement_detected, frame)
 
                 continue
             else:
