@@ -26,6 +26,8 @@ args = vars(parser.parse_args())
 
 mode = args["mode"]
 
+bbox_mode = False
+
 background_image=None
 
 frame_width = 1296
@@ -36,7 +38,7 @@ frame_height = 736
 
 camera = PiCamera()
 camera.resolution = (frame_width, frame_height)
-camera.framerate = 30
+camera.framerate = 49
 # camera.awb_mode = 'off'
 # camera.awb_gains = 1.3
 #camera.exposure_mode = 'off'
@@ -109,11 +111,13 @@ for image in camera.capture_continuous(cap, format="bgr", use_video_port=True):
                 movement_detected = True
                 print(cv2.contourArea(contour))
 
-                (x, y, w, h)=cv2.boundingRect(contour)
-                        
-                cv2.rectangle(frame, (x, y), (x+w, y+h), (255,255,255), 3)
-                
-                cv2.putText(frame, str(cv2.contourArea(contour)), (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (255, 255, 255), 1)
+                if bbox_mode == True:
+
+                    (x, y, w, h)=cv2.boundingRect(contour)
+                            
+                    cv2.rectangle(frame, (x, y), (x+w, y+h), (255,255,255), 3)
+                    
+                    cv2.putText(frame, str(cv2.contourArea(contour)), (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (255, 255, 255), 1)
 
                 gif_writer.create_gif(movement_detected, frame)
 
