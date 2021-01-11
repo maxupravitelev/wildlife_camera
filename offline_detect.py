@@ -33,17 +33,17 @@ background_image = None
 # frame_width = 1296
 # frame_height = 736
 
-# frame_width = 1280
-# frame_height = 720
+frame_width = 1280
+frame_height = 720
 
-frame_width = 640
-frame_height = 480
+# frame_width = 640
+# frame_height = 480
 
 camera = PiCamera()
 camera.resolution = (frame_width, frame_height)
-camera.framerate = 49
-camera.awb_mode = 'off'
-camera.awb_gains = 1.3
+camera.framerate = 60
+# camera.awb_mode = 'off'
+# camera.awb_gains = 1.3
 # camera.exposure_mode = 'off'
 cap = PiRGBArray(camera, size=(frame_width, frame_height))
 
@@ -66,18 +66,29 @@ time.sleep(2.0)
 
 # print("Frame resolution: " + str(frame.shape))
 
-detection_area = 0.005
+detection_area = 0.001
 
 contour_threshold = int((frame_height * frame_height) * (detection_area))
 
 print("Total area: " + str(frame_width * frame_height) + " (frame width: " + str(frame_width) + " x " + "frame height: " + str(frame_height) + ")")
-print("Detection area: " + str(contour_threshold) + " (" + str(detection_area * 100) + " % of total area")
+print("Detection area: " + str(contour_threshold) + " (" + str(detection_area * 100) + " % of total area)")
 
 if mode == "avi":
     avi_writer = Avi_writer(frame)
 else: 
 # if mode == "gif":
     gif_writer = Gif_writer()
+
+def check_movement(contours):
+    detected = False
+    for contour in contours:
+            # print(cv2.contourArea(contour))
+            if cv2.contourArea(contour) >= contour_threshold:
+                detected = True
+                continue
+            else:
+                detected = False
+    return detected
 
 # capture frames from the camera
 for image in camera.capture_continuous(cap, format="bgr", use_video_port=True):
@@ -112,32 +123,36 @@ for image in camera.capture_continuous(cap, format="bgr", use_video_port=True):
         # print("contours shape: " )
         
         for contour in contours:
+            movement_detected = check_movement(contours)
+            # print(movement_detected)
             # print(cv2.contourArea(contour))
-            if cv2.contourArea(contour) >= contour_threshold:
-                movement_detected = True
-                print(cv2.contourArea(contour))
+            # if cv2.contourArea(contour) >= contour_threshold:
+            #     movement_detected = True
+            #     print(cv2.contourArea(contour))
 
-                if bbox_mode == True:
+            #     if bbox_mode == True:
 
-                    (x, y, w, h)=cv2.boundingRect(contour)
+            #         (x, y, w, h)=cv2.boundingRect(contour)
                             
-                    cv2.rectangle(frame, (x, y), (x+w, y+h), (255,255,255), 3)
+            #         cv2.rectangle(frame, (x, y), (x+w, y+h), (255,255,255), 3)
                     
-                    cv2.putText(frame, str(cv2.contourArea(contour)), (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (255, 255, 255), 1)
+            #         cv2.putText(frame, str(cv2.contourArea(contour)), (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (255, 255, 255), 1)
 
-                #gif_writer.create_gif(movement_detected, frame)
+            #     #gif_writer.create_gif(movement_detected, frame)
 
-                continue
-            else:
-                movement_detected = False
-                # gif_writer.create_gif(movement_detected, frame)
-                # continue
+            #     continue
+            # else:
+            #     movement_detected = False
+            #     # gif_writer.create_gif(movement_detected, frame)
+            #     # continue
 
-                # (x, y, w, h)=cv2.boundingRect(contour)
-                # cv2.rectangle(frame, (x, y), (x+w, y+h), (255,255,255), 3)
-                # continue
+            #     # (x, y, w, h)=cv2.boundingRect(contour)
+            #     # cv2.rectangle(frame, (x, y), (x+w, y+h), (255,255,255), 3)
+            #     # continue
 
     if mode == "gif":
+        if movement_detected == True:
+            print("mov detect")
 
         # handle creating gifs from frames
         gif_writer.create_gif(movement_detected, frame)

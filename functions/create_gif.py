@@ -15,6 +15,8 @@ class Gif_writer:
 
         self.image_counter = 0
 
+        self.image_limit = 200
+
         self.image_list = []
 
         self.inactivity_limit = 2
@@ -24,7 +26,7 @@ class Gif_writer:
         
     def create_gif(self, motion, frame):
 
-        if motion is True:
+        if motion == True and self.image_counter < self.image_limit:
             # print("write to gif")
             self.inactivityCounter = 0
             self.file_done = False
@@ -68,7 +70,7 @@ class Gif_writer:
                 imgToGif(self.folderCount)
 
                 self.folderCount +=1
-                print("count: " + str(self.folderCount))
+                print("Files created: " + str(self.folderCount))
                 
                 # reset values to handle next gif
                 self.image_list = []
