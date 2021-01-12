@@ -66,7 +66,7 @@ time.sleep(2.0)
 
 # print("Frame resolution: " + str(frame.shape))
 
-detection_area = 0.001
+detection_area = 0.002
 
 contour_threshold = int((frame_height * frame_height) * (detection_area))
 
@@ -85,7 +85,7 @@ def check_movement(contours):
             # print(cv2.contourArea(contour))
             if cv2.contourArea(contour) >= contour_threshold:
                 detected = True
-                continue
+                break
             else:
                 detected = False
     return detected
@@ -121,12 +121,15 @@ for image in camera.capture_continuous(cap, format="bgr", use_video_port=True):
     else:
         # movement_detected = True
         # print("contours shape: " )
-        
-        for contour in contours:
-            movement_detected = check_movement(contours)
+        movement_detected = check_movement(contours)
+
+        # for contour in contours:
+            # movement_detected = check_movement(contours)
             # print(movement_detected)
             # print(cv2.contourArea(contour))
             # if cv2.contourArea(contour) >= contour_threshold:
+            #     movement_detected = check_movement(contours)
+
             #     movement_detected = True
             #     print(cv2.contourArea(contour))
 
@@ -151,8 +154,8 @@ for image in camera.capture_continuous(cap, format="bgr", use_video_port=True):
             #     # continue
 
     if mode == "gif":
-        if movement_detected == True:
-            print("mov detect")
+        # if movement_detected == True:
+        #     print("mov detect")
 
         # handle creating gifs from frames
         gif_writer.create_gif(movement_detected, frame)
