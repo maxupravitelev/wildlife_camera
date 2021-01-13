@@ -55,11 +55,14 @@ args = vars(ap.parse_args())
 # frame_width = 1920
 # frame_height = 1080
 
-#vs = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
+frame_width = 1280
+frame_height = 720
+
+vs = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
 #vs = VideoStream(usePiCamera=1).start()
 
 #vs = VideoStream(src=0).start()
-vs = VideoStream(src=0, resolution=(1296,730)).start()
+#vs = VideoStream(src=0, resolution=(1296,730)).start()
 
 # warmup
 time.sleep(2.0)

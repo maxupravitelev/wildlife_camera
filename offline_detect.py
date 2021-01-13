@@ -1,6 +1,7 @@
 import cv2
 from functions.imgToGif import imgToGif
 
+import imutils
 
 from imutils.video import VideoStream
 from functions.create_avi import Avi_writer
@@ -39,9 +40,11 @@ frame_height = 720
 # frame_width = 640
 # frame_height = 480
 
+framerate = 32
+
 camera = PiCamera()
 camera.resolution = (frame_width, frame_height)
-camera.framerate = 60
+camera.framerate = framerate
 # camera.awb_mode = 'off'
 # camera.awb_gains = 1.3
 # camera.exposure_mode = 'off'
@@ -80,30 +83,31 @@ else:
     gif_writer = Gif_writer()
 
 def check_movement(contours):
-    detected = False
+    # detected = False
     for contour in contours:
-            # print(cv2.contourArea(contour))
-            if cv2.contourArea(contour) >= contour_threshold:
-                detected = True
-                break
+            print(cv2.contourArea(contour))
+            if cv2.contourArea(contour) >= 20:
+
+                return True
             else:
-                detected = False
-    return detected
+                return False
+
 
 # capture frames from the camera
 for image in camera.capture_continuous(cap, format="bgr", use_video_port=True):
-    # grab the raw NumPy array representing the image, then initialize the timestamp
-    # and occupied/unoccupied text
+    
+    timer1 = time.time()
     frame = image.array
-    # show the frame
 
+    resized_frame = imutils.resize(frame, width=400)
+    
     cap.truncate(0)
     cap.seek(0)
     
-    gauss_blur_factor = 25
+    # gauss_blur_factor = 25
 
-    gray_frame=cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
-    gray_frame=cv2.GaussianBlur(gray_frame,(gauss_blur_factor,gauss_blur_factor),0)
+    gray_frame=cv2.cvtColor(resized_frame,cv2.COLOR_BGR2GRAY)
+    # gray_frame=cv2.GaussianBlur(gray_frame,(gauss_blur_factor,gauss_blur_factor),0)
 
     if gif_writer.background_image is None:
         gif_writer.background_image=gray_frame
@@ -116,9 +120,10 @@ for image in camera.capture_continuous(cap, format="bgr", use_video_port=True):
     
     (contours,_)=cv2.findContours(threshold,cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-    if contours == []: 
-        movement_detected = False
-    else:
+    movement_detected = False
+
+    if contours != []: 
+
         # movement_detected = True
         # print("contours shape: " )
         movement_detected = check_movement(contours)
@@ -159,6 +164,9 @@ for image in camera.capture_continuous(cap, format="bgr", use_video_port=True):
 
         # handle creating gifs from frames
         gif_writer.create_gif(movement_detected, frame)
+
+    timer2 = time.time()
+    print("FPS: " + str((1/(timer2-timer1))))
 
     key = cv2.waitKey(1) & 0xFF
 
