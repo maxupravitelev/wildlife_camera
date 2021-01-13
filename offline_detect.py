@@ -85,21 +85,28 @@ else:
 def check_movement(contours):
     # detected = False
     for contour in contours:
-            print(cv2.contourArea(contour))
-            if cv2.contourArea(contour) >= 20:
+            if cv2.contourArea(contour) > 0:
+                print(cv2.contourArea(contour))
 
                 return True
             else:
                 return False
 
+# timer2 = time.time()
 
+# timer2 = time.time()
 # capture frames from the camera
 for image in camera.capture_continuous(cap, format="bgr", use_video_port=True):
     
-    timer1 = time.time()
+    
+
+    # timer1 = time.time()
+    # print("SPF: " + str(((timer1-timer2))))
+    # timer2 = time.time()
+
     frame = image.array
 
-    resized_frame = imutils.resize(frame, width=400)
+    resized_frame = imutils.resize(frame, width=200)
     
     cap.truncate(0)
     cap.seek(0)
@@ -165,8 +172,7 @@ for image in camera.capture_continuous(cap, format="bgr", use_video_port=True):
         # handle creating gifs from frames
         gif_writer.create_gif(movement_detected, frame)
 
-    timer2 = time.time()
-    print("FPS: " + str((1/(timer2-timer1))))
+
 
     key = cv2.waitKey(1) & 0xFF
 
