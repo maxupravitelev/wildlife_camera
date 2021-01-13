@@ -119,9 +119,20 @@ while True:
         gif_writer.background_image="gray_frame"
         analyzer.set_background(frame)
 
+    
+    analyzer.frame = frame
 
     if analyzer.motion_detected == True:
         print("detected")
+            # if mode == "gif":
+        # if movement_detected == True:
+        #     print("mov detect")
+
+        # handle creating gifs from frames
+    else:
+        print("not")
+    gif_writer.create_gif(analyzer.motion_detected, frame)
+
 
     key = cv2.waitKey(1) & 0xFF
 

@@ -1,4 +1,3 @@
- 
 from threading import Thread
 import cv2
 import os
@@ -6,7 +5,7 @@ import imutils
 
 class Analyzer:
     def __init__(self, frame):
-        self.contourAreaLimit = 0
+        self.contourAreaLimit = 5
 
         self.gauss_blur_factor = 7
 
@@ -24,6 +23,7 @@ class Analyzer:
 
     def analyze(self):
         while not self.stopped:
+            # cv2.imshow("gray_frame", self.frame)
             resized_frame = imutils.resize(self.frame, width=200)
             
             gray_frame=cv2.cvtColor(resized_frame,cv2.COLOR_BGR2GRAY)
@@ -37,12 +37,18 @@ class Analyzer:
             if contours != []: 
                 for contour in contours:
                     if cv2.contourArea(contour) > self.contourAreaLimit:
+                        # print(cv2.contourArea(contour))
                         self.motion_detected = True
-                        break
+                        (x, y, w, h)=cv2.boundingRect(contour)
+                            
+                        cv2.rectangle(self.frame, (x, y), (x+w, y+h), (255,255,255), 3)
+
+                        continue
                     else:
                         self.motion_detected = False
-        
-        if cv2.waitKey(1) == ord("q"):
+            
+
+        if cv2.waitKey(1) == ord("x"):
                 self.stopped = True
 
     def set_background(self, image):
