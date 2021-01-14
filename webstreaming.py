@@ -212,4 +212,4 @@ if __name__ == '__main__':
 
 # if mode == "avi":
 #     writer.release()
-vs.stop()
+cap.stop()

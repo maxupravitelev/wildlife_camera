@@ -57,6 +57,7 @@ frame_height = 720
 #cap = VideoStream(src=0, resolution=(frame_width,frame_height)).start()
 cap = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
 #cap = VideoStream(usePiCamera=1).start()
+time.sleep(2.0)
 
 
 #cap=cv2.VideoCapture(0)
@@ -64,7 +65,6 @@ cap = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
 # cap = VideoStream(src=0).start()
 
 frame = cap.read()
-time.sleep(2.0)
 
 
 
