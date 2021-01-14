@@ -19,6 +19,7 @@ class Analyzer:
 
         self.background_image = imutils.resize(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY), width=200)
 
+        self.same_frame = False
 
     def start(self):    
         Thread(target=self.analyze, args=()).start()
@@ -36,11 +37,13 @@ class Analyzer:
             threshold=cv2.threshold(delta, 30, 255, cv2.THRESH_BINARY)[1]
 
             (contours,_)=cv2.findContours(threshold,cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            
             self.motion_detected = False
-            if contours != []: 
+            
+            if contours != [] and self.same_frame == False: 
                 for contour in contours:
-                    if cv2.contourArea(contour) > self.contourAreaLimit:
-                        # print(cv2.contourArea(contour))
+                    if cv2.contourArea(contour) > 100:
+                        print(cv2.contourArea(contour))
                         self.motion_detected = True
                         
                         if self.bbox_mode == True:

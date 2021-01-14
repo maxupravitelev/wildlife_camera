@@ -34,8 +34,14 @@ debug_mode = False
 # frame_width = 1296
 # frame_height = 736
 
-frame_width = 1280
-frame_height = 720
+# frame_width = 1280
+# frame_height = 720
+
+# frame_width = 1024
+# frame_height = 768
+
+frame_width = 1640
+frame_height = 1232
 
 # frame_width = 640
 # frame_height = 480
@@ -57,10 +63,10 @@ if picamera_manual == True:
 
 # init videostream (separate thread)
 #cap = VideoStream(src=0, resolution=(frame_width,frame_height)).start()
-#cap = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
+cap = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
 #cap = VideoStream(usePiCamera=1).start()
 #cap=cv2.VideoCapture(0)
-cap = VideoStream(src=0).start()
+#cap = VideoStream(src=0).start()
 
 
 # warm um camera - without first frame returns empty
@@ -115,7 +121,10 @@ while True:
     # check if grabbed frame equals the previos one
     if np.array_equal(last_frame,frame):
         # print("same frame")
+        analyzer.same_frame = True
         continue   
+    
+    analyzer.same_frame = False
 
     if enable_timer == True:
         timer1 = time.time()
