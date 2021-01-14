@@ -30,7 +30,7 @@ class Gif_writer:
 
         self.stopped = False
 
-        self.same_frame = False
+        self.last_frame = None
 
     def start(self):    
         Thread(target=self.create_gif, args=()).start()
@@ -38,13 +38,17 @@ class Gif_writer:
 
     def create_gif(self):
         while not self.stopped:
-            if self.motion_detected == True and self.image_counter < self.image_limit and self.same_frame == False:
+            if self.motion_detected == True and self.image_counter < self.image_limit:
+                if np.array_equal(self.last_frame,self.frame):
+                    # print("same frame")
+                    continue   
                 # print("write to gif")
                 self.inactivityCounter = 0
                 self.file_done = False
                 self.image_list.append(self.frame)
                 self.image_counter += 1
                 # print("Image count: " + str(self.image_counter))
+                self.last_frame = self.frame.copy()
 
             else:
                 if self.file_done == False and self.inactivityCounter <= self.inactivity_limit:

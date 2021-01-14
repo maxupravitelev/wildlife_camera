@@ -122,11 +122,9 @@ while True:
     if np.array_equal(last_frame,frame):
         # print("same frame")
         analyzer.same_frame = True
-        gif_writer.same_frame = True
         continue   
     
     analyzer.same_frame = False
-    gif_writer.same_frame = False
 
     if enable_timer == True:
         timer1 = time.time()
