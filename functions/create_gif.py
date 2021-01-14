@@ -43,7 +43,7 @@ class Gif_writer:
 
                 self.image_list.append(frame)
                 self.image_counter += 1
-                print("Image count: " + str(self.image_counter))
+                # print("Image count: " + str(self.image_counter))
 
                 print("Append while inactive. Count: " + str(self.inactivityCounter))
 

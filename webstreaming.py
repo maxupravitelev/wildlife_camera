@@ -4,6 +4,7 @@ from pyimagesearch.motion_detection.SingleMotionDetector import SingleMotionDete
 from functions.imgToGif import imgToGif
 from functions.create_avi import Avi_writer
 from functions.create_gif import Gif_writer
+from functions.analyzer import Analyzer
 
 from imutils.video import VideoStream
 from flask import Response
@@ -19,6 +20,8 @@ import cv2
 import numpy
 import os
 import collections 
+
+
 
 import numpy as np
 
@@ -58,7 +61,7 @@ args = vars(ap.parse_args())
 frame_width = 1280
 frame_height = 720
 
-vs = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
+cap = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
 #vs = VideoStream(usePiCamera=1).start()
 
 #vs = VideoStream(src=0).start()
@@ -82,16 +85,17 @@ def detect_motion(mode):
 
     # initialize the motion detector and the total number of frames
     # read thus far
-    md = SingleMotionDetector(accumWeight=0.5)
+    # md = SingleMotionDetector(accumWeight=0.5)
 
     # read frame to get the correct frame.shape dimensions for writer
-    frame = vs.read()
+    frame = cap.read()
 
     print("Frame resolution: " + str(frame.shape))
 
     if mode == "avi":
         avi_writer = Avi_writer(frame)
 
+    analyzer = Analyzer(frame).start()
 
     total = 0
     frameCount = 32
@@ -104,10 +108,10 @@ def detect_motion(mode):
     while True:
         # read the next frame from the video stream, resize it,
         # convert the frame to grayscale, and blur it
-        frame = vs.read()
-        #frame = imutils.resize(frame, width=800)
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        gray = cv2.GaussianBlur(gray, (7, 7), 0)
+        # frame = vs.read()
+        # #frame = imutils.resize(frame, width=800)
+        # gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        # gray = cv2.GaussianBlur(gray, (7, 7), 0)
 
         # grab the current timestamp and draw it on the frame
         #timestamp = datetime.datetime.now()
@@ -118,25 +122,49 @@ def detect_motion(mode):
         # if the total number of frames has reached a sufficient
         # number to construct a reasonable background model, then
         # continue to process the frame
-        if total > frameCount:
+
+        last_frame = frame.copy()
+        # ret, frame = cap.read()
+        frame = cap.read()
+
+        if np.array_equal(last_frame,frame):
+            # print("same")
+            continue   
+
+        if gif_writer.background_image is None:
+            gif_writer.background_image="gray_frame"
+            analyzer.set_background(frame)
+
+        
+        analyzer.frame = frame
+
+        
+        gif_writer.create_gif(analyzer.motion_detected, frame)
+
+        key = cv2.waitKey(1) & 0xFF
+
+        if key == ord("q"):
+            break
+
+        # if total > frameCount:
             # detect motion in the image
-            motion = md.detect(gray)
-            # check to see if motion was found in the frame
+            # motion = md.detect(gray)
+            # # check to see if motion was found in the frame
             
-            if mode=="avi":
-                avi_writer.create_avi(motion, frame)
+            # if mode=="avi":
+            #     avi_writer.create_avi(motion, frame)
                 
-            if mode == "gif":
-                gif_writer.create_gif(motion, frame)
+            # if mode == "gif":
+            #     gif_writer.create_gif(motion, frame)
 
         # update the background model and increment the total number
         # of frames read thus far
-        md.update(gray)
-        total += 1
+        # md.update(gray)
+        # total += 1
         # acquire the lock, set the output frame, and release the
         # lock
-        with lock:
-            outputFrame = frame.copy()
+        # with lock:
+            # outputFrame = frame.copy()
 
 def generate():
     # grab global references to the output frame and lock variables

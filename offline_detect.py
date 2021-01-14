@@ -55,23 +55,29 @@ frame_height = 720
 
 
 #cap = VideoStream(src=0, resolution=(frame_width,frame_height)).start()
-#cap = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
+cap = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
+#cap = VideoStream(usePiCamera=1).start()
+
 
 #cap=cv2.VideoCapture(0)
 
-cap = VideoStream(src=0).start()
+# cap = VideoStream(src=0).start()
 
 frame = cap.read()
+time.sleep(2.0)
 
-analyzer = Analyzer(frame).start()
+
+
 # cap = VideoStream(src=0, resolution=(1296,730)).start()
 
 # cap.set(15, -3   ) # exposure       min: -7  , max: -1  , increment:1
 # cap.set(17, 5000 ) 
 
-time.sleep(2.0)
 
 #ret, frame = cap.read()
+
+# cap.stream.set(3, 1280)
+# cap.stream.set(4, 720)
 
 # print("Frame resolution: " + str(frame.shape))
 
@@ -87,6 +93,9 @@ if mode == "avi":
 else: 
 # if mode == "gif":
     gif_writer = Gif_writer()
+
+analyzer = Analyzer(frame).start()
+
 
 def check_movement(contours):
     # detected = False
@@ -122,15 +131,15 @@ while True:
     
     analyzer.frame = frame
 
-    if analyzer.motion_detected == True:
-        print("detected")
-            # if mode == "gif":
-        # if movement_detected == True:
-        #     print("mov detect")
+    # if analyzer.motion_detected == True:
+    #     print("detected")
+    #         # if mode == "gif":
+    #     # if movement_detected == True:
+    #     #     print("mov detect")
 
-        # handle creating gifs from frames
-    else:
-        print("not")
+    #     # handle creating gifs from frames
+    # else:
+    #     print("not")
     gif_writer.create_gif(analyzer.motion_detected, frame)
 
 

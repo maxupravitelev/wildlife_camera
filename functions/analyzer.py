@@ -5,7 +5,7 @@ import imutils
 
 class Analyzer:
     def __init__(self, frame):
-        self.contourAreaLimit = 5
+        self.contourAreaLimit = 400
 
         self.gauss_blur_factor = 7
 
@@ -33,17 +33,17 @@ class Analyzer:
             threshold=cv2.threshold(delta, 30, 255, cv2.THRESH_BINARY)[1]
 
             (contours,_)=cv2.findContours(threshold,cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
+            self.motion_detected = False
             if contours != []: 
                 for contour in contours:
                     if cv2.contourArea(contour) > self.contourAreaLimit:
-                        # print(cv2.contourArea(contour))
+                        print(cv2.contourArea(contour))
                         self.motion_detected = True
-                        (x, y, w, h)=cv2.boundingRect(contour)
+                        # (x, y, w, h)=cv2.boundingRect(contour)
                             
-                        cv2.rectangle(self.frame, (x, y), (x+w, y+h), (255,255,255), 3)
+                        # cv2.rectangle(self.frame, (x, y), (x+w, y+h), (255,255,255), 3)
 
-                        continue
+                        break
                     else:
                         self.motion_detected = False
             
