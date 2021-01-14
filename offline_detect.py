@@ -1,35 +1,31 @@
 import cv2
-from functions.imgToGif import imgToGif
-
-import imutils
-
-from imutils.video import VideoStream
-from functions.create_avi import Avi_writer
-from functions.create_gif import Gif_writer
-from functions.analyzer import Analyzer
-
-
 import os
 import time
-
 import argparse
-
 import numpy as np
 
+# modules for handling file writing
+from functions.create_avi import Avi_writer
+from functions.create_gif import Gif_writer
+
+# module for handling movement detection
+from functions.analyzer import Analyzer
+
+# modules by pyimagesearch
+import imutils
+from imutils.video import VideoStream
 
 
 ## parse args from command line
 parser = argparse.ArgumentParser()
-
 parser.add_argument("--mode", type=str, default="gif",
         help="run in gif or avi mode") 
-
 args = vars(parser.parse_args())
-
 mode = args["mode"]
 
+
 # init different modes
-bbox_mode = False
+bbox_mode = True
 picamera_manual = False
 enable_timer = False
 
@@ -59,7 +55,6 @@ if picamera_manual == True:
 
 
 # init videostream (separate thread)
-
 #cap = VideoStream(src=0, resolution=(frame_width,frame_height)).start()
 #cap = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
 #cap = VideoStream(usePiCamera=1).start()
@@ -70,17 +65,21 @@ cap = VideoStream(src=0).start()
 # warm um camera - without first frame returns empty
 time.sleep(2.0)
 
+
 # read first frame
 frame = cap.read()
 
+
 # get frame size from first frame making
 print("Frame resolution: " + str(frame.shape))
+
 
 # set size of changed area that triggers movement detection
 detection_area = 0.002
 contour_threshold = int((frame_height * frame_height) * (detection_area))
 print("Total area: " + str(frame_width * frame_height) + " (frame width: " + str(frame_width) + " x " + "frame height: " + str(frame_height) + ")")
 print("Detection area: " + str(contour_threshold) + " (" + str(detection_area * 100) + " % of total area)")
+
 
 # handle different file writing formats
 if mode == "avi":
@@ -89,13 +88,12 @@ else:
 # if mode == "gif":
     gif_writer = Gif_writer()
 
+
 # init analyzer for movement detection (separate thread)
-analyzer = Analyzer(frame, contour_threshold).start()
+analyzer = Analyzer(frame, contour_threshold, bbox_mode).start()
 
 if enable_timer == True:
-
     timer2 = time.time()
-
     timer2 = time.time()
 
 # loop definition for manual picamera mode

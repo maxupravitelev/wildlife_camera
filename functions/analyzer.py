@@ -4,7 +4,7 @@ import os
 import imutils
 
 class Analyzer:
-    def __init__(self, frame, contour_threshold):
+    def __init__(self, frame, contour_threshold, bbox_mode):
         self.contourAreaLimit = contour_threshold
 
         self.gauss_blur_factor = 7
@@ -12,7 +12,10 @@ class Analyzer:
         self.motion_detected = False
 
         self.frame = frame
+
         self.stopped = False
+
+        self.bbox_mode = bbox_mode
 
         self.background_image = imutils.resize(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY), width=200)
 
@@ -39,9 +42,14 @@ class Analyzer:
                     if cv2.contourArea(contour) > self.contourAreaLimit:
                         # print(cv2.contourArea(contour))
                         self.motion_detected = True
-                        # (x, y, w, h)=cv2.boundingRect(contour)
+                        
+                        if self.bbox_mode == True:
+
+                            (x, y, w, h)=cv2.boundingRect(contour)
+                                    
+                            cv2.rectangle(self.frame, (x, y), (x+w, y+h), (255,255,255), 3)
                             
-                        # cv2.rectangle(self.frame, (x, y), (x+w, y+h), (255,255,255), 3)
+                            cv2.putText(self.frame, str(cv2.contourArea(contour)), (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (255, 255, 255), 1)
 
                         break
                     else:
