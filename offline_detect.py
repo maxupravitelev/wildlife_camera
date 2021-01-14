@@ -27,7 +27,7 @@ mode = args["mode"]
 # init different modes
 bbox_mode = False
 picamera_manual = False
-enable_timer = False
+enable_timer = True
 debug_mode = False
 
 # set frame dimensions
@@ -93,7 +93,7 @@ if mode == "avi":
     avi_writer = Avi_writer(frame)
 else: 
 # if mode == "gif":
-    gif_writer = Gif_writer()
+    gif_writer = Gif_writer().start()
 
 
 # init analyzer for movement detection (separate thread)
@@ -122,9 +122,11 @@ while True:
     if np.array_equal(last_frame,frame):
         # print("same frame")
         analyzer.same_frame = True
+        gif_writer.same_frame = True
         continue   
     
     analyzer.same_frame = False
+    gif_writer.same_frame = False
 
     if enable_timer == True:
         timer1 = time.time()
@@ -138,11 +140,12 @@ while True:
 
     # set frame handled by analyzer
     analyzer.frame = frame
+    gif_writer.frame = frame
 
-    
+    gif_writer.motion_detected = analyzer.motion_detected
 
     # pass current analyzer result to file creator, file creator writes frames to file if motion_detected returns true
-    gif_writer.create_gif(analyzer.motion_detected, frame)
+    #gif_writer.create_gif(analyzer.motion_detected, frame)
 
     if debug_mode == True:
         cv2.imshow("video feed", analyzer.frame)
