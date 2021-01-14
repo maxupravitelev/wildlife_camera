@@ -52,11 +52,15 @@ class Gif_writer:
 
             else:
                 if self.file_done == False and self.inactivityCounter <= self.inactivity_limit:
+                    if np.array_equal(self.last_frame,self.frame):
+                        # print("same frame")
+                        continue  
                     self.inactivityCounter += 1
 
                     self.image_list.append(self.frame)
                     self.image_counter += 1
                     # print("Image count: " + str(self.image_counter))
+                    self.last_frame = self.frame.copy()
 
                     print("Append while inactive. Count: " + str(self.inactivityCounter))
 
