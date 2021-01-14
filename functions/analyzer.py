@@ -56,7 +56,8 @@ class Analyzer:
                         self.motion_detected = False
             
 
-        if cv2.waitKey(1) == ord("x"):
+            if cv2.waitKey(1) == ord("x"):
+                print("analyzer stopped")
                 self.stopped = True
 
     def set_background(self, image):
