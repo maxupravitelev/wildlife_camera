@@ -94,7 +94,7 @@ else:
 # if mode == "gif":
     gif_writer = Gif_writer()
 
-analyzer = Analyzer(frame).start()
+analyzer = Analyzer(frame, contour_threshold).start()
 
 
 def check_movement(contours):
