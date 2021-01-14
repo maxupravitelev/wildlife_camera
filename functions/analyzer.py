@@ -38,9 +38,10 @@ class Analyzer:
 
             (contours,_)=cv2.findContours(threshold,cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             
-            self.motion_detected = False
-            
             if contours != [] and self.same_frame == False: 
+                
+                self.motion_detected = False
+                
                 for contour in contours:
                     if cv2.contourArea(contour) > 100:
                         print(cv2.contourArea(contour))

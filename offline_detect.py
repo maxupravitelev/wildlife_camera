@@ -63,10 +63,10 @@ if picamera_manual == True:
 
 # init videostream (separate thread)
 #cap = VideoStream(src=0, resolution=(frame_width,frame_height)).start()
-cap = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
+#cap = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
 #cap = VideoStream(usePiCamera=1).start()
 #cap=cv2.VideoCapture(0)
-#cap = VideoStream(src=0).start()
+cap = VideoStream(src=0).start()
 
 
 # warm um camera - without first frame returns empty
@@ -138,6 +138,8 @@ while True:
 
     # set frame handled by analyzer
     analyzer.frame = frame
+
+    
 
     # pass current analyzer result to file creator, file creator writes frames to file if motion_detected returns true
     gif_writer.create_gif(analyzer.motion_detected, frame)

@@ -30,9 +30,6 @@ class Gif_writer:
             # print("write to gif")
             self.inactivityCounter = 0
             self.file_done = False
-
-
- 
             self.image_list.append(frame)
             self.image_counter += 1
             # print("Image count: " + str(self.image_counter))
