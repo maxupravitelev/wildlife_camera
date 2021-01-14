@@ -16,8 +16,7 @@ import argparse
 
 import numpy as np
 
-# from picamera.array import PiRGBArray
-# from picamera import PiCamera
+
 
 ## parse args from command line
 parser = argparse.ArgumentParser()
@@ -29,10 +28,12 @@ args = vars(parser.parse_args())
 
 mode = args["mode"]
 
+# init different modes
 bbox_mode = False
+picamera_manual = False
+enable_timer = False
 
-background_image = None
-
+# set frame dimensions
 # frame_width = 1296
 # frame_height = 736
 
@@ -42,136 +43,106 @@ frame_height = 720
 # frame_width = 640
 # frame_height = 480
 
-# framerate = 32
+if picamera_manual == True:
+    from picamera.array import PiRGBArray
+    from picamera import PiCamera
 
-# camera = PiCamera()
-# camera.resolution = (frame_width, frame_height)
-# camera.framerate = framerate
-# # camera.awb_mode = 'off'
-# # camera.awb_gains = 1.3
-# # camera.exposure_mode = 'off'
-# cap = PiRGBArray(camera, size=(frame_width, frame_height))
+    framerate = 32
+
+    camera = PiCamera()
+    camera.resolution = (frame_width, frame_height)
+    camera.framerate = framerate
+    # camera.awb_mode = 'off'
+    # camera.awb_gains = 1.3
+    # camera.exposure_mode = 'off'
+    cap = PiRGBArray(camera, size=(frame_width, frame_height))
 
 
+# init videostream (separate thread)
 
 #cap = VideoStream(src=0, resolution=(frame_width,frame_height)).start()
-cap = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
+#cap = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
 #cap = VideoStream(usePiCamera=1).start()
+#cap=cv2.VideoCapture(0)
+cap = VideoStream(src=0).start()
+
+
+# warm um camera - without first frame returns empty
 time.sleep(2.0)
 
-
-#cap=cv2.VideoCapture(0)
-
-# cap = VideoStream(src=0).start()
-
+# read first frame
 frame = cap.read()
 
+# get frame size from first frame making
+print("Frame resolution: " + str(frame.shape))
 
-
-# cap = VideoStream(src=0, resolution=(1296,730)).start()
-
-# cap.set(15, -3   ) # exposure       min: -7  , max: -1  , increment:1
-# cap.set(17, 5000 ) 
-
-
-#ret, frame = cap.read()
-
-# cap.stream.set(3, 1280)
-# cap.stream.set(4, 720)
-
-# print("Frame resolution: " + str(frame.shape))
-
+# set size of changed area that triggers movement detection
 detection_area = 0.002
-
 contour_threshold = int((frame_height * frame_height) * (detection_area))
-
 print("Total area: " + str(frame_width * frame_height) + " (frame width: " + str(frame_width) + " x " + "frame height: " + str(frame_height) + ")")
 print("Detection area: " + str(contour_threshold) + " (" + str(detection_area * 100) + " % of total area)")
 
+# handle different file writing formats
 if mode == "avi":
     avi_writer = Avi_writer(frame)
 else: 
 # if mode == "gif":
     gif_writer = Gif_writer()
 
+# init analyzer for movement detection (separate thread)
 analyzer = Analyzer(frame, contour_threshold).start()
 
+if enable_timer == True:
 
-def check_movement(contours):
-    # detected = False
-    for contour in contours:
-            if cv2.contourArea(contour) > 0:
-                print(cv2.contourArea(contour))
+    timer2 = time.time()
 
-                return True
-            else:
-                return False
+    timer2 = time.time()
 
-# timer2 = time.time()
-
-# timer2 = time.time()
-# capture frames from the camera
+# loop definition for manual picamera mode
 # for image in camera.capture_continuous(cap, format="bgr", use_video_port=True):
 
-counter = 0
+#     frame = image.array
 
+#     cap.truncate(0)
+#     cap.seek(0)
+
+# main loop
 while True:
     last_frame = frame.copy()
     # ret, frame = cap.read()
     frame = cap.read()
 
+    # check if grabbed frame equals the previos one
     if np.array_equal(last_frame,frame):
-        # print("same")
+        # print("same frame")
         continue   
 
+    if enable_timer == True:
+        timer1 = time.time()
+        print("SPF: " + str(((timer1-timer2))))
+        timer2 = time.time()
+
+    # set background image on startup / after file creation was comleted
     if gif_writer.background_image is None:
         gif_writer.background_image="gray_frame"
         analyzer.set_background(frame)
 
-    
+    # set frame handled by analyzer
     analyzer.frame = frame
 
-    # if analyzer.motion_detected == True:
-    #     print("detected")
-    #         # if mode == "gif":
-    #     # if movement_detected == True:
-    #     #     print("mov detect")
-
-    #     # handle creating gifs from frames
-    # else:
-    #     print("not")
+    # pass current analyzer result to file creator, file creator writes frames to file if motion_detected returns true
     gif_writer.create_gif(analyzer.motion_detected, frame)
 
-
+    # loop breaking conditions
     key = cv2.waitKey(1) & 0xFF
 
-    if key == ord("q"):
+    if key == ord("x"):
         break
 
-#     # timer1 = time.time()
-#     # print("SPF: " + str(((timer1-timer2))))
-#     # timer2 = time.time()
-
-#     frame = image.array
-
-#     resized_frame = imutils.resize(frame, width=200)
-    
-#     cap.truncate(0)
-#     cap.seek(0)
-    
-#     # gauss_blur_factor = 25
-
-#     gray_frame=cv2.cvtColor(resized_frame,cv2.COLOR_BGR2GRAY)
-#     # gray_frame=cv2.GaussianBlur(gray_frame,(gauss_blur_factor,gauss_blur_factor),0)
 
 
-#     # print(movement_detected)
 
-#     delta=cv2.absdiff(gif_writer.background_image,gray_frame)
-#     threshold=cv2.threshold(delta, 30, 255, cv2.THRESH_BINARY)[1]
-#     #cnts = cv2.findContours(threshold.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
-    
-#     (contours,_)=cv2.findContours(threshold,cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
 
 #     movement_detected = False
 
