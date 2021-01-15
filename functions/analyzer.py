@@ -7,7 +7,7 @@ class Analyzer:
     def __init__(self, frame, contour_threshold, bbox_mode):
         self.contourAreaLimit = contour_threshold
 
-        self.gauss_blur_factor = 7
+        self.gauss_blur_factor = 25
 
         self.motion_detected = False
 
@@ -43,7 +43,7 @@ class Analyzer:
                 self.motion_detected = False
                 
                 for contour in contours:
-                    if cv2.contourArea(contour) > 350:
+                    if cv2.contourArea(contour) > 50:
                         # print(cv2.contourArea(contour))
                         self.motion_detected = True
                         

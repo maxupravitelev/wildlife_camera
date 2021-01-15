@@ -66,7 +66,7 @@ class Gif_writer:
 
                 if self.file_done == False and self.inactivityCounter > self.inactivity_limit:
 
-                    if self.image_counter > 10:
+                    if self.image_counter > 4:
                         # create folder for images
                         newFolder = 'gifs/images' + str(self.folderCount)
                         if not os.path.isdir(newFolder):
