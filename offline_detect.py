@@ -11,11 +11,11 @@ from functions.create_gif import Gif_writer
 # module for handling movement detection
 from functions.analyzer import Analyzer
 
-from functions.PiCam import PiCam 
+#from functions.PiCam import PiCam 
 
 # modules by pyimagesearch
 import imutils
-# from imutils.video import VideoStream
+from imutils.video import VideoStream
 
 
 ## parse args from command line
@@ -68,11 +68,11 @@ frame_height = 768
 #cap = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
 #cap = VideoStream(usePiCamera=1).start()
 #cap=cv2.VideoCapture(0)
-#cap = VideoStream(src=0).start()
+cap = VideoStream(src=0).start()
 
 # cap = VideoStream(resolution="3").start()
 
-cap = PiCam(resolution=(frame_width,frame_height)).start()
+#cap = PiCam(resolution=(frame_width,frame_height)).start()
 
 # warm um camera - without first frame returns empty
 time.sleep(2.0)

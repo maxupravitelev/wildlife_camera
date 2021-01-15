@@ -3,7 +3,7 @@ import os
 from functions.imgToGif import imgToGif
 import numpy as np
 from threading import Thread
-
+import threading
 
 class Gif_writer:
     def __init__(self):
@@ -31,6 +31,8 @@ class Gif_writer:
         self.stopped = False
 
         self.last_frame = None
+
+        self.lock = threading.Lock()
 
     def start(self):    
         Thread(target=self.create_gif, args=()).start()
@@ -68,34 +70,38 @@ class Gif_writer:
 
                     if self.image_counter > 4:
                         # create folder for images
-                        newFolder = 'gifs/images' + str(self.folderCount)
-                        if not os.path.isdir(newFolder):
-                            os.makedirs(newFolder)
+                        
+                        # use lock to reset backgroung image for all processes 
+                        with self.lock:
+                        
+                            newFolder = 'gifs/images' + str(self.folderCount)
+                            if not os.path.isdir(newFolder):
+                                os.makedirs(newFolder)
 
-                        print("Total images: " + str(len(self.image_list)))
+                            print("Total images: " + str(len(self.image_list)))
 
-                        # write individual images
-                        for num, image in enumerate(self.image_list, start=0):
-                            if num < 10:
-                                localPath = newFolder + '/image1000'+str(num)+'.jpg'                
-                            if num >= 10 and num < 100: 
-                                localPath = newFolder + '/image100'+str(num)+'.jpg'                
-                            if num >= 100: 
-                                localPath = newFolder + '/image10'+str(num)+'.jpg'
-                            cv2.imwrite(localPath,image)  
+                            # write individual images
+                            for num, image in enumerate(self.image_list, start=0):
+                                if num < 10:
+                                    localPath = newFolder + '/image1000'+str(num)+'.jpg'                
+                                if num >= 10 and num < 100: 
+                                    localPath = newFolder + '/image100'+str(num)+'.jpg'                
+                                if num >= 100: 
+                                    localPath = newFolder + '/image10'+str(num)+'.jpg'
+                                cv2.imwrite(localPath,image)  
 
-                        # convert folder to gif
-                        imgToGif(self.folderCount)
+                            # convert folder to gif
+                            imgToGif(self.folderCount)
 
-                        self.folderCount +=1
-                        print("Files created: " + str(self.folderCount))
-                    
-                    # reset values to handle next gif
-                    self.image_list = []
-                    self.image_counter = 0
+                            self.folderCount +=1
+                            print("Files created: " + str(self.folderCount))
+                        
+                        # reset values to handle next gif
+                        self.image_list = []
+                        self.image_counter = 0
 
-                    self.file_done = True
-                    self.background_image = None
+                        self.file_done = True
+                        self.background_image = None
             if cv2.waitKey(1) == ord("x"):
                 print("analyzer stopped")
                 self.stopped = True
