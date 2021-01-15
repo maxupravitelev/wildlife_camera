@@ -15,7 +15,7 @@ from functions.PiCam import PiCam
 
 # modules by pyimagesearch
 import imutils
-from imutils.video import VideoStream
+# from imutils.video import VideoStream
 
 
 ## parse args from command line
@@ -29,7 +29,7 @@ mode = args["mode"]
 # init different modes
 bbox_mode = False
 picamera_manual = False
-enable_timer = True
+enable_timer = False
 debug_mode = False
 
 # set frame dimensions
@@ -39,28 +39,28 @@ debug_mode = False
 # frame_width = 1280
 # frame_height = 720
 
-# frame_width = 1024
-# frame_height = 768
+frame_width = 1024
+frame_height = 768
 
-frame_width = 1640
-frame_height = 1232
+# frame_width = 1640
+# frame_height = 1232
 
 # frame_width = 640
 # frame_height = 480
 
-if picamera_manual == True:
-    from picamera.array import PiRGBArray
-    from picamera import PiCamera
+# if picamera_manual == True:
+#     from picamera.array import PiRGBArray
+#     from picamera import PiCamera
 
-    framerate = 32
+#     framerate = 32
 
-    camera = PiCamera()
-    camera.resolution = (frame_width, frame_height)
-    camera.framerate = framerate
-    # camera.awb_mode = 'off'
-    # camera.awb_gains = 1.3
-    # camera.exposure_mode = 'off'
-    cap = PiRGBArray(camera, size=(frame_width, frame_height))
+#     camera = PiCamera()
+#     camera.resolution = (frame_width, frame_height)
+#     camera.framerate = framerate
+#     # camera.awb_mode = 'off'
+#     # camera.awb_gains = 1.3
+#     # camera.exposure_mode = 'off'
+#     cap = PiRGBArray(camera, size=(frame_width, frame_height))
 
 
 # init videostream (separate thread)
@@ -68,8 +68,11 @@ if picamera_manual == True:
 #cap = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
 #cap = VideoStream(usePiCamera=1).start()
 #cap=cv2.VideoCapture(0)
-cap = VideoStream(src=0).start()
+#cap = VideoStream(src=0).start()
 
+# cap = VideoStream(resolution="3").start()
+
+cap = PiCam(resolution=(frame_width,frame_height)).start()
 
 # warm um camera - without first frame returns empty
 time.sleep(2.0)

@@ -1,38 +1,19 @@
-import cv2
-
+# import the necessary packages
 from picamera.array import PiRGBArray
 from picamera import PiCamera
-
 from threading import Thread
+import cv2
 
 class PiCam:
-    def __init__(self, resolution="2"):
+    def __init__(self, resolution=(640, 480), framerate=60, **kwargs):
+        # initialize the camera
         self.camera = PiCamera()
 
         # set camera parameters
-        if resolution == "1":
-            self.camera.resolution = (640, 480)
-
-        elif resolution == "2":
-            self.camera.resolution = (1024, 768)
-
-        elif resolution == "3":
-            self.camera.resolution = (1640, 1232)
-
-        elif resolution == "1w":
-            self.camera.resolution = (1280, 720)
-
-        elif resolution == "2w":
-            self.camera.resolution = (1640, 922)
-
-        elif resolution == "3w":
-            self.camera.resolution = (1920, 1080)        
-
-        self.camera.framerate = 30
-        camera.awb_mode = 'off'
-        camera.awb_gains = 1.3
-
-        # camera.exposure_mode = 'off'
+        self.camera.resolution = resolution
+        self.camera.framerate = framerate
+        self.camera.awb_mode = 'off'
+        self.camera.awb_gains = 1.3
 
         # set optional camera parameters (refer to PiCamera docs)
         for (arg, value) in kwargs.items():
@@ -77,6 +58,6 @@ class PiCam:
 
     def stop(self):
         # indicate that the thread should be stopped
-        self.stopped = True    
+        self.stopped = True
 
 # built upon: https://github.com/jrosebr1/imutils/blob/master/imutils/video/pivideostream.py
