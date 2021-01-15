@@ -39,11 +39,11 @@ debug_mode = False
 # frame_width = 1280
 # frame_height = 720
 
-frame_width = 1024
-frame_height = 768
+# frame_width = 1024
+# frame_height = 768
 
-# frame_width = 1640
-# frame_height = 1232
+frame_width = 1640
+frame_height = 1232
 
 # frame_width = 640
 # frame_height = 480

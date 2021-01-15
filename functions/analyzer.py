@@ -43,8 +43,8 @@ class Analyzer:
                 self.motion_detected = False
                 
                 for contour in contours:
-                    if cv2.contourArea(contour) > 100:
-                        print(cv2.contourArea(contour))
+                    if cv2.contourArea(contour) > 350:
+                        # print(cv2.contourArea(contour))
                         self.motion_detected = True
                         
                         if self.bbox_mode == True:

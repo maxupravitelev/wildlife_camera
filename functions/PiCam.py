@@ -10,10 +10,29 @@ class PiCam:
         self.camera = PiCamera()
 
         # set camera parameters
+        # if resolution == "1":
+        #     self.camera.resolution = (640, 480)
+
+        # elif resolution == "2":
+        #     self.camera.resolution = (1024, 768)
+
+        # elif resolution == "3":
+        #     self.camera.resolution = (1640, 1232)
+
+        # elif resolution == "1w":
+        #     self.camera.resolution = (1280, 720)
+
+        # elif resolution == "2w":
+        #     self.camera.resolution = (1640, 922)
+
+        # elif resolution == "3w":
+        #     self.camera.resolution = (1920, 1080)        
+
+
         self.camera.resolution = resolution
         self.camera.framerate = framerate
-        self.camera.awb_mode = 'off'
-        self.camera.awb_gains = 1.3
+        # self.camera.awb_mode = 'off'
+        # self.camera.awb_gains = 1.3
 
         # set optional camera parameters (refer to PiCamera docs)
         for (arg, value) in kwargs.items():
