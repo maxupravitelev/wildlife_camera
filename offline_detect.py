@@ -11,6 +11,8 @@ from functions.create_gif import Gif_writer
 # module for handling movement detection
 from functions.analyzer import Analyzer
 
+from functions.PiCam import PiCam 
+
 # modules by pyimagesearch
 import imutils
 from imutils.video import VideoStream
