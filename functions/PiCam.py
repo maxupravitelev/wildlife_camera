@@ -32,7 +32,7 @@ class PiCam:
         self.camera.resolution = resolution
         self.camera.framerate = framerate
         self.camera.awb_mode = 'off'
-        self.camera.awb_gains = 1.0
+        self.camera.awb_gains = 1.8
 
         # set optional camera parameters (refer to PiCamera docs)
         for (arg, value) in kwargs.items():
@@ -48,6 +48,8 @@ class PiCam:
         self.frame = None
         self.stopped = False
 
+        self.frame_count = 0
+
     def start(self):
         # start the thread to read frames from the video stream
         t = Thread(target=self.update, args=())
@@ -61,6 +63,7 @@ class PiCam:
             # grab the frame from the stream and clear the stream in
             # preparation for the next frame
             self.frame = f.array
+            self.frame_count += 1
             self.rawCapture.truncate(0)
 
             # if the thread indicator variable is set, stop the thread

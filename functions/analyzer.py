@@ -23,6 +23,8 @@ class Analyzer:
 
         self.same_frame = False
 
+        self.file_writing = False
+
     def start(self):    
         Thread(target=self.analyze, args=()).start()
         return self    
@@ -40,13 +42,13 @@ class Analyzer:
 
             (contours,_)=cv2.findContours(threshold,cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             
+            self.motion_detected = False
+
             if contours != [] and self.same_frame == False: 
                 
-                self.motion_detected = False
-                
                 for contour in contours:
-                    if cv2.contourArea(contour) > 50:
-                        # print(cv2.contourArea(contour))
+                    if cv2.contourArea(contour) > 100:
+                        print(cv2.contourArea(contour))
                         self.motion_detected = True
                         
                         if self.bbox_mode == True:
