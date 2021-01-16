@@ -50,6 +50,8 @@ class PiCam:
 
         self.frame_count = 0
 
+        # self.frame_updated = False 
+
     def start(self):
         # start the thread to read frames from the video stream
         t = Thread(target=self.update, args=())
@@ -60,11 +62,14 @@ class PiCam:
     def update(self):
         # keep looping infinitely until the thread is stopped
         for f in self.stream:
+            
             # grab the frame from the stream and clear the stream in
             # preparation for the next frame
             self.frame = f.array
+            # self.frame_updated = True
             self.frame_count += 1
             self.rawCapture.truncate(0)
+            # self.frame_updated = False
 
             # if the thread indicator variable is set, stop the thread
             # and resource camera resources

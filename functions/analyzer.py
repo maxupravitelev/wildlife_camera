@@ -42,10 +42,11 @@ class Analyzer:
 
             (contours,_)=cv2.findContours(threshold,cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             
-            self.motion_detected = False
+            #self.motion_detected = False
 
             if contours != [] and self.same_frame == False: 
-                
+                #self.motion_detected = False
+
                 for contour in contours:
                     if cv2.contourArea(contour) > 500:
                         print(cv2.contourArea(contour))
@@ -70,6 +71,7 @@ class Analyzer:
 
     def set_background(self, image):
         self.background_image = imutils.resize(cv2.cvtColor(image, cv2.COLOR_BGR2GRAY), self.resize_width)
+        self.motion_detected = False
 
     def stop(self):
         self.stopped = True

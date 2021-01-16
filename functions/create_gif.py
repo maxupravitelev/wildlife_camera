@@ -16,11 +16,11 @@ class Gif_writer:
 
         self.image_counter = 0
 
-        self.image_limit = 40
+        self.image_limit = 100
 
         self.image_list = []
 
-        self.inactivity_limit = 4
+        self.inactivity_limit = 10
 
         self.background_image = None
 
@@ -46,9 +46,9 @@ class Gif_writer:
     def create_gif(self, lock):
         while not self.stopped:
             if self.motion_detected == True and self.image_counter < self.image_limit and self.same_frame == False:
-                # if np.array_equal(self.last_frame,self.frame):
+                if np.array_equal(self.last_frame,self.frame):
                 #     # print("same frame")
-                #     continue   
+                    continue   
                 # print("write to gif")
                 self.inactivityCounter = 0
                 self.file_done = False
@@ -78,7 +78,16 @@ class Gif_writer:
                         
                         # use lock to reset backgroung image for all processes 
                         # with self.lock:
+                    # print("active threads: " + str(threading.active_count()))
+                    # print("current thread: " + str(threading.current_thread()))
+                    
                     with lock:
+
+                        # print("lock check: " + str(lock.locked()))
+                        # print("wrting to file")
+                        # print("active threads: " + str(threading.active_count()))
+                        # print("current thread: " + str(threading.current_thread()))
+                    
 
                         self.writing = True
 
