@@ -144,8 +144,9 @@ while True:
         analyzer.set_background(frame)
 
     # set frame handled by analyzer
+    gif_writer.frame = frame.copy()
     analyzer.frame = frame
-    gif_writer.frame = frame
+    
 
     gif_writer.motion_detected = analyzer.motion_detected
 
