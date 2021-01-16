@@ -31,8 +31,8 @@ class PiCam:
 
         self.camera.resolution = resolution
         self.camera.framerate = framerate
-        # self.camera.awb_mode = 'off'
-        # self.camera.awb_gains = 1.3
+        self.camera.awb_mode = 'off'
+        self.camera.awb_gains = 1.0
 
         # set optional camera parameters (refer to PiCamera docs)
         for (arg, value) in kwargs.items():

@@ -16,8 +16,10 @@ class Analyzer:
         self.stopped = False
 
         self.bbox_mode = bbox_mode
+        
+        self.resize_width = 300
 
-        self.background_image = imutils.resize(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY), width=200)
+        self.background_image = imutils.resize(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY), self.resize_width)
 
         self.same_frame = False
 
@@ -28,7 +30,7 @@ class Analyzer:
     def analyze(self):
         while not self.stopped:
             # cv2.imshow("gray_frame", self.frame)
-            resized_frame = imutils.resize(self.frame, width=200)
+            resized_frame = imutils.resize(self.frame, self.resize_width)
             
             gray_frame=cv2.cvtColor(resized_frame,cv2.COLOR_BGR2GRAY)
             gray_frame=cv2.GaussianBlur(gray_frame,(self.gauss_blur_factor,self.gauss_blur_factor),0)
@@ -65,7 +67,7 @@ class Analyzer:
                 self.stopped = True
 
     def set_background(self, image):
-        self.background_image = imutils.resize(cv2.cvtColor(image, cv2.COLOR_BGR2GRAY), width=200)
+        self.background_image = imutils.resize(cv2.cvtColor(image, cv2.COLOR_BGR2GRAY), self.resize_width)
 
     def stop(self):
         self.stopped = True
