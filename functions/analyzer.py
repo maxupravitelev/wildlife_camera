@@ -7,7 +7,7 @@ class Analyzer:
     def __init__(self, frame, contour_threshold, bbox_mode):
         self.contourAreaLimit = contour_threshold
 
-        self.gauss_blur_factor = 75
+        self.gauss_blur_factor = 15
 
         self.motion_detected = False
 
@@ -39,7 +39,8 @@ class Analyzer:
 
             delta=cv2.absdiff(self.background_image,gray_frame)
             threshold=cv2.threshold(delta, 30, 255, cv2.THRESH_BINARY)[1]
-
+            threshold = cv2.erode(threshold, None, iterations=2)
+            threshold = cv2.dilate(threshold, None, iterations=2)
             (contours,_)=cv2.findContours(threshold,cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             
             #self.motion_detected = False
@@ -48,7 +49,11 @@ class Analyzer:
                 #self.motion_detected = False
 
                 for contour in contours:
-                    if cv2.contourArea(contour) > 500:
+                    
+                    # print(cv2.contourArea(contour))
+                    # self.background_image = imutils.resize(cv2.cvtColor(image, cv2.COLOR_BGR2GRAY), self.resize_width)
+
+                    if cv2.contourArea(contour) > 100:
                         print(cv2.contourArea(contour))
                         self.motion_detected = True
                         

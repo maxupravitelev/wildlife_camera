@@ -31,8 +31,8 @@ class PiCam:
 
         self.camera.resolution = resolution
         self.camera.framerate = framerate
-        self.camera.awb_mode = 'off'
-        self.camera.awb_gains = 1.8
+        # self.camera.awb_mode = 'off'
+        # self.camera.awb_gains = 1.8
 
         # set optional camera parameters (refer to PiCamera docs)
         for (arg, value) in kwargs.items():
@@ -66,10 +66,10 @@ class PiCam:
             # grab the frame from the stream and clear the stream in
             # preparation for the next frame
             self.frame = f.array
-            # self.frame_updated = True
-            self.frame_count += 1
+            self.frame_updated = True
+            # self.frame_count += 1
             self.rawCapture.truncate(0)
-            # self.frame_updated = False
+            self.frame_updated = False
 
             # if the thread indicator variable is set, stop the thread
             # and resource camera resources

@@ -11,7 +11,7 @@ from functions.create_gif import Gif_writer
 # module for handling movement detection
 from functions.analyzer import Analyzer
 
-# from functions.PiCam import PiCam 
+from functions.PiCam import PiCam 
 
 # modules by pyimagesearch
 import imutils
@@ -68,11 +68,11 @@ frame_height = 768
 #cap = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
 #cap = VideoStream(usePiCamera=1).start()
 #cap=cv2.VideoCapture(0)
-cap = VideoStream(src=0).start()
+#cap = VideoStream(src=0).start()
 
 # cap = VideoStream(resolution="3").start()
 
-#cap = PiCam(resolution=(frame_width,frame_height)).start()
+cap = PiCam(resolution=(frame_width,frame_height)).start()
 
 # warm um camera - without first frame returns empty
 time.sleep(2.0)
@@ -144,6 +144,8 @@ while True:
     if gif_writer.background_image is None:
         gif_writer.background_image="gray_frame"
         analyzer.set_background(frame)
+
+    # print(cap.frame_updated)
 
     # set frame handled by analyzer
     gif_writer.frame = frame.copy()

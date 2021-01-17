@@ -5,8 +5,7 @@ from imutils.video import VideoStream
 from flask import Response
 from flask import Flask
 
-# from picamera.array import PiRGBArray
-# from picamera import PiCamera
+from functions.PiCam import PiCam 
 
 import argparse
 
@@ -36,23 +35,22 @@ app = Flask(__name__)
 # frame_width = 1296
 # frame_height = 730
 
-frame_width = 1280
-frame_height = 720
+# frame_width = 1280
+# frame_height = 720
+
+frame_width = 1024
+frame_height = 768
 
 # picamera settings https://picamera.readthedocs.io/en/release-1.10/api_camera.html
-# camera = PiCamera()
-# camera.resolution = (frame_width, frame_height)
-# camera.framerate = 30
-# camera.awb_mode = 'off'
-# camera.awb_gains = 1.3
-# #camera.exposure_mode = 'off'
-# cap = PiRGBArray(camera, size=(frame_width, frame_height))
 
 #vs = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
 #vs = VideoStream(usePiCamera=1).start()
 
-vs = VideoStream(src=0).start()
+#vs = VideoStream(src=0).start()
 #vs = VideoStream(src=0, resolution=(1296,730)).start()
+
+vs = PiCam(resolution=(frame_width,frame_height)).start()
+
 
 # warmup
 time.sleep(2.0)

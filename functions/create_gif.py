@@ -20,7 +20,7 @@ class Gif_writer:
 
         self.image_list = []
 
-        self.inactivity_limit = 10
+        self.inactivity_limit = 4
 
         self.background_image = None
 
