@@ -20,7 +20,7 @@ from functions.cam import VideoStream
 
 ## parse args from command line
 parser = argparse.ArgumentParser()
-parser.add_argument("--mode", type=str, default="avi",
+parser.add_argument("--mode", type=str, default="gif",
         help="run in gif or avi mode") 
 args = vars(parser.parse_args())
 mode = args["mode"]
@@ -95,7 +95,7 @@ print("Detection area: " + str(contour_threshold) + " (" + str(detection_area * 
 
 # handle different file writing formats
 
-File_writer = File_writer(mode=mode).start()
+File_writer = File_writer(mode=mode)
 
 
 # init analyzer for movement detection (separate thread)
@@ -116,17 +116,19 @@ if enable_timer == True:
 
 # main loop
 while True:
-    last_frame = frame.copy()
+    # last_frame = frame.copy()
     # ret, frame = cap.read()
+
     frame = cap.read()
+    if cap.same_frame == True:
+        continue
 
-
+    frame = cap.read()
     # print(cap.same_frame)
 
+    # analyzer.same_frame = cap.same_frame
+    # File_writer.same_frame = cap.same_frame
 
-    analyzer.same_frame = File_writer.same_frame
-
-    if File_writer.same_frame == False:
 
 
     if enable_timer == True:
@@ -153,10 +155,12 @@ while True:
     File_writer.frame = frame.copy()
     analyzer.frame = frame
     
-    # print(File_writer.motion_detected)
+    print(analyzer.motion_detected)
 
 
-    File_writer.motion_detected = analyzer.motion_detected
+    if analyzer.motion_detected == True:
+        File_writer.create_file(frame)    
+
 
     # pass current analyzer result to file creator, file creator writes frames to file if motion_detected returns true
     #File_writer.create_file(analyzer.motion_detected, frame)

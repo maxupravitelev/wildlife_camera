@@ -25,9 +25,9 @@ frame = cap.read()
 # get frame size from first frame making
 print("Frame resolution: " + str(frame.shape))
 
-File_writer = File_writer(mode="gif").start()
-
-File_writer.motion_detected = True
+if debug_mode == False:
+    File_writer = File_writer(mode="gif").start()
+    File_writer.motion_detected = True
 
 if enable_timer == True:
     timer2 = time.time()
@@ -39,26 +39,23 @@ while True:
     last_frame = frame.copy()
     frame = cap.read()
 
-    # if debug_mode == False:
-    #     File_writer.frame = frame.copy()
 
+    if debug_mode == False:
+        File_writer.frame = frame.copy()
 
-
-    # if debug_mode == True:
-    #     # view color frame
-    #     cv2.imshow("video feed", frame)
+    
+    if debug_mode == True:
+        # view color frame
+        cv2.imshow("video feed", frame)
 
     if enable_timer == True:
 
-        # check if grabbed frame equals the previous one
-        if np.array_equal(last_frame,frame):
-            # print("same frame")
-
-            continue   
-        
         timer1 = time.time()
-        print("FPS: " + str(1/((timer1-timer2))))
-        timer2 = time.time()
+    
+        if (cap.same_frame == False):
+            
+            print("FPS: " + str(1/((timer1-timer2))))
+            timer2 = time.time()
 
     # loop breaking condition
     key = cv2.waitKey(1) & 0xFF
@@ -67,5 +64,4 @@ while True:
         break
 
 # clean up
-
 cap.stop()

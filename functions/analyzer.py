@@ -45,12 +45,12 @@ class Analyzer:
             
             #self.motion_detected = False
 
-            if contours != [] and self.same_frame == False: 
+            if contours != []: 
                 #self.motion_detected = False
 
                 for contour in contours:
                     
-                    # print(cv2.contourArea(contour))
+                    print(cv2.contourArea(contour))
                     # self.background_image = imutils.resize(cv2.cvtColor(image, cv2.COLOR_BGR2GRAY), self.resize_width)
 
                     if cv2.contourArea(contour) > 100:
