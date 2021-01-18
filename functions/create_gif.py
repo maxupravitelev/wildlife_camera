@@ -38,6 +38,14 @@ class Gif_writer:
 
         self.same_frame = False
 
+        self.mode = "avi"
+
+        if self.mode == "avi":
+            self.fps = 30
+            self.frame_width = 640
+            self.frame_height = 480
+            self.writer = cv2.VideoWriter("avi/output"+ str(self.folderCount) + ".avi", cv2.VideoWriter_fourcc(*"MJPG"), self.fps,(self.frame_width,self.frame_height))
+
     def start(self):    
         lock = threading.Lock()
         Thread(target=self.create_gif, args=(lock,)).start()
@@ -83,44 +91,65 @@ class Gif_writer:
                     
                     with lock:
 
-                        # print("lock check: " + str(lock.locked()))
-                        # print("wrting to file")
-                        # print("active threads: " + str(threading.active_count()))
-                        # print("current thread: " + str(threading.current_thread()))
-                    
+                        if self.mode == "gif":
 
-                        self.writing = True
-
-                        newFolder = 'gifs/images' + str(self.folderCount)
-                        if not os.path.isdir(newFolder):
-                            os.makedirs(newFolder)
-
-                        print("Total images: " + str(len(self.image_list)))
-
-                        # write individual images
-                        for num, image in enumerate(self.image_list, start=0):
-                            if num < 10:
-                                localPath = newFolder + '/image1000'+str(num)+'.jpg'                
-                            if num >= 10 and num < 100: 
-                                localPath = newFolder + '/image100'+str(num)+'.jpg'                
-                            if num >= 100: 
-                                localPath = newFolder + '/image10'+str(num)+'.jpg'
-                            cv2.imwrite(localPath,image)  
-
-                        # convert folder to gif
-                        imgToGif(self.folderCount)
-
-                        self.folderCount +=1
-                        print("Files created: " + str(self.folderCount))
-                    
-                        # reset values to handle next gif
-                        self.image_list = []
-                        self.image_counter = 0
-
-                        self.file_done = True
-                        self.background_image = None
+                            # print("lock check: " + str(lock.locked()))
+                            # print("wrting to file")
+                            # print("active threads: " + str(threading.active_count()))
+                            # print("current thread: " + str(threading.current_thread()))
                         
-                        self.writing = False
+
+                            self.writing = True
+
+                            newFolder = 'gifs/images' + str(self.folderCount)
+                            if not os.path.isdir(newFolder):
+                                os.makedirs(newFolder)
+
+                            print("Total images: " + str(len(self.image_list)))
+
+                            # write individual images
+                            for num, image in enumerate(self.image_list, start=0):
+                                if num < 10:
+                                    localPath = newFolder + '/image1000'+str(num)+'.jpg'                
+                                if num >= 10 and num < 100: 
+                                    localPath = newFolder + '/image100'+str(num)+'.jpg'                
+                                if num >= 100: 
+                                    localPath = newFolder + '/image10'+str(num)+'.jpg'
+                                cv2.imwrite(localPath,image)  
+
+                            # convert folder to gif
+                            imgToGif(self.folderCount)
+
+                            self.folderCount +=1
+                            print("Files created: " + str(self.folderCount))
+                        
+                            # reset values to handle next gif
+                            self.image_list = []
+                            self.image_counter = 0
+
+                            self.file_done = True
+                            self.background_image = None
+                            
+                            self.writing = False
+                        
+                        elif self.mode == "avi":
+
+                            for frame in self.image_list:
+                                
+                                self.writer.write(frame)
+                            self.folderCount += 1
+                            print("count: " + str(self.folderCount))
+                            self.file_done = True
+                            self.writer = cv2.VideoWriter("avi/output"+ str(self.folderCount) + ".avi", cv2.VideoWriter_fourcc(*"MJPG"), self.fps,(self.frame_width,self.frame_height))
+
+                            # reset values to handle next gif
+                            self.image_list = []
+                            self.image_counter = 0
+
+                            self.file_done = True
+                            self.background_image = None
+                            
+                            self.writing = False
 
                     # self.image_list = []
                     # self.image_counter = 0
