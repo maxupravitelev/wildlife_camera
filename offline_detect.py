@@ -157,8 +157,10 @@ while True:
     
 
     if analyzer.motion_detected == True:
-        File_writer.create_file(frame)    
-
+        File_writer.create_file(frame)
+        File_writer.motion_detected = True
+    else:
+        File_writer.motion_detected = False
 
     # pass current analyzer result to file creator, file creator writes frames to file if motion_detected returns true
     #File_writer.create_file(analyzer.motion_detected, frame)

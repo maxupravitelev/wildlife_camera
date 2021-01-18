@@ -53,7 +53,7 @@ class File_writer:
 
     def create_file(self, frame):
         # while not self.stopped:
-        if self.image_counter < self.image_limit:
+        if self.image_counter < self.image_limit and self.motion_detected == True:
             # if np.array_equal(self.last_frame,self.frame):
             #     self.same_frame == True
             #     continue   
