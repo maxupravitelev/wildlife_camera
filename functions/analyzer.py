@@ -43,18 +43,18 @@ class Analyzer:
             threshold = cv2.dilate(threshold, None, iterations=2)
             (contours,_)=cv2.findContours(threshold,cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             
-            #self.motion_detected = False
+            self.motion_detected = False
 
             if contours != []: 
-                #self.motion_detected = False
+                # self.motion_detected = False
 
                 for contour in contours:
                     
                     # print(cv2.contourArea(contour))
                     # self.background_image = imutils.resize(cv2.cvtColor(image, cv2.COLOR_BGR2GRAY), self.resize_width)
 
-                    if cv2.contourArea(contour) > 100:
-                        # print(cv2.contourArea(contour))
+                    if cv2.contourArea(contour) > 500:
+                        print(cv2.contourArea(contour))
                         self.motion_detected = True
                         
                         if self.bbox_mode == True:
@@ -65,7 +65,8 @@ class Analyzer:
                             
                             cv2.putText(self.frame, str(cv2.contourArea(contour)), (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (255, 255, 255), 1)
 
-                        break
+                        continue
+
                     else:
                         self.motion_detected = False
             

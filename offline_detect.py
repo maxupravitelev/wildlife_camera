@@ -149,18 +149,17 @@ while True:
         File_writer.background_image="gray_frame"
         analyzer.set_background(frame)
 
-    # print(cap.frame_updated)
 
     # set frame handled by analyzer
     File_writer.frame = frame.copy()
     analyzer.frame = frame
     
+    File_writer.motion_detected = analyzer.motion_detected
+    # print(analyzer.motion_detected)
 
-    if analyzer.motion_detected == True:
+    if analyzer.motion_detected == True or File_writer.file_done == False:
         File_writer.create_file(frame)
-        File_writer.motion_detected = True
-    else:
-        File_writer.motion_detected = False
+   
 
     # pass current analyzer result to file creator, file creator writes frames to file if motion_detected returns true
     #File_writer.create_file(analyzer.motion_detected, frame)

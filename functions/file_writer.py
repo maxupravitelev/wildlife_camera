@@ -72,7 +72,7 @@ class File_writer:
                 #     self.same_frame == True
                 #     continue   
                 
-                self.same_frame == False
+                # self.same_frame == False
                 self.inactivityCounter += 1
 
                 self.image_list.append(frame)
