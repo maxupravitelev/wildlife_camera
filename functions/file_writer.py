@@ -48,10 +48,10 @@ class File_writer:
 
     def start(self):    
         lock = threading.Lock()
-        Thread(target=self.create_gif, args=(lock,)).start()
+        Thread(target=self.create_file, args=(lock,)).start()
         return self  
 
-    def create_gif(self, lock):
+    def create_file(self, lock):
         while not self.stopped:
             if self.motion_detected == True and self.image_counter < self.image_limit and self.same_frame == False:
                 if np.array_equal(self.last_frame,self.frame):
@@ -124,32 +124,21 @@ class File_writer:
                             print("GIFs created: " + str(self.fileCount))
                         
                             # reset values to handle next gif
-                            self.image_list = []
-                            self.image_counter = 0
-
-                            self.file_done = True
-                            self.background_image = None
-                            
-                            self.writing = False
+                            self.reset_values()
                         
                         elif self.mode == "avi":
 
                             for frame in self.image_list:
 
                                 self.writer.write(frame)
+                                
                             self.fileCount += 1
                             print("AVIs created: " + str(self.fileCount))
                             self.file_done = True
                             self.writer = cv2.VideoWriter("avi/output"+ str(self.fileCount) + ".avi", cv2.VideoWriter_fourcc(*"MJPG"), self.fps,(self.frame_width,self.frame_height))
 
-                            # reset values to handle next gif
-                            self.image_list = []
-                            self.image_counter = 0
-
-                            self.file_done = True
-                            self.background_image = None
-                            
-                            self.writing = False
+                            # reset values to handle next avi
+                            self.reset_values()
 
                     # self.image_list = []
                     # self.image_counter = 0
@@ -160,6 +149,15 @@ class File_writer:
         if cv2.waitKey(1) == ord("x"):
             print("analyzer stopped")
             self.stopped = True
+
+    def reset_values(self):
+        self.image_list = []
+        self.image_counter = 0
+
+        self.file_done = True
+        self.background_image = None
+        
+        self.writing = False
 
     def stop(self):
         self.stopped = True

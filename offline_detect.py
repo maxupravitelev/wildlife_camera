@@ -154,7 +154,7 @@ while True:
     File_writer.motion_detected = analyzer.motion_detected
 
     # pass current analyzer result to file creator, file creator writes frames to file if motion_detected returns true
-    #File_writer.create_gif(analyzer.motion_detected, frame)
+    #File_writer.create_file(analyzer.motion_detected, frame)
 
     if debug_mode == True:
         cv2.imshow("video feed", analyzer.frame)
