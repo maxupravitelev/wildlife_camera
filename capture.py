@@ -10,8 +10,8 @@ from functions.cam import VideoStream
 
 from functions.file_writer import File_writer
 
-
-debug_mode = True
+## mode selection
+debug_mode = False
 enable_timer = True
 
 cap = VideoStream(src=0).start()
@@ -24,6 +24,21 @@ frame = cap.read()
 
 # get frame size from first frame making
 print("Frame resolution: " + str(frame.shape))
+
+
+
+start = time.time()
+
+frames = 0
+while frames < 60:
+    frame = cap.read()
+    if cap.same_frame == False:
+        frames += 1
+
+end = time.time()
+
+print("FPS: " + str(120/(end-start)))
+
 
 if debug_mode == False:
     File_writer = File_writer(mode="gif").start()
