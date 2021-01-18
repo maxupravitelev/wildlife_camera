@@ -16,7 +16,7 @@ class File_writer:
 
         self.image_counter = 0
 
-        self.image_limit = 100
+        self.image_limit = 80
 
         self.image_list = []
 
@@ -53,23 +53,26 @@ class File_writer:
 
     def create_file(self, lock):
         while not self.stopped:
-            if self.motion_detected == True and self.image_counter < self.image_limit and self.same_frame == False:
+            if self.motion_detected == True and self.image_counter < self.image_limit:
                 if np.array_equal(self.last_frame,self.frame):
-                #     # print("same frame")
+                    self.same_frame == True
                     continue   
+                self.same_frame == False
                 # print("write to gif")
                 self.inactivityCounter = 0
                 self.file_done = False
                 self.image_list.append(self.frame)
                 self.image_counter += 1
-                # print("Image count: " + str(self.image_counter))
+                print("Image count: " + str(self.image_counter))
                 self.last_frame = self.frame.copy()
 
             else:
                 if self.file_done == False and self.inactivityCounter <= self.inactivity_limit:
                     if np.array_equal(self.last_frame,self.frame):
-                        # print("same frame")
-                        continue  
+                        self.same_frame == True
+                        continue   
+                    
+                    self.same_frame == False
                     self.inactivityCounter += 1
 
                     self.image_list.append(self.frame)
@@ -91,6 +94,14 @@ class File_writer:
                     
                     with lock:
 
+                        # final_image_list = []
+
+                        # final_image_list.append(self.image_list[0])
+
+                        # for i in range(1, len(self.image_list)):
+                        #     if np.array_equal(self.image_list[i],final_image_list[-1]) == False:
+                        #         final_image_list.append(self.image_list[i])
+
                         if self.mode == "gif":
 
                             # print("lock check: " + str(lock.locked()))
@@ -104,6 +115,8 @@ class File_writer:
                             newFolder = 'gifs/images' + str(self.fileCount)
                             if not os.path.isdir(newFolder):
                                 os.makedirs(newFolder)
+
+                            # print("final Total images: " + str(len(final_image_list)))
 
                             print("Total images: " + str(len(self.image_list)))
 
@@ -127,6 +140,7 @@ class File_writer:
                             self.reset_values()
                         
                         elif self.mode == "avi":
+                            # print("final Total images: " + str(len(final_image_list)))
 
                             for frame in self.image_list:
 

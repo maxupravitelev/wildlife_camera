@@ -14,13 +14,13 @@ from functions.file_writer import File_writer
 # from functions.PiCam import PiCam 
 
 # modules by pyimagesearch
-import imutils
-from imutils.video import VideoStream
+#import imutils
+from functions.cam import VideoStream
 
 
 ## parse args from command line
 parser = argparse.ArgumentParser()
-parser.add_argument("--mode", type=str, default="gif",
+parser.add_argument("--mode", type=str, default="avi",
         help="run in gif or avi mode") 
 args = vars(parser.parse_args())
 mode = args["mode"]
@@ -120,19 +120,24 @@ while True:
     # ret, frame = cap.read()
     frame = cap.read()
 
-    #print(cap.frame_updated)
 
-    # check if grabbed frame equals the previos one
-    if np.array_equal(last_frame,frame):
-        # print("same frame")
-        analyzer.same_frame = True
-        File_writer.same_frame = True
-        continue   
-    
-    analyzer.same_frame = False
-    File_writer.same_frame = False
+    # print(cap.same_frame)
+
+
+    analyzer.same_frame = File_writer.same_frame
+
+    if File_writer.same_frame == False:
+
 
     if enable_timer == True:
+
+        # check if grabbed frame equals the previous one
+        if np.array_equal(last_frame,frame):
+            # print("same frame")
+            analyzer.same_frame = True
+            File_writer.same_frame = True
+            continue   
+
         timer1 = time.time()
         print("SPF: " + str(((timer1-timer2))))
         timer2 = time.time()

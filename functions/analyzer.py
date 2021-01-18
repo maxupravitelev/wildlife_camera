@@ -54,7 +54,7 @@ class Analyzer:
                     # self.background_image = imutils.resize(cv2.cvtColor(image, cv2.COLOR_BGR2GRAY), self.resize_width)
 
                     if cv2.contourArea(contour) > 100:
-                        print(cv2.contourArea(contour))
+                        # print(cv2.contourArea(contour))
                         self.motion_detected = True
                         
                         if self.bbox_mode == True:
