@@ -95,7 +95,7 @@ print("Detection area: " + str(contour_threshold) + " (" + str(detection_area * 
 
 # handle different file writing formats
 
-File_writer = File_writer(mode=mode)
+File_writer = File_writer(mode=mode).start()
 
 
 # init analyzer for movement detection (separate thread)
@@ -155,8 +155,6 @@ while True:
     File_writer.frame = frame.copy()
     analyzer.frame = frame
     
-    print(analyzer.motion_detected)
-
 
     if analyzer.motion_detected == True:
         File_writer.create_file(frame)    
