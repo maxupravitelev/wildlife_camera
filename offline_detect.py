@@ -4,12 +4,12 @@ import time
 import argparse
 import numpy as np
 
-# modules for handling file writing
-from functions.create_avi import Avi_writer
-from functions.create_gif import Gif_writer
-
 # module for handling movement detection
 from functions.analyzer import Analyzer
+
+# module for handling writing to files
+from functions.file_writer import File_writer
+
 
 # from functions.PiCam import PiCam 
 
@@ -94,11 +94,8 @@ print("Detection area: " + str(contour_threshold) + " (" + str(detection_area * 
 
 
 # handle different file writing formats
-if mode == "avi":
-    avi_writer = Avi_writer(frame)
-else: 
-# if mode == "gif":
-    gif_writer = Gif_writer().start()
+
+File_writer = File_writer(mode=mode).start()
 
 
 # init analyzer for movement detection (separate thread)
@@ -129,11 +126,11 @@ while True:
     if np.array_equal(last_frame,frame):
         # print("same frame")
         analyzer.same_frame = True
-        gif_writer.same_frame = True
+        File_writer.same_frame = True
         continue   
     
     analyzer.same_frame = False
-    gif_writer.same_frame = False
+    File_writer.same_frame = False
 
     if enable_timer == True:
         timer1 = time.time()
@@ -141,23 +138,23 @@ while True:
         timer2 = time.time()
 
     # set background image on startup / after file creation was comleted
-    if gif_writer.background_image is None:
-        gif_writer.background_image="gray_frame"
+    if File_writer.background_image is None:
+        File_writer.background_image="gray_frame"
         analyzer.set_background(frame)
 
     # print(cap.frame_updated)
 
     # set frame handled by analyzer
-    gif_writer.frame = frame.copy()
+    File_writer.frame = frame.copy()
     analyzer.frame = frame
     
-    # print(gif_writer.motion_detected)
+    # print(File_writer.motion_detected)
 
 
-    gif_writer.motion_detected = analyzer.motion_detected
+    File_writer.motion_detected = analyzer.motion_detected
 
     # pass current analyzer result to file creator, file creator writes frames to file if motion_detected returns true
-    #gif_writer.create_gif(analyzer.motion_detected, frame)
+    #File_writer.create_gif(analyzer.motion_detected, frame)
 
     if debug_mode == True:
         cv2.imshow("video feed", analyzer.frame)
