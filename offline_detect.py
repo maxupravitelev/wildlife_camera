@@ -139,7 +139,7 @@ while True:
             continue   
 
         timer1 = time.time()
-        print("SPF: " + str(((timer1-timer2))))
+        print("FPS: " + str(1/((timer1-timer2))))
         timer2 = time.time()
 
     # set background image on startup / after file creation was comleted
@@ -162,8 +162,6 @@ while True:
     #File_writer.create_file(analyzer.motion_detected, frame)
 
     if debug_mode == True:
-        cv2.imshow("video feed", analyzer.frame)
-
         # view color frame
         cv2.imshow("video feed", analyzer.frame)
 
