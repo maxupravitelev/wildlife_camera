@@ -16,8 +16,11 @@ enable_timer = False
 approx_fps = True
 
 ## init capture
-frame_width = 1024
-frame_height = 768
+# frame_width = 1024
+# frame_height = 768
+
+frame_width = 640
+frame_height = 480
 
 # cap = VideoStream(src=0).start()
 cap = PiCam(resolution=(frame_width,frame_height)).start()
