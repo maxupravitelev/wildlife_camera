@@ -22,6 +22,8 @@ class VideoStream:
         
         self.same_frame = False
 
+        self.frame_count = 0
+
     def start(self):
         # start the thread to read frames from the video stream
         t = Thread(target=self.update, name=self.name, args=())
@@ -34,24 +36,24 @@ class VideoStream:
         while True:
             # if the thread indicator variable is set, stop the thread
 
-
-
             if self.stopped:
                 return
 
             # otherwise, read the next frame from the stream
             (self.grabbed, self.frame) = self.stream.read()
-            
+            self.frame_count +=1
+
 
 
     def read(self):
         # return the frame most recently read
-        if np.array_equal(self.last_frame,self.frame):
-            # print("same frame")
-            self.same_frame = True
-        else:
-            self.same_frame = False
-            self.last_frame = self.frame.copy()
+        # if np.array_equal(self.last_frame,self.frame):
+        #     # print("same frame")
+        #     self.same_frame = True
+        # else:
+        #     self.same_frame = False
+        #     self.last_frame = self.frame
+        #     self.frame_count +=1
         return self.frame
 
     def stop(self):

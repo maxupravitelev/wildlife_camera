@@ -34,8 +34,8 @@ class PiCam:
 
         self.camera.resolution = resolution
         self.camera.framerate = 60
-        self.camera.awb_mode = 'off'
-        self.camera.awb_gains = 1.8
+        # self.camera.awb_mode = 'off'
+        # self.camera.awb_gains = 1.8
         # self.camera.exposure_mode = 'fixedfps'
 
         # set optional camera parameters (refer to PiCamera docs)
@@ -87,12 +87,12 @@ class PiCam:
 
     def read(self):
         # return the frame most recently read
-        if np.array_equal(self.last_frame,self.frame):
-            # print("same frame")
-            self.same_frame = True
-        else:
-            self.same_frame = False
-            self.last_frame = self.frame.copy()
+        # if np.array_equal(self.last_frame,self.frame):
+        #     # print("same frame")
+        #     self.same_frame = True
+        # else:
+        #     self.same_frame = False
+        #     self.last_frame = self.frame.copy()
         return self.frame
 
     def stop(self):

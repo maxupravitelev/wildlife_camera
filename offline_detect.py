@@ -11,7 +11,7 @@ from functions.analyzer import Analyzer
 from functions.file_writer import File_writer
 
 
-from functions.PiCam import PiCam 
+# from functions.PiCam import PiCam 
 
 # modules by pyimagesearch
 #import imutils
@@ -20,7 +20,7 @@ from functions.cam import VideoStream
 
 ## parse args from command line
 parser = argparse.ArgumentParser()
-parser.add_argument("--mode", type=str, default="gif",
+parser.add_argument("--mode", type=str, default="avi",
         help="run in gif or avi mode") 
 args = vars(parser.parse_args())
 mode = args["mode"]
@@ -68,11 +68,11 @@ frame_height = 480
 #cap = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
 #cap = VideoStream(usePiCamera=1).start()
 #cap=cv2.VideoCapture(0)
-#cap = VideoStream(src=0).start()
+cap = VideoStream(src=0).start()
 
 # cap = VideoStream(resolution="3").start()
 
-cap = PiCam(resolution=(frame_width,frame_height)).start()
+# cap = PiCam(resolution=(frame_width,frame_height)).start()
 
 # warm um camera - without first frame returns empty
 time.sleep(2.0)
@@ -126,6 +126,7 @@ while True:
 
     frame_count = cap.frame_count
     if frame_count == previous_frame_count:
+        # print("same")
         continue
 
     previous_frame_count = frame_count
@@ -139,22 +140,13 @@ while True:
     # analyzer.same_frame = cap.same_frame
     # File_writer.same_frame = cap.same_frame
 
-
-
     if enable_timer == True:
-
-        # check if grabbed frame equals the previous one
-        # if np.array_equal(last_frame,frame):
-        #     # print("same frame")
-        #     analyzer.same_frame = True
-        #     File_writer.same_frame = True
-        #     continue   
 
         # timer1 = time.time()
         print("FPS: " + str(1/((timer1-timer2))))
         timer2 = time.time()
 
-    # set background image on startup / after file creation was comleted
+    # set background image on startup / after file creation was completed
     if File_writer.background_image is None:
         File_writer.background_image="gray_frame"
         analyzer.set_background(frame)

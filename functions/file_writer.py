@@ -20,7 +20,7 @@ class File_writer:
 
         self.image_list = []
 
-        self.inactivity_limit = 4
+        self.inactivity_limit = 40
 
         self.background_image = None
 
