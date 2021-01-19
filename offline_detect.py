@@ -68,11 +68,11 @@ frame_height = 768
 #cap = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
 #cap = VideoStream(usePiCamera=1).start()
 #cap=cv2.VideoCapture(0)
-cap = VideoStream(src=0).start()
+#cap = VideoStream(src=0).start()
 
 # cap = VideoStream(resolution="3").start()
 
-# cap = PiCam(resolution=(frame_width,frame_height)).start()
+cap = PiCam(resolution=(frame_width,frame_height)).start()
 
 # warm um camera - without first frame returns empty
 time.sleep(2.0)

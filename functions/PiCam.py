@@ -4,6 +4,9 @@ from picamera import PiCamera
 from threading import Thread
 import cv2
 
+import numpy as np
+
+
 class PiCam:
     def __init__(self, resolution=(640, 480), framerate=60, **kwargs):
         # initialize the camera
@@ -50,7 +53,9 @@ class PiCam:
 
         self.frame_count = 0
 
-        # self.frame_updated = False 
+        self.last_frame = None
+        
+        self.same_frame = False
 
     def start(self):
         # start the thread to read frames from the video stream

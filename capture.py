@@ -30,14 +30,16 @@ print("Frame resolution: " + str(frame.shape))
 start = time.time()
 
 frames = 0
-while frames < 60:
+time_limit = 60
+
+while time_limit < time_limit:
     frame = cap.read()
     if cap.same_frame == False:
         frames += 1
 
 end = time.time()
 
-print("FPS: " + str(120/(end-start)))
+print("FPS: " + str(time_limit/(end-start)))
 
 
 if debug_mode == False:
