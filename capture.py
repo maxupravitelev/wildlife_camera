@@ -46,6 +46,14 @@ if approx_fps == True:
         if cap.same_frame == False:
             frames += 1
 
+    # previous_frame_count = cap.frame_count
+    # while frames < time_limit:
+    #     # print(cap.frame_count)
+    #     frame_count = cap.frame_count
+    #     if frame_count > previous_frame_count:
+    #         previous_frame_count = frame_count
+    #         frames += 1
+
     end = time.time()
 
     print("approx. FPS: " + str(time_limit/(end-start)))
@@ -64,6 +72,7 @@ if approx_fps == False:
 
     frame = cap.read()
 
+    # previous_frame_count = cap.frame_count
 
     while True:
         last_frame = frame.copy()
@@ -82,6 +91,12 @@ if approx_fps == False:
 
             timer1 = time.time()
         
+                
+            # if previous_frame_count < cap.frame_count:
+            #     print("FPS: " + str(1/((timer1-timer2))))
+            #     timer2 = time.time()
+            #     previous_frame_count = cap.frame_count
+
             if (cap.same_frame == False):
                 
                 print("FPS: " + str(1/((timer1-timer2))))
