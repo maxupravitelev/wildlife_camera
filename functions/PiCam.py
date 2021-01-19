@@ -73,7 +73,7 @@ class PiCam:
             # preparation for the next frame
             self.frame = f.array
             # self.frame_updated = True
-            # self.frame_count += 1
+            self.frame_count += 1
             self.rawCapture.truncate(0)
             # self.frame_updated = False
 

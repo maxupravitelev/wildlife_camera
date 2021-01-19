@@ -113,15 +113,25 @@ if enable_timer == True:
 #     cap.truncate(0)
 #     cap.seek(0)
 
+previous_frame_count = cap.frame_count
 
 # main loop
 while True:
     # last_frame = frame.copy()
     # ret, frame = cap.read()
 
-    frame = cap.read()
-    if cap.same_frame == True:
+    # frame = cap.read()
+    if enable_timer == True:
+        timer1 = time.time()
+
+    frame_count = cap.frame_count
+    if frame_count == previous_frame_count:
         continue
+
+    previous_frame_count = frame_count
+
+    # if cap.same_frame == True:
+    #     continue
 
     frame = cap.read()
     # print(cap.same_frame)
@@ -134,13 +144,13 @@ while True:
     if enable_timer == True:
 
         # check if grabbed frame equals the previous one
-        if np.array_equal(last_frame,frame):
-            # print("same frame")
-            analyzer.same_frame = True
-            File_writer.same_frame = True
-            continue   
+        # if np.array_equal(last_frame,frame):
+        #     # print("same frame")
+        #     analyzer.same_frame = True
+        #     File_writer.same_frame = True
+        #     continue   
 
-        timer1 = time.time()
+        # timer1 = time.time()
         print("FPS: " + str(1/((timer1-timer2))))
         timer2 = time.time()
 
@@ -158,6 +168,7 @@ while True:
     # print(analyzer.motion_detected)
 
     if analyzer.motion_detected == True or File_writer.file_done == False:
+        # print("motion")
         File_writer.create_file(frame)
    
 
