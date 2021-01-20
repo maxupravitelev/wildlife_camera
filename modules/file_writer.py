@@ -1,6 +1,6 @@
 import cv2
 import os
-from functions.imgToGif import imgToGif
+from modules.imgToGif import imgToGif
 import numpy as np
 from threading import Thread
 import threading

@@ -1,4 +1,5 @@
-# import the necessary packages
+# built upon: https://github.com/jrosebr1/imutils/blob/master/imutils/video/pivideostream.py
+
 from threading import Thread
 import cv2
 
@@ -13,22 +14,15 @@ class VideoStream:
 
         (self.grabbed, self.frame) = self.stream.read()
 
-        # initialize the thread name
-        self.name = name
-
         # initialize the variable used to indicate if the thread should
         # be stopped
         self.stopped = False
-
-        self.last_frame = None
-        
-        self.same_frame = False
 
         self.frame_count = 0
 
     def start(self):
         # start the thread to read frames from the video stream
-        t = Thread(target=self.update, name=self.name, args=())
+        t = Thread(target=self.update, args=())
         t.daemon = True
         t.start()
         return self
@@ -43,19 +37,11 @@ class VideoStream:
 
             # otherwise, read the next frame from the stream
             (self.grabbed, self.frame) = self.stream.read()
+            
+            # set to check if frame was updated in main thread
             self.frame_count +=1
 
-
-
     def read(self):
-        # return the frame most recently read
-        # if np.array_equal(self.last_frame,self.frame):
-        #     # print("same frame")
-        #     self.same_frame = True
-        # else:
-        #     self.same_frame = False
-        #     self.last_frame = self.frame
-        #     self.frame_count +=1
         return self.frame
 
     def stop(self):

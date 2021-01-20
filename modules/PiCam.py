@@ -1,4 +1,5 @@
-# import the necessary packages
+# built upon: https://github.com/jrosebr1/imutils/blob/master/imutils/video/pivideostream.py
+
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 from threading import Thread
@@ -8,7 +9,7 @@ import numpy as np
 
 
 class PiCam:
-    def __init__(self, resolution=(640, 480), framerate=60, **kwargs):
+    def __init__(self, resolution=(640, 480), framerate=32, **kwargs):
         # initialize the camera
         self.camera = PiCamera()
 
@@ -54,10 +55,6 @@ class PiCam:
 
         self.frame_count = 0
 
-        self.last_frame = None
-        
-        self.same_frame = False
-
     def start(self):
         # start the thread to read frames from the video stream
         t = Thread(target=self.update, args=())
@@ -72,10 +69,8 @@ class PiCam:
             # grab the frame from the stream and clear the stream in
             # preparation for the next frame
             self.frame = f.array
-            # self.frame_updated = True
             self.frame_count += 1
             self.rawCapture.truncate(0)
-            # self.frame_updated = False
 
             # if the thread indicator variable is set, stop the thread
             # and resource camera resources
@@ -86,17 +81,8 @@ class PiCam:
                 return
 
     def read(self):
-        # return the frame most recently read
-        # if np.array_equal(self.last_frame,self.frame):
-        #     # print("same frame")
-        #     self.same_frame = True
-        # else:
-        #     self.same_frame = False
-        #     self.last_frame = self.frame.copy()
         return self.frame
 
     def stop(self):
         # indicate that the thread should be stopped
         self.stopped = True
-
-# built upon: https://github.com/jrosebr1/imutils/blob/master/imutils/video/pivideostream.py
