@@ -11,7 +11,7 @@ from functions.analyzer import Analyzer
 from functions.file_writer import File_writer
 
 
-from functions.PiCam import PiCam 
+#from functions.PiCam import PiCam 
 
 # modules by pyimagesearch
 #import imutils
@@ -68,11 +68,11 @@ frame_height = 480
 #cap = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
 #cap = VideoStream(usePiCamera=1).start()
 #cap=cv2.VideoCapture(0)
-#cap = VideoStream(src=0).start()
+cap = VideoStream(src=0).start()
 
-# cap = VideoStream(resolution="3").start()
+#cap = VideoStream(resolution="3").start()
 
-cap = PiCam(resolution=(frame_width,frame_height)).start()
+#cap = PiCam(resolution=(frame_width,frame_height)).start()
 
 # warm um camera - without first frame returns empty
 time.sleep(2.0)
@@ -147,9 +147,9 @@ while True:
         timer2 = time.time()
 
     # set background image on startup / after file creation was completed
-    if File_writer.background_image is None:
-        File_writer.background_image="gray_frame"
+    if File_writer.background_image_set == False:
         analyzer.set_background(frame)
+        File_writer.background_image_set = True
 
 
     # set frame handled by analyzer
@@ -163,11 +163,11 @@ while True:
 
         if analyzer.motion_detected == True or File_writer.file_done == False:
             # print("[main] write | motion detected: " + str(analyzer.motion_detected) + " file done: " + str(File_writer.file_done) )
-            File_writer.create_file(frame)
+            File_writer.handle_image_list(frame)
    
 
     # pass current analyzer result to file creator, file creator writes frames to file if motion_detected returns true
-    #File_writer.create_file(analyzer.motion_detected, frame)
+    #File_writer.handle_image_list(analyzer.motion_detected, frame)
 
     if debug_mode == True:
         # view color frame

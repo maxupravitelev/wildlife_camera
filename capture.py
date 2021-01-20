@@ -6,7 +6,7 @@ import numpy as np
 
 from functions.cam import VideoStream
 
-from functions.PiCam import PiCam 
+# from functions.PiCam import PiCam 
 
 from functions.file_writer import File_writer
 
@@ -22,8 +22,8 @@ approx_fps = True
 frame_width = 640
 frame_height = 480
 
-# cap = VideoStream(src=0).start()
-cap = PiCam(resolution=(frame_width,frame_height)).start()
+cap = VideoStream(src=0).start()
+#cap = PiCam(resolution=(frame_width,frame_height)).start()
 
 time.sleep(2.0)
 
@@ -41,18 +41,18 @@ if approx_fps == True:
     frames = 0
     time_limit = 60
 
-    while frames < time_limit:
-        frame = cap.read()
-        if cap.same_frame == False:
-            frames += 1
-
-    # previous_frame_count = cap.frame_count
     # while frames < time_limit:
-    #     # print(cap.frame_count)
-    #     frame_count = cap.frame_count
-    #     if frame_count > previous_frame_count:
-    #         previous_frame_count = frame_count
+    #     frame = cap.read()
+    #     if cap.same_frame == False:
     #         frames += 1
+
+    previous_frame_count = cap.frame_count
+    while frames < time_limit:
+        # print(cap.frame_count)
+        frame_count = cap.frame_count
+        if frame_count > previous_frame_count:
+            previous_frame_count = frame_count
+            frames += 1
 
     end = time.time()
 
