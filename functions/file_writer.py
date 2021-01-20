@@ -20,7 +20,7 @@ class File_writer:
 
         self.image_list = []
 
-        self.inactivity_limit = 40
+        self.inactivity_limit = 10
 
         self.background_image = None
 
@@ -54,33 +54,23 @@ class File_writer:
     def create_file(self, frame):
         # while not self.stopped:
         if self.image_counter < self.image_limit and self.motion_detected == True:
-            # if np.array_equal(self.last_frame,self.frame):
-            #     self.same_frame == True
-            #     continue   
-            # self.same_frame == False
-            # print("write to gif")
+            
+            print("[filewriter] Image count: " + str(self.image_counter))
+
             self.inactivityCounter = 0
             self.file_done = False
             self.image_list.append(frame)
             self.image_counter += 1
-            print("Image count: " + str(self.image_counter))
-            self.last_frame = self.frame.copy()
 
         else:
             if self.file_done == False and self.inactivityCounter <= self.inactivity_limit:
-                # if np.array_equal(self.last_frame,self.frame):
-                #     self.same_frame == True
-                #     continue   
-                
-                # self.same_frame == False
+
                 self.inactivityCounter += 1
 
                 self.image_list.append(frame)
                 self.image_counter += 1
-                # print("Image count: " + str(self.image_counter))
-                self.last_frame = self.frame.copy()
 
-                print("Append while inactive. Count: " + str(self.inactivityCounter))
+                print("Append image while inactive. Count: " + str(self.inactivityCounter))
 
             if self.file_done == False and self.inactivityCounter > self.inactivity_limit:
 

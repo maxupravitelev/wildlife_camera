@@ -11,7 +11,7 @@ from functions.analyzer import Analyzer
 from functions.file_writer import File_writer
 
 
-# from functions.PiCam import PiCam 
+from functions.PiCam import PiCam 
 
 # modules by pyimagesearch
 #import imutils
@@ -20,7 +20,7 @@ from functions.cam import VideoStream
 
 ## parse args from command line
 parser = argparse.ArgumentParser()
-parser.add_argument("--mode", type=str, default="avi",
+parser.add_argument("--mode", type=str, default="gif",
         help="run in gif or avi mode") 
 args = vars(parser.parse_args())
 mode = args["mode"]
@@ -68,11 +68,11 @@ frame_height = 480
 #cap = VideoStream(usePiCamera=1,resolution=(frame_width,frame_height)).start()
 #cap = VideoStream(usePiCamera=1).start()
 #cap=cv2.VideoCapture(0)
-cap = VideoStream(src=0).start()
+#cap = VideoStream(src=0).start()
 
 # cap = VideoStream(resolution="3").start()
 
-# cap = PiCam(resolution=(frame_width,frame_height)).start()
+cap = PiCam(resolution=(frame_width,frame_height)).start()
 
 # warm um camera - without first frame returns empty
 time.sleep(2.0)
@@ -157,11 +157,13 @@ while True:
     analyzer.frame = frame
     
     File_writer.motion_detected = analyzer.motion_detected
-    # print(analyzer.motion_detected)
+    analyzer.file_writing = File_writer.writing
 
-    if analyzer.motion_detected == True or File_writer.file_done == False:
-        # print("motion")
-        File_writer.create_file(frame)
+    if File_writer.writing == False:
+
+        if analyzer.motion_detected == True or File_writer.file_done == False:
+            # print("[main] write | motion detected: " + str(analyzer.motion_detected) + " file done: " + str(File_writer.file_done) )
+            File_writer.create_file(frame)
    
 
     # pass current analyzer result to file creator, file creator writes frames to file if motion_detected returns true
