@@ -7,26 +7,28 @@ import time
 
 class Analyzer:
     def __init__(self, frame, contour_threshold, bbox_mode, verbose=True):
+        
+        # set detection area
         self.contourAreaLimit = contour_threshold
 
+        # init frame analysis
         self.gauss_blur_factor = 15
-
-        self.motion_detected = False
-
-        self.frame = frame
-
-        self.stopped = False
-
-        self.bbox_mode = bbox_mode
-        
         self.resize_width = 300
-
+        self.frame = frame
         self.background_image = imutils.resize(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY), self.resize_width)
 
-        self.same_frame = False
+        # init motion detection
+        self.motion_detected = False
 
+        # init thread handling
+        self.stopped = False
+
+        # set for drawing bounding box around detected area 
+        self.bbox_mode = bbox_mode
+        
         self.file_writing = False
 
+        # set verbose mode
         self.verbose = verbose
 
     def start(self):    
@@ -50,12 +52,10 @@ class Analyzer:
                 threshold = cv2.dilate(threshold, None, iterations=2)
                 (contours,_)=cv2.findContours(threshold,cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
                 
-
                 if contours != []: 
                     for contour in contours:
-
-                        if cv2.contourArea(contour) > 500:
-                            if self.verbose = True:
+                        if cv2.contourArea(contour) > 100:
+                            if self.verbose == True:
                                 print("[analyzer] motion detected: " + str(cv2.contourArea(contour)))
 
                             self.motion_detected = True
@@ -80,7 +80,7 @@ class Analyzer:
 
 
             if cv2.waitKey(1) == ord("x"):
-                if self.verbose = True:
+                if self.verbose == True:
                     print("analyzer stopped")
                 self.stopped = True
 

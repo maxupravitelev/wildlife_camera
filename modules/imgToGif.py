@@ -2,26 +2,13 @@ from PIL import Image, ImageDraw
 import glob 
 
 
-# def imgToGif():
-#     for i in range(1, 9):
-#         img = Image.open("images/image"+str(i)+".jpg")
-#         images.append(img)
-#     images[0].save('out.gif',
-#                    save_all=True, append_images=images[1:], optimize=False, duration=80, loop=0)
+# init modes
 
-# def imgToGif(folderCount):
-#     images = []
+image_magic_mode = True
 
-#     for img in glob.glob("gifs/images" + str(folderCount) + "/" + "*.jpg"):
-#         newJpg = Image.open(img)
-#         images.append(newJpg)
-#         print(img)
-#     print(images)
-#     # for i in range(1, len(images)):
-#         #img = Image.open("images/image"+str(i)+".jpg")
-#     #    images.append(img)
-#     images[0].save('gifs/out'+ str(folderCount) + '.gif',
-#                    save_all=True, append_images=images[1:], optimize=True, duration=200, loop=0)
+if image_magic_mode == True:
+    from wand.image import Image as ImageFromWand
+
 
 def imgToGif(folderCount):
     images = []
@@ -68,4 +55,7 @@ def imgToGif(folderCount):
     images[0].save('gifs/out'+ str(folderCount) + '.gif',
                    save_all=True, append_images=images[1:], optimize=True, duration=50, loop=0)
 
-# imgToGif(0)
+    if image_magic_mode == True:
+
+        with ImageFromWand(filename='gifs/out'+ str(folderCount) + '.gif') as img:
+            img.save(filename='gifs/outCompressed'+ str(folderCount) + '.gif')
