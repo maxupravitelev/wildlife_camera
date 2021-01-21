@@ -84,16 +84,15 @@ class File_writer:
                 if self.verbose == True:
                     print("[filewriter] wrting to file...")
 
+                    if self.verbose == True:
+                        print("[filewriter] total images: " + str(len(self.image_list)))                    
+
                 if self.mode == "gif":
 
                     # create folder for images
                     newFolder = 'gifs/images' + str(self.fileCount)
                     if not os.path.isdir(newFolder):
                         os.makedirs(newFolder)
-
-
-                    if self.verbose == True:
-                        print("[filewriter] total images: " + str(len(self.image_list)))
 
                     # write individual images
                     for num, image in enumerate(self.image_list, start=0):
@@ -116,9 +115,6 @@ class File_writer:
                 
                 elif self.mode == "avi":
                     
-                    if self.verbose == True:
-                        print("[filewriter] final Total images: " + str(len(final_image_list)))
-
                     for frame in self.image_list:
 
                         self.writer.write(frame)
