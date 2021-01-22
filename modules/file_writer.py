@@ -44,10 +44,12 @@ class File_writer:
 
         self.verbose = verbose
 
+
     def start(self):    
         lock = threading.Lock()
         Thread(target=self.write_to_file, args=(lock,)).start()
         return self 
+
 
     def handle_image_list(self, frame):
         if self.image_counter < self.image_limit and self.motion_detected == True:
@@ -59,7 +61,6 @@ class File_writer:
             self.file_done = False
             self.image_list.append(frame)
             self.image_counter += 1
-
         else:
             if self.file_done == False and self.inactivityCounter <= self.inactivity_limit:
 

@@ -16,7 +16,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--mode", type=str, default="gif",
         help="run in gif or avi mode")
 parser.add_argument("--verbose", type=bool, default=True,
-        help="run in gif or avi mode") 
+        help="activate status updates") 
 args = vars(parser.parse_args())
 mode = args["mode"]
 verbose = args["verbose"]

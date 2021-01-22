@@ -4,26 +4,34 @@ import time
 import argparse
 import numpy as np
 
-from functions.cam import VideoStream
 
-# from functions.PiCam import PiCam 
+from modules.file_writer import File_writer
 
-from functions.file_writer import File_writer
+## parse args from command line
+parser = argparse.ArgumentParser()
+
+parser.add_argument("--mode", type=str, default="webcam",
+        help="select") 
+
+args = vars(parser.parse_args())
+
+mode = args["mode"]
 
 ## mode selection
 debug_mode = False
 enable_timer = False
-approx_fps = True
+approx_fps = False
 
 ## init capture
-# frame_width = 1024
-# frame_height = 768
+frame_width = 1024
+frame_height = 768
 
-frame_width = 640
-frame_height = 480
-
-cap = VideoStream(src=0).start()
-#cap = PiCam(resolution=(frame_width,frame_height)).start()
+if mode == "webcam":
+    from modules.cam import VideoStream
+    cap = VideoStream(src=0).start()
+if mode == "picam":
+    from modules.PiCam import PiCam
+    cap = PiCam(resolution=(frame_width,frame_height)).start()
 
 time.sleep(2.0)
 
@@ -40,11 +48,6 @@ if approx_fps == True:
 
     frames = 0
     time_limit = 60
-
-    # while frames < time_limit:
-    #     frame = cap.read()
-    #     if cap.same_frame == False:
-    #         frames += 1
 
     previous_frame_count = cap.frame_count
     while frames < time_limit:
@@ -63,44 +66,44 @@ if approx_fps == True:
 if approx_fps == False:
 
     if debug_mode == False:
-        File_writer = File_writer(mode="gif").start()
+        File_writer = File_writer(mode="avi").start()
         File_writer.motion_detected = True
 
     if enable_timer == True:
         timer2 = time.time()
         timer2 = time.time()
 
+    # check if frame has been actually updated
+    previous_frame_count = cap.frame_count
+
     frame = cap.read()
 
     # previous_frame_count = cap.frame_count
 
     while True:
-        last_frame = frame.copy()
+ 
+        if enable_timer == True:
+            timer1 = time.time()
+
         frame = cap.read()
 
-
-        if debug_mode == False:
-            File_writer.frame = frame.copy()
-
+        # check if frame has been actually updated
+        frame_count = cap.frame_count
+        if frame_count == previous_frame_count:
+            # print("same")
+            continue
+        previous_frame_count = frame_count
         
+        if debug_mode == False:
+            File_writer.handle_image_list(frame)
+
         if debug_mode == True:
             # view color frame
             cv2.imshow("video feed", frame)
 
         if enable_timer == True:
-
-            timer1 = time.time()
-        
-                
-            # if previous_frame_count < cap.frame_count:
-            #     print("FPS: " + str(1/((timer1-timer2))))
-            #     timer2 = time.time()
-            #     previous_frame_count = cap.frame_count
-
-            if (cap.same_frame == False):
-                
-                print("FPS: " + str(1/((timer1-timer2))))
-                timer2 = time.time()
+            print("FPS: " + str(1/((timer1-timer2))))
+            timer2 = time.time()
 
         # loop breaking condition
         key = cv2.waitKey(1) & 0xFF

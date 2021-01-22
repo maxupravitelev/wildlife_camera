@@ -10,7 +10,7 @@ Run `python detect.py` to start the app. The default mode is set to producing gi
 
 `python adjust.py` is meant to be run on a raspberry pi to help adjusting the camera position while viewing it in the browser of a different device in the local network.
 
-`python capture.py` captures the video stream immediately without detecting motion
+`python capture.py` captures the video stream immediately without detecting motion. Produces AVI by default.
 
 ## Hardware requirements
 
