@@ -116,6 +116,11 @@ class File_writer:
                 
                 elif self.mode == "avi":
                     
+                    # create folder for images
+                    newFolder = 'avi'
+                    if not os.path.isdir(newFolder):
+                        os.makedirs(newFolder)
+
                     for frame in self.image_list:
 
                         self.writer.write(frame)
