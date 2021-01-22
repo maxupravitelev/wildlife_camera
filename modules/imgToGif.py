@@ -11,33 +11,18 @@ if image_magic_mode == True:
 
 
 def imgToGif(folderCount):
+    
+    # read images from files into imagelist while preserving the correct order
     images = []
+    files_in_folder = 0
 
-    orderList = []
-
-    testList = []
-
-    finalNumberList = []
-
-    for img in glob.glob("gifs/images" + str(folderCount) + "/" + "*.jpg"):
-        orderList.append(img)
-
-    for order in orderList:
-        s = order.replace("gifs/images" + str(folderCount) + "/image", "")
-        testList.append(s)
-
-    for order in testList:
-        s = order.replace(".jpg", "")
-        finalNumberList.append(int(s))
-
-
-
-        #print(img)
-    #print(finalNumberList)
+    for path in glob.glob("gifs/images" + str(folderCount) + "/" + "*.jpg"):
+        files_in_folder += 1
    
     if image_magic_mode == False:
 
-        for i in range(0, len(finalNumberList), 1):
+        for i in range(0, files_in_folder):
+            print("files wrote" + str(i))
             if i < 10:
                 for img in glob.glob("gifs/images" + str(folderCount) + "/image1000" + str(i) + "*.jpg"):
                     #print(img)

@@ -13,7 +13,7 @@ from modules.file_writer import File_writer
 
 ## parse args from command line
 parser = argparse.ArgumentParser()
-parser.add_argument("--mode", type=str, default="avi",
+parser.add_argument("--mode", type=str, default="gif",
         help="run in gif or avi mode")
 parser.add_argument("--verbose", type=bool, default=True,
         help="run in gif or avi mode") 

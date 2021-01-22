@@ -1,11 +1,11 @@
 import cv2
 import time
 
-from imutils.video import VideoStream
+from modules.cam import VideoStream
 from flask import Response
 from flask import Flask
 
-from functions.PiCam import PiCam 
+from modules.PiCam import PiCam 
 
 import argparse
 
@@ -107,24 +107,7 @@ def generate():
         yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + 
             bytearray(encodedImage) + b'\r\n')
 
-def generate_picam():
-
-    global outputFrame
-
-    for image in camera.capture_continuous(cap, format="bgr", use_video_port=True):
-
-        outputFrame = image.array
-        if outputFrame is None:
-            continue
-        # encode the frame in JPEG format
-        (flag, encodedImage) = cv2.imencode(".jpg", outputFrame)
-        # ensure the frame was successfully encoded
-        if not flag:
-                continue
-        # yield the output frame in the byte format
-        yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + 
-            bytearray(encodedImage) + b'\r\n')
-
+# Built upon: https://www.pyimagesearch.com/2019/09/02/opencv-stream-video-to-web-browser-html-page/
 @app.route("/")
 def video_feed():
     # return the response generated along with the specific media
