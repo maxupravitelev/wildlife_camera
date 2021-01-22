@@ -38,8 +38,8 @@ def imgToGif(folderCount):
                     images.append(newJpg)
 
 
-            images[0].save('gifs/out'+ str(folderCount) + '.gif',
-                        save_all=True, append_images=images[1:], optimize=True, duration=50, loop=0)
+        images[0].save('gifs/out'+ str(folderCount) + '.gif',
+                    save_all=True, append_images=images[1:], optimize=True, duration=50, loop=0)
 
     if image_magic_mode == True:
 
