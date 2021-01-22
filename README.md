@@ -18,4 +18,4 @@ The app was tested with usb webcams on a laptop and camera modules on a raspberr
 
 ## current stage
 
-The app is in early stages and is not yet exactly user-friendly at this point :)
+The app is in early stages and is not yet exactly user-friendly at this point :). GIF creation is not optimized yet, so the produced files are rather large.

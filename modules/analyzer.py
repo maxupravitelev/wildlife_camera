@@ -6,16 +6,18 @@ import time
 
 
 class Analyzer:
-    def __init__(self, frame, contour_threshold, bbox_mode, verbose=True):
+    def __init__(self, frame, contour_threshold, bbox_mode, detection_area_factor=0.001, verbose=True):
         
         # set detection area
         self.contourAreaLimit = contour_threshold
 
         # init frame analysis
         self.gauss_blur_factor = 15
-        self.resize_width = 300
+        self.resize_width = 400
         self.frame = frame
         self.background_image = imutils.resize(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY), self.resize_width)
+        self.detection_area = 0
+        self.detection_area_factor = detection_area_factor
 
         # init motion detection
         self.motion_detected = False
@@ -42,7 +44,11 @@ class Analyzer:
             
                 # cv2.imshow("gray_frame", self.frame)
                 resized_frame = imutils.resize(self.frame, self.resize_width)
-                
+                if self.detection_area == 0:
+                    self.detection_area = int((resized_frame.shape[0] * resized_frame.shape[1]) * (self.detection_area_factor))
+
+                # print(self.detection_area)
+
                 gray_frame=cv2.cvtColor(resized_frame,cv2.COLOR_BGR2GRAY)
                 gray_frame=cv2.GaussianBlur(gray_frame,(self.gauss_blur_factor,self.gauss_blur_factor),0)
 
@@ -54,7 +60,7 @@ class Analyzer:
                 
                 if contours != []: 
                     for contour in contours:
-                        if cv2.contourArea(contour) > 300:
+                        if cv2.contourArea(contour) > self.detection_area:
                             if self.verbose == True:
                                 print("[analyzer] motion detected: " + str(cv2.contourArea(contour)))
 

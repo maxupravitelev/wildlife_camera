@@ -46,12 +46,10 @@ frame_width = 640
 frame_height = 480
 
 # init videostream (separate thread)
-
 if picamera_mode == False:
     from modules.cam import VideoStream
     #cap = VideoStream(src=0, resolution=(frame_width,frame_height)).start()
     cap = VideoStream(src=0).start()
-
 else: 
     from modules.PiCam import PiCam 
 
@@ -73,10 +71,10 @@ frame_height = frame.shape[0]
 frame_width = frame.shape[1]
 
 # set size of changed area that triggers movement detection
-detection_area = 0.002
+detection_area = 0.003
 contour_threshold = int((frame_height * frame_height) * (detection_area))
 print("Total area: " + str(frame_width * frame_height) + " (frame width: " + str(frame_width) + " x " + "frame height: " + str(frame_height) + ")")
-print("Detection area: " + str(contour_threshold) + " (" + str(detection_area * 100) + " % of total area)")
+print("Approx. detection area: " + str(contour_threshold) + " (" + str(detection_area * 100) + " % of total area)")
 
 
 # init writing files (separate thread)
@@ -85,14 +83,17 @@ File_writer = File_writer(mode=mode, verbose=verbose).start()
 
 
 # init analyzer for movement detection (separate thread)
-analyzer = Analyzer(frame, contour_threshold, bbox_mode, verbose=verbose).start()
+analyzer = Analyzer(frame, contour_threshold, bbox_mode, detection_area_factor=detection_area, verbose=verbose).start()
 
+
+# init timing FPS
 if enable_timer == True:
     timer2 = time.time()
     timer2 = time.time()
 
 # check if frame has been actually updated
 previous_frame_count = cap.frame_count
+
 
 # main loop
 while True:
@@ -133,12 +134,9 @@ while True:
     if File_writer.writing == False:
 
         if analyzer.motion_detected == True or File_writer.file_done == False:
-            # print("[main] write | motion detected: " + str(analyzer.motion_detected) + " file done: " + str(File_writer.file_done) )
             # pass current analyzer result to file creator, file creator writes frames to file if motion_detected returns true
             File_writer.handle_image_list(frame)
    
-
-    #File_writer.handle_image_list(analyzer.motion_detected, frame)
 
     if debug_mode == True:
 
