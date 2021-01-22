@@ -32,6 +32,7 @@ class PiCam:
         # elif resolution == "3w":
         #     self.camera.resolution = (1920, 1080)        
 
+        # picamera settings https://picamera.readthedocs.io/en/release-1.10/api_camera.html
 
         self.camera.resolution = resolution
         self.camera.framerate = 60

@@ -3,7 +3,6 @@ import glob
 
 
 # init modes
-
 image_magic_mode = False
 
 if image_magic_mode == True:
@@ -22,7 +21,6 @@ def imgToGif(folderCount):
     if image_magic_mode == False:
 
         for i in range(0, files_in_folder):
-            print("files wrote" + str(i))
             if i < 10:
                 for img in glob.glob("gifs/images" + str(folderCount) + "/image1000" + str(i) + "*.jpg"):
                     #print(img)
