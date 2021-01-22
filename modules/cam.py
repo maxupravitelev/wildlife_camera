@@ -10,7 +10,7 @@ class VideoStream:
         # initialize the video camera stream and read the first frame
         # from the stream
         self.stream = cv2.VideoCapture(src)
-        # self.stream = cv2.VideoCapture("tcp://192.168.178.50:5000")  
+        # self.stream = cv2.VideoCapture("tcp://192.168.178.51:5000")  
 
         (self.grabbed, self.frame) = self.stream.read()
 

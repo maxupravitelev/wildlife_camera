@@ -6,7 +6,7 @@ from threading import Thread
 import threading
 
 class File_writer:
-    def __init__(self, mode="avi", verbose=True):
+    def __init__(self, mode="avi", verbose=True, height=480, width=680):
 
         # init file creation handling
         self.file_done = True
@@ -38,8 +38,8 @@ class File_writer:
 
         if self.mode == "avi":
             self.fps = 30
-            self.frame_width = 640
-            self.frame_height = 480
+            self.frame_width = width
+            self.frame_height = height
             self.writer = cv2.VideoWriter("avi/output"+ str(self.fileCount) + ".avi", cv2.VideoWriter_fourcc(*"MJPG"), self.fps,(self.frame_width,self.frame_height))
 
         self.verbose = verbose

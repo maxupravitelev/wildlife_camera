@@ -38,6 +38,8 @@ time.sleep(2.0)
 # read first frame
 frame = cap.read()
 
+frame_height = frame.shape[0]
+frame_width = frame.shape[1]
 
 # get frame size from first frame making
 print("Frame resolution: " + str(frame.shape))
@@ -66,7 +68,7 @@ if approx_fps == True:
 if approx_fps == False:
 
     if debug_mode == False:
-        File_writer = File_writer(mode="avi").start()
+        File_writer = File_writer(height=frame_height, width=frame_width).start()
         File_writer.motion_detected = True
 
     if enable_timer == True:

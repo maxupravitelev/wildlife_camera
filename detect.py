@@ -78,7 +78,7 @@ print("Approx. detection area: " + str(contour_threshold) + " (" + str(detection
 
 
 # init writing files (separate thread)
-File_writer = File_writer(mode=mode, verbose=verbose).start()
+File_writer = File_writer(mode=mode, verbose=verbose, height=frame_height, width=frame_width).start()
 # todo: CHECK IF WRITING FOLDER EXIST!
 
 
