@@ -30,7 +30,7 @@ class File_writer:
 
         # init inactivity handling; needed if frames are skipped or contours are not found in inbetween frames
         self.inactivityCounter = 0
-        self.inactivity_limit = 10
+        self.inactivity_limit = 4
 
 
         # handle modes

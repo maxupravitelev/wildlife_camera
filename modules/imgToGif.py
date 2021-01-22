@@ -1,13 +1,25 @@
 from PIL import Image, ImageDraw
 import glob 
+import json
+
+# config_path = 'config.json'
+config_path = 'modules/config.json'
+
+with open(config_path) as config_file:
+    config = json.load(config_file)
+
+gif_duration = config['gif_duration']
+loop_gif = config['loop_gif']
+image_magic_installed = config['image_magic_installed']
 
 
-# init modes
-image_magic_mode = False
+if image_magic_installed == "true":
+    image_magic_installed = True
+else:
+     image_magic_installed = False
 
-if image_magic_mode == True:
+if image_magic_installed == True:
     from wand.image import Image as ImageFromWand
-
 
 def imgToGif(folderCount):
     
@@ -18,8 +30,8 @@ def imgToGif(folderCount):
     for path in glob.glob("gifs/images" + str(folderCount) + "/" + "*.jpg"):
         files_in_folder += 1
    
-    if image_magic_mode == False:
 
+    if image_magic_installed == False:
         for i in range(0, files_in_folder):
             if i < 10:
                 for img in glob.glob("gifs/images" + str(folderCount) + "/image1000" + str(i) + "*.jpg"):
@@ -39,9 +51,9 @@ def imgToGif(folderCount):
 
 
         images[0].save('gifs/out'+ str(folderCount) + '.gif',
-                    save_all=True, append_images=images[1:], optimize=True, duration=50, loop=0)
+                    save_all=True, append_images=images[1:], optimize=True, duration=(gif_duration), loop=loop_gif)
 
-    if image_magic_mode == True:
+    if image_magic_installed == True:
 
         # with ImageFromWand(filename='gifs/out'+ str(folderCount) + '.gif') as img:
         #     img.save(filename='gifs/outCompressed'+ str(folderCount) + '.gif')
@@ -67,6 +79,7 @@ def imgToGif(folderCount):
             for cursor in range(len(finalNumberList)):
                 with wand.sequence[cursor] as frame:
                     frame.delay = 1 * (cursor + 1)
+
             # Set layer type
             wand.type = 'optimize'
             wand.save(filename='gifs/out'+ str(folderCount) + '.gif')
