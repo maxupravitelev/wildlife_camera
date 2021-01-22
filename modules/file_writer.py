@@ -20,7 +20,7 @@ class File_writer:
 
         self.image_list = []     
         self.image_counter = 0
-        self.image_limit = 80
+        self.image_limit = 300
         
         # init flag to handle reference background resetting after file is created
         self.background_image_set = False

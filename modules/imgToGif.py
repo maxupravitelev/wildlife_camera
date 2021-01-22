@@ -4,7 +4,7 @@ import glob
 
 # init modes
 
-image_magic_mode = True
+image_magic_mode = False
 
 if image_magic_mode == True:
     from wand.image import Image as ImageFromWand
@@ -34,28 +34,29 @@ def imgToGif(folderCount):
 
         #print(img)
     #print(finalNumberList)
-
-    for i in range(0, len(finalNumberList), 1):
-        if i < 10:
-            for img in glob.glob("gifs/images" + str(folderCount) + "/image1000" + str(i) + "*.jpg"):
-                #print(img)
-                newJpg = Image.open(img)
-                images.append(newJpg)
-        if i >= 10 and i < 100: 
-            for img in glob.glob("gifs/images" + str(folderCount) + "/image100" + str(i) + "*.jpg"):
-                #print(img)
-                newJpg = Image.open(img)
-                images.append(newJpg)
-        if i >= 100: 
-            for img in glob.glob("gifs/images" + str(folderCount) + "/image10" + str(i) + "*.jpg"):
-                #print(img)
-                newJpg = Image.open(img)
-                images.append(newJpg)
-
+   
     if image_magic_mode == False:
 
-        images[0].save('gifs/out'+ str(folderCount) + '.gif',
-                    save_all=True, append_images=images[1:], optimize=True, duration=50, loop=0)
+        for i in range(0, len(finalNumberList), 1):
+            if i < 10:
+                for img in glob.glob("gifs/images" + str(folderCount) + "/image1000" + str(i) + "*.jpg"):
+                    #print(img)
+                    newJpg = Image.open(img)
+                    images.append(newJpg)
+            if i >= 10 and i < 100: 
+                for img in glob.glob("gifs/images" + str(folderCount) + "/image100" + str(i) + "*.jpg"):
+                    #print(img)
+                    newJpg = Image.open(img)
+                    images.append(newJpg)
+            if i >= 100: 
+                for img in glob.glob("gifs/images" + str(folderCount) + "/image10" + str(i) + "*.jpg"):
+                    #print(img)
+                    newJpg = Image.open(img)
+                    images.append(newJpg)
+
+
+            images[0].save('gifs/out'+ str(folderCount) + '.gif',
+                        save_all=True, append_images=images[1:], optimize=True, duration=50, loop=0)
 
     if image_magic_mode == True:
 

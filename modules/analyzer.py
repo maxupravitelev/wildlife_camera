@@ -54,7 +54,7 @@ class Analyzer:
                 
                 if contours != []: 
                     for contour in contours:
-                        if cv2.contourArea(contour) > 100:
+                        if cv2.contourArea(contour) > 300:
                             if self.verbose == True:
                                 print("[analyzer] motion detected: " + str(cv2.contourArea(contour)))
 

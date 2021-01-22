@@ -13,7 +13,7 @@ from modules.file_writer import File_writer
 
 ## parse args from command line
 parser = argparse.ArgumentParser()
-parser.add_argument("--mode", type=str, default="gif",
+parser.add_argument("--mode", type=str, default="avi",
         help="run in gif or avi mode")
 parser.add_argument("--verbose", type=bool, default=True,
         help="run in gif or avi mode") 
@@ -69,6 +69,8 @@ frame = cap.read()
 # get frame size from first frame making
 print("Frame resolution: " + str(frame.shape))
 
+frame_height = frame.shape[0]
+frame_width = frame.shape[1]
 
 # set size of changed area that triggers movement detection
 detection_area = 0.002
@@ -79,6 +81,7 @@ print("Detection area: " + str(contour_threshold) + " (" + str(detection_area * 
 
 # init writing files (separate thread)
 File_writer = File_writer(mode=mode, verbose=verbose).start()
+# todo: CHECK IF WRITING FOLDER EXIST!
 
 
 # init analyzer for movement detection (separate thread)
