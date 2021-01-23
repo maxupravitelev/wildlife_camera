@@ -2,7 +2,6 @@ from PIL import Image, ImageDraw
 import glob 
 import json
 
-# config_path = 'config.json'
 config_path = 'modules/config.json'
 
 with open(config_path) as config_file:

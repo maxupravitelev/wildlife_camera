@@ -1,5 +1,7 @@
 {
     "gif_duration" : 50,
     "loop_gif" : 0,
-    "image_magic_installed" : "false"
+    "image_magic_installed" : "false",
+    "framerate": 30,
+    "resolution_4:3": [[640, 480], [1024, 768]]
   }

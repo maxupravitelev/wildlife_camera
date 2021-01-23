@@ -6,10 +6,16 @@ from threading import Thread
 import cv2
 
 import numpy as np
+import json
+
+config_path = 'modules/config.json'
+
+with open(config_path) as config_file:
+    config = json.load(config_file)
 
 
 class PiCam:
-    def __init__(self, resolution=(640, 480), framerate=32, **kwargs):
+    def __init__(self, resolution=(640, 480)):
         # initialize the camera
         self.camera = PiCamera()
 
@@ -34,8 +40,11 @@ class PiCam:
 
         # picamera settings https://picamera.readthedocs.io/en/release-1.10/api_camera.html
 
-        self.camera.resolution = resolution
-        self.camera.framerate = 60
+        r = 0
+        resolution = config["resolution"][r]
+        self.camera.resolution = (resolution[0], resolution[1])
+        print(self.camera.resolution)
+        self.camera.framerate = config["framerate"]
         # self.camera.awb_mode = 'off'
         # self.camera.awb_gains = 1.8
         # self.camera.exposure_mode = 'fixedfps'

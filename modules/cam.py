@@ -5,12 +5,19 @@ import cv2
 
 import numpy as np
 
+import json
+
+config_path = 'modules/config.json'
+
+with open(config_path) as config_file:
+    config = json.load(config_file)
+
 class VideoStream:
     def __init__(self, src=0, name="VideoStream"):
         # initialize the video camera stream and read the first frame
         # from the stream
         self.stream = cv2.VideoCapture(src)
-        # self.stream = cv2.VideoCapture("tcp://192.168.178.51:5000")  
+        # self.stream = cv2.VideoCapture("tcp://192.168.178.57:5000")  
 
         (self.grabbed, self.frame) = self.stream.read()
 
