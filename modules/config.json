@@ -3,5 +3,6 @@
     "loop_gif" : 0,
     "image_magic_installed" : "false",
     "framerate": 30,
-    "resolution_4:3": [[640, 480], [1024, 768]]
+    "resolution_4:3": [[640, 480], [1024, 768], [1640, 1232]],
+    "resolution_16:9": [[1280, 730], [1640, 922], [1920, 1080]]
   }

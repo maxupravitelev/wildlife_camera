@@ -2,7 +2,9 @@ import cv2
 import time
 
 from flask import Response
-from flask import Flask
+from flask import Flask, request
+
+import json
 
 import argparse
 
@@ -105,6 +107,27 @@ def generate():
         # yield the output frame in the byte format
         yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + 
             bytearray(encodedImage) + b'\r\n')
+
+@app.route('/config', methods=['GET', 'POST'])
+def config():
+    if request.method == 'GET':
+        print("config sent")
+        
+        config_path = 'modules/config.json'
+
+        with open(config_path) as config_file:
+            config = json.load(config_file)
+
+        return config
+    else:
+        config = request.json
+        with open('config.json', 'w') as outfile:
+            json.dump(config, outfile)
+        return config
+
+
+
+
 
 
 @app.route("/")
