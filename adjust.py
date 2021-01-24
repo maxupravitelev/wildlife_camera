@@ -3,6 +3,7 @@ import time
 
 from flask import Response
 from flask import Flask, request
+from flask_cors import CORS
 
 import json
 
@@ -31,6 +32,7 @@ outputFrame = None
 
 # initialize a flask object
 app = Flask(__name__)
+CORS(app)
 
 # initialize the video stream and allow the camera sensor to
 
@@ -118,11 +120,13 @@ def config():
         with open(config_path) as config_file:
             config = json.load(config_file)
 
+        # config.headers.add("Access-Control-Allow-Origin", "*")
         return config
     else:
         config = request.json
         with open('config.json', 'w') as outfile:
             json.dump(config, outfile)
+
         return config
 
 
