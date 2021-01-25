@@ -15,7 +15,7 @@ class PiCam:
 
         self.update_values()
 
-        self.camera = PiCamera()     
+            
 
         self.frame = None
 
@@ -32,10 +32,11 @@ class PiCam:
         with open(config_path) as config_file:
             config = json.load(config_file)
 
-        
+        self.camera = PiCamera() 
+
         # set resolution
         r = 0
-        resolution = config["picam_config"]["resolution"][r]
+        resolution = config["picam_config"]["resolution_4:3"][r]
         self.camera.resolution = (resolution[0], resolution[1])
         print(self.camera.resolution)
         
@@ -47,6 +48,9 @@ class PiCam:
         self.camera.exposure_mode = config["picam_config"]["exposure_mode"]
         print(self.camera.framerate)
         
+        self.rawCapture = PiRGBArray(self.camera, size=resolution)
+        self.stream = self.camera.capture_continuous(self.rawCapture,
+            format="bgr", use_video_port=True)
 
     def start(self):
         # start the thread to read frames from the video stream

@@ -7,7 +7,7 @@ import numpy as np
 
 import json
 
-config_path = 'modules/config.json'
+config_path = 'config/config.json'
 
 with open(config_path) as config_file:
     config = json.load(config_file)

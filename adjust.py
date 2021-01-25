@@ -12,7 +12,7 @@ import argparse
 ## parse args from command line
 parser = argparse.ArgumentParser()
 
-parser.add_argument("--mode", type=str, default="webcam",
+parser.add_argument("--mode", type=str, default="picam",
         help="run in gif or avi mode") 
 
 parser.add_argument("--bbox", type=bool, default=False,
