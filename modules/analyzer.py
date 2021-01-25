@@ -8,14 +8,13 @@ import time
 class Analyzer:
     def __init__(self, frame, contour_threshold, bbox_mode, detection_area_factor=0.001, verbose=True):
         
-        # set detection area
-        self.contourAreaLimit = contour_threshold
-
         # init frame analysis
         self.gauss_blur_factor = 15
         self.resize_width = 400
         self.frame = frame
         self.background_image = imutils.resize(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY), self.resize_width)
+
+        # set detection area
         self.detection_area = 0
         self.detection_area_factor = detection_area_factor
 

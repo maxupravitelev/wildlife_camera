@@ -17,34 +17,34 @@ class PiCam:
 
         self.camera = PiCamera()     
 
-        # initialize the stream
-        self.rawCapture = PiRGBArray(self.camera, size=resolution)
-        self.stream = self.camera.capture_continuous(self.rawCapture,
-            format="bgr", use_video_port=True)
-
-        # initialize the frame and the variable used to indicate
-        # if the thread should be stopped
         self.frame = None
+
+        # init thread
         self.stopped = False
 
+        # init check to identify duplicate frames
         self.frame_count = 0
 
     def update_values(self):
-        # picamera settings https://picamera.readthedocs.io/en/release-1.10/api_camera.html
 
-        config_path = 'modules/config.json'
+        config_path = 'config/config.json'
 
         with open(config_path) as config_file:
             config = json.load(config_file)
 
-                r = 0
-        resolution = config["resolution"][r]
+        
+        # set resolution
+        r = 0
+        resolution = config["picam_config"]["resolution"][r]
         self.camera.resolution = (resolution[0], resolution[1])
         print(self.camera.resolution)
-        self.camera.framerate = config["framerate"]
-        self.camera.awb_mode = config["awb_mode"]
-        self.camera.awb_gains = config["awb_gains"]
-        self.camera.exposure_mode = config["exposure_mode"]
+        
+        # set picamera setting
+        # picamera settings https://picamera.readthedocs.io/en/release-1.10/api_camera.html
+        self.camera.framerate = config["picam_config"]["framerate"]
+        self.camera.awb_mode = config["picam_config"]["awb_mode"]
+        self.camera.awb_gains = config["picam_config"]["awb_gains"]
+        self.camera.exposure_mode = config["picam_config"]["exposure_mode"]
 
     def start(self):
         # start the thread to read frames from the video stream

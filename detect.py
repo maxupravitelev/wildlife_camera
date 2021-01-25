@@ -10,6 +10,9 @@ from modules.analyzer import Analyzer
 # module for handling writing to files
 from modules.file_writer import File_writer
 
+# function to parse bool value from config file
+from modules.utils import boolcheck
+
 
 ## parse args from command line
 parser = argparse.ArgumentParser()
@@ -23,37 +26,28 @@ verbose = args["verbose"]
 
 print("[init] startup settings | mode " + str(mode) + " verbose | " + str(verbose))
 
+# set setting from config file
+config_path = 'config/config.json'
+
+with open(config_path) as config_file:
+    config = json.load(config_file)
+
 # init different modes
-bbox_mode = False
-picamera_mode = False
-enable_timer = False
-debug_mode = False
+bbox_mode = boolcheck(config["general_config"]["draw_bbox"])
+camera_mode = boolcheck(config["general_config"]["camera"])
+enable_timer = boolcheck(config["general_config"]["enable_fps_timer"])
+debug_mode = boolcheck(config["general_config"]["debug_mode"])
 
-# set frame dimensions
-# frame_width = 1296
-# frame_height = 736
-
-# frame_width = 1280
-# frame_height = 720
-
-# frame_width = 1024
-# frame_height = 768
-
-# frame_width = 1640
-# frame_height = 1232
-
-frame_width = 640
-frame_height = 480
 
 # init videostream (separate thread)
-if picamera_mode == False:
+if camera_mode == "webcam":
     from modules.cam import VideoStream
     #cap = VideoStream(src=0, resolution=(frame_width,frame_height)).start()
     cap = VideoStream(src=0).start()
 else: 
     from modules.PiCam import PiCam 
 
-    cap = PiCam(resolution=(frame_width,frame_height)).start()
+    cap = PiCam().start()
 
 
 # warm um camera - without first frame returns empty
@@ -79,8 +73,6 @@ print("Approx. detection area: " + str(contour_threshold) + " (" + str(detection
 
 # init writing files (separate thread)
 File_writer = File_writer(mode=mode, verbose=verbose, height=frame_height, width=frame_width).start()
-# todo: CHECK IF WRITING FOLDER EXIST!
-
 
 # init analyzer for movement detection (separate thread)
 analyzer = Analyzer(frame, contour_threshold, bbox_mode, detection_area_factor=detection_area, verbose=verbose).start()
