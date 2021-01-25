@@ -4,19 +4,27 @@ import os
 import imutils
 import time
 
+# function to parse bool value from config file
+from modules.utils import boolcheck
 
 class Analyzer:
     def __init__(self, frame, contour_threshold, bbox_mode, detection_area_factor=0.001, verbose=True):
         
+        # set setting from config file
+        config_path = 'config/config.json'
+
+        with open(config_path) as config_file:
+            config = json.load(config_file)
+
         # init frame analysis
-        self.gauss_blur_factor = 15
-        self.resize_width = 400
+        self.gauss_blur_factor = config["analyzer_config"]["gauss_blur_factor"]
+        self.resize_width = config["analyzer_config"]["resize_width"]
         self.frame = frame
         self.background_image = imutils.resize(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY), self.resize_width)
 
         # set detection area
         self.detection_area = 0
-        self.detection_area_factor = detection_area_factor
+        self.detection_area_factor = config["analyzer_config"]["detection_area_factor"]
 
         # init motion detection
         self.motion_detected = False
@@ -25,12 +33,12 @@ class Analyzer:
         self.stopped = False
 
         # set for drawing bounding box around detected area 
-        self.bbox_mode = bbox_mode
+        self.bbox_mode = boolcheck(config["analyzer_config"]["bbox_mode"])
         
         self.file_writing = False
 
         # set verbose mode
-        self.verbose = verbose
+        self.verbose = boolcheck(config["analyzer_config"]["verbose"])
 
     def start(self):    
         Thread(target=self.analyze, args=()).start()

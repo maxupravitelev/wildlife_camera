@@ -33,7 +33,6 @@ with open(config_path) as config_file:
     config = json.load(config_file)
 
 # init different modes
-bbox_mode = boolcheck(config["general_config"]["draw_bbox"])
 camera_mode = boolcheck(config["general_config"]["camera"])
 enable_timer = boolcheck(config["general_config"]["enable_fps_timer"])
 debug_mode = boolcheck(config["general_config"]["debug_mode"])
