@@ -107,7 +107,7 @@ def config():
     if request.method == 'GET':
         print("config sent")
         
-        config_path = 'modules/config.json'
+        config_path = 'config/config.json'
 
         with open(config_path) as config_file:
             config = json.load(config_file)
@@ -116,8 +116,10 @@ def config():
         return config
     else:
         config = request.json
-        with open('config.json', 'w') as outfile:
+        with open('config/config.json', 'w') as outfile:
             json.dump(config, outfile)
+        
+        PiCam.update_values()
 
         return config
 

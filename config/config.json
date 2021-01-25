@@ -28,5 +28,16 @@
     "verbose": "true",
     "enable_fps_timer": "false",
     "debug_mode": "false" 
+  },
+  "analyzer_config": {
+    "detection_area_factor": 0.001,
+    "resize_width": 400,
+    "gauss_blur_factor": 15,
+    "bbox_mode": "false",
+    "verbose": "true"
+
+  },
+  "file_writer_config": {
+
   }
 }

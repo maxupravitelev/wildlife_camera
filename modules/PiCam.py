@@ -45,6 +45,8 @@ class PiCam:
         self.camera.awb_mode = config["picam_config"]["awb_mode"]
         self.camera.awb_gains = config["picam_config"]["awb_gains"]
         self.camera.exposure_mode = config["picam_config"]["exposure_mode"]
+        print(self.camera.framerate)
+        
 
     def start(self):
         # start the thread to read frames from the video stream
