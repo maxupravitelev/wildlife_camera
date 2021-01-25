@@ -1,7 +1,8 @@
 def boolcheck(string):
-    if string == 'True' or string == 'true' or '1':
+    print(string)
+    if string == 'True' or string == 'true' or string == '1':
          return True
-    elif s == 'False' or s == 'false' or '0':
+    elif string == 'False' or string == 'false' or string == '0':
          return False
     else:
          raise ValueError("Input value is not convertible to bool.")

@@ -3,6 +3,7 @@ import os
 import time
 import argparse
 import numpy as np
+import json
 
 # module for handling movement detection
 from modules.analyzer import Analyzer
@@ -33,7 +34,7 @@ with open(config_path) as config_file:
     config = json.load(config_file)
 
 # init different modes
-camera_mode = boolcheck(config["general_config"]["camera"])
+camera_mode = config["general_config"]["camera"]
 enable_timer = boolcheck(config["general_config"]["enable_fps_timer"])
 debug_mode = boolcheck(config["general_config"]["debug_mode"])
 
@@ -45,7 +46,6 @@ if camera_mode == "webcam":
     cap = VideoStream(src=0).start()
 else: 
     from modules.PiCam import PiCam 
-
     cap = PiCam().start()
 
 
@@ -74,7 +74,7 @@ print("Approx. detection area: " + str(contour_threshold) + " (" + str(detection
 File_writer = File_writer(mode=mode, verbose=verbose, height=frame_height, width=frame_width).start()
 
 # init analyzer for movement detection (separate thread)
-analyzer = Analyzer(frame, contour_threshold, bbox_mode, detection_area_factor=detection_area, verbose=verbose).start()
+analyzer = Analyzer(frame, detection_area_factor=detection_area, verbose=verbose).start()
 
 
 # init timing FPS

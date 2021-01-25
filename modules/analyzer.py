@@ -3,12 +3,13 @@ import cv2
 import os
 import imutils
 import time
+import json
 
 # function to parse bool value from config file
 from modules.utils import boolcheck
 
 class Analyzer:
-    def __init__(self, frame, contour_threshold, bbox_mode, detection_area_factor=0.001, verbose=True):
+    def __init__(self, frame, detection_area_factor=0.001, verbose=True):
         
         # set setting from config file
         config_path = 'config/config.json'

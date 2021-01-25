@@ -2,15 +2,14 @@ from PIL import Image, ImageDraw
 import glob 
 import json
 
-config_path = 'modules/config.json'
+config_path = 'config/config.json'
 
 with open(config_path) as config_file:
     config = json.load(config_file)
 
-gif_duration = config['gif_duration']
-loop_gif = config['loop_gif']
-image_magic_installed = config['image_magic_installed']
-
+gif_duration = config["gif_config"]['gif_duration']
+loop_gif = config["gif_config"]['loop_gif']
+image_magic_installed = config["gif_config"]['image_magic_installed']
 
 if image_magic_installed == "true":
     image_magic_installed = True
