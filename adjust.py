@@ -36,14 +36,6 @@ CORS(app)
 
 # initialize the video stream and allow the camera sensor to
 
-#frame_width = 640
-#frame_height = 480
-
-# frame_width = 1296
-# frame_height = 730
-
-# frame_width = 1280
-# frame_height = 720
 
 frame_width = 1024
 frame_height = 768

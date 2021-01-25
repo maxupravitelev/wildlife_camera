@@ -8,50 +8,14 @@ import cv2
 import numpy as np
 import json
 
-config_path = 'modules/config.json'
-
-with open(config_path) as config_file:
-    config = json.load(config_file)
-
 
 class PiCam:
     def __init__(self, resolution=(640, 480)):
         # initialize the camera
-        self.camera = PiCamera()
 
-        # set camera parameters
-        # if resolution == "1":
-        #     self.camera.resolution = (640, 480)
+        self.update_values()
 
-        # elif resolution == "2":
-        #     self.camera.resolution = (1024, 768)
-
-        # elif resolution == "3":
-        #     self.camera.resolution = (1640, 1232)
-
-        # elif resolution == "1w":
-        #     self.camera.resolution = (1280, 720)
-
-        # elif resolution == "2w":
-        #     self.camera.resolution = (1640, 922)
-
-        # elif resolution == "3w":
-        #     self.camera.resolution = (1920, 1080)        
-
-        # picamera settings https://picamera.readthedocs.io/en/release-1.10/api_camera.html
-
-        r = 0
-        resolution = config["resolution"][r]
-        self.camera.resolution = (resolution[0], resolution[1])
-        print(self.camera.resolution)
-        self.camera.framerate = config["framerate"]
-        # self.camera.awb_mode = 'off'
-        # self.camera.awb_gains = 1.8
-        # self.camera.exposure_mode = 'fixedfps'
-
-        # set optional camera parameters (refer to PiCamera docs)
-        for (arg, value) in kwargs.items():
-            setattr(self.camera, arg, value)
+        self.camera = PiCamera()     
 
         # initialize the stream
         self.rawCapture = PiRGBArray(self.camera, size=resolution)
@@ -64,6 +28,23 @@ class PiCam:
         self.stopped = False
 
         self.frame_count = 0
+
+    def update_values(self):
+        # picamera settings https://picamera.readthedocs.io/en/release-1.10/api_camera.html
+
+        config_path = 'modules/config.json'
+
+        with open(config_path) as config_file:
+            config = json.load(config_file)
+
+                r = 0
+        resolution = config["resolution"][r]
+        self.camera.resolution = (resolution[0], resolution[1])
+        print(self.camera.resolution)
+        self.camera.framerate = config["framerate"]
+        self.camera.awb_mode = config["awb_mode"]
+        self.camera.awb_gains = config["awb_gains"]
+        self.camera.exposure_mode = config["exposure_mode"]
 
     def start(self):
         # start the thread to read frames from the video stream

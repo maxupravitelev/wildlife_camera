@@ -4,5 +4,8 @@
     "image_magic_installed" : "false",
     "framerate": 30,
     "resolution_4:3": [[640, 480], [1024, 768], [1640, 1232]],
-    "resolution_16:9": [[1280, 730], [1640, 922], [1920, 1080]]
-  }
+    "resolution_16:9": [[1280, 730], [1640, 922], [1920, 1080]],
+    "awb_mode": "off",
+    "awb_gains": 1.8,
+    "exposure_mode": "auto"
+}
