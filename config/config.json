@@ -18,7 +18,7 @@
     "gif_config": {
       "gif_duration": 50,
       "loop_gif": 0,
-      "image_magic_installed": "false"
+      "image_magic_installed": "true"
     },
     "general_config": {
       "output_format": "gif",

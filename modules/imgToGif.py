@@ -15,11 +15,6 @@ gif_duration = config["gif_config"]['gif_duration']
 loop_gif = config["gif_config"]['loop_gif']
 image_magic_installed = boolcheck(config["gif_config"]['image_magic_installed'])
 
-if image_magic_installed == "true":
-    image_magic_installed = True
-else:
-     image_magic_installed = False
-
 if image_magic_installed == True:
     from wand.image import Image as ImageFromWand
 
@@ -44,13 +39,15 @@ def imgToGif(folderCount, image_list):
         with ImageFromWand() as wand:
 
             for image in image_list:
-                im = Image.fromarray(image)
+                im = ImageFromWand.from_array(image)
                 wand.sequence.append(im)
 
             # Create progressive delay for each frame
             for cursor in range(len(wand.sequence)):
                 with wand.sequence[cursor] as frame:
                     frame.delay = 1 * (cursor + 1)
+
+            print(len(wand.sequence))
 
             # Set layer type
             wand.type = 'optimize'
