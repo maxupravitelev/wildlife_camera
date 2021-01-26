@@ -13,9 +13,7 @@ class PiCam:
     def __init__(self, resolution=(640, 480)):
         # initialize the camera
 
-        self.update_values()
-
-            
+        # self.update_values()
 
         self.frame = None
 
@@ -24,8 +22,6 @@ class PiCam:
 
         # init check to identify duplicate frames
         self.frame_count = 0
-
-    def update_values(self):
 
         config_path = 'config/config.json'
 
@@ -52,6 +48,8 @@ class PiCam:
         self.stream = self.camera.capture_continuous(self.rawCapture,
             format="bgr", use_video_port=True)
 
+    # def update_values(self):
+
     def start(self):
         # start the thread to read frames from the video stream
         t = Thread(target=self.update, args=())
@@ -62,12 +60,6 @@ class PiCam:
     def update(self):
         # keep looping infinitely until the thread is stopped
         for f in self.stream:
-            
-            # grab the frame from the stream and clear the stream in
-            # preparation for the next frame
-            self.frame = f.array
-            self.frame_count += 1
-            self.rawCapture.truncate(0)
 
             # if the thread indicator variable is set, stop the thread
             # and resource camera resources
@@ -76,6 +68,14 @@ class PiCam:
                 self.rawCapture.close()
                 self.camera.close()
                 return
+
+            # grab the frame from the stream and clear the stream in
+            # preparation for the next frame
+            self.frame = f.array
+            self.frame_count += 1
+            self.rawCapture.truncate(0)
+
+
 
     def read(self):
         return self.frame

@@ -34,18 +34,13 @@ outputFrame = None
 app = Flask(__name__)
 CORS(app)
 
-# initialize the video stream and allow the camera sensor to
-
-
-frame_width = 1024
-frame_height = 768
 
 if mode == "webcam":
     from modules.cam import VideoStream
     cap = VideoStream(src=0).start()
 if mode == "picam":
     from modules.PiCam import PiCam
-    cap = PiCam(resolution=(frame_width,frame_height)).start()
+    cap = PiCam().start()
 
 # warmup
 time.sleep(2.0)
@@ -56,12 +51,21 @@ background_image = None
 def generate():
     # grab global references to the output frame and lock variables
     
-    global outputFrame, background_image
+    global outputFrame, cap
     # loop over frames from the output stream
     
+
+
     while True:
         # check if the output frame is available, otherwise skip
         # the iteration of the loop
+
+        if cap.stopped == True:
+            time.sleep(2.0)
+            cap = PiCam().start()
+            print("PiCam restarted")
+            time.sleep(2.0)
+
         outputFrame = cap.read()
         if outputFrame is None:
             continue
@@ -104,6 +108,9 @@ def generate():
 
 @app.route('/config', methods=['GET', 'POST'])
 def config():
+
+    global cap
+
     if request.method == 'GET':
         print("config sent")
         
@@ -119,7 +126,8 @@ def config():
         with open('config/config.json', 'w') as outfile:
             json.dump(config, outfile)
         
-        PiCam.update_values()
+        cap.stop()
+        
 
         return config
 
