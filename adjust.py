@@ -57,15 +57,16 @@ def generate():
 
 
     while True:
-        # check if the output frame is available, otherwise skip
-        # the iteration of the loop
 
-        if cap.stopped == True:
-            time.sleep(2.0)
+
+        if cap.picam_fully_stopped == True:
+            # time.sleep(2.0)
             cap = PiCam().start()
             print("PiCam restarted")
             time.sleep(2.0)
 
+        # check if the output frame is available, otherwise skip
+        # the iteration of the loop
         outputFrame = cap.read()
         if outputFrame is None:
             continue

@@ -48,6 +48,8 @@ class PiCam:
         self.stream = self.camera.capture_continuous(self.rawCapture,
             format="bgr", use_video_port=True)
 
+        self.picam_fully_stopped = False
+
     # def update_values(self):
 
     def start(self):
@@ -67,6 +69,7 @@ class PiCam:
                 self.stream.close()
                 self.rawCapture.close()
                 self.camera.close()
+                self.picam_fully_stopped == True
                 return
 
             # grab the frame from the stream and clear the stream in
