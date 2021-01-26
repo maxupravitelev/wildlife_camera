@@ -6,7 +6,7 @@ from threading import Thread
 import threading
 
 class File_writer:
-    def __init__(self, mode="avi", verbose=True, height=480, width=680):
+    def __init__(self, mode="gif", verbose=True, height=480, width=680):
 
         # init file creation handling
         self.file_done = True
@@ -20,7 +20,7 @@ class File_writer:
 
         self.image_list = []     
         self.image_counter = 0
-        self.image_limit = 80
+        self.image_limit = 10
         
         # init flag to handle reference background resetting after file is created
         self.background_image_set = False
@@ -106,7 +106,7 @@ class File_writer:
                         cv2.imwrite(localPath,image)  
 
                     # convert folder to gif
-                    imgToGif(self.fileCount)
+                    imgToGif(self.fileCount, self.image_list)
 
                     self.fileCount +=1
                     print("[filewriter] GIFs created: " + str(self.fileCount))

@@ -1,6 +1,10 @@
 from PIL import Image, ImageDraw
 import glob 
 import json
+import numpy as np
+
+# function to parse bool value from config file
+from modules.utils import boolcheck
 
 config_path = 'config/config.json'
 
@@ -9,7 +13,7 @@ with open(config_path) as config_file:
 
 gif_duration = config["gif_config"]['gif_duration']
 loop_gif = config["gif_config"]['loop_gif']
-image_magic_installed = config["gif_config"]['image_magic_installed']
+image_magic_installed = boolcheck(config["gif_config"]['image_magic_installed'])
 
 if image_magic_installed == "true":
     image_magic_installed = True
@@ -19,8 +23,42 @@ else:
 if image_magic_installed == True:
     from wand.image import Image as ImageFromWand
 
-def imgToGif(folderCount):
+def imgToGif(folderCount, image_list):
     
+    
+    pil_image_list = []
+
+    for image in image_list:
+        im = Image.fromarray(image)
+        pil_image_list.append(im)
+
+        pil_image_list[0].save('gifs/outTR'+ str(folderCount) + '.gif',
+                    save_all=True, append_images=pil_image_list[1:], optimize=True, duration=(gif_duration), loop=loop_gif)
+
+
+    if image_magic_installed == True:
+
+        # with ImageFromWand(filename='gifs/out'+ str(folderCount) + '.gif') as img:
+        #     img.save(filename='gifs/outCompressed'+ str(folderCount) + '.gif')
+
+        with ImageFromWand() as wand:
+
+            for image in image_list:
+                im = Image.fromarray(image)
+                wand.sequence.append(im)
+
+            # Create progressive delay for each frame
+            for cursor in range(len(wand.sequence)):
+                with wand.sequence[cursor] as frame:
+                    frame.delay = 1 * (cursor + 1)
+
+            # Set layer type
+            wand.type = 'optimize'
+            wand.save(filename='gifs/out'+ str(folderCount) + '.gif')
+
+
+def folder_to_gif():
+
     # read images from files into imagelist while preserving the correct order
     images = []
     files_in_folder = 0
@@ -28,7 +66,6 @@ def imgToGif(folderCount):
     for path in glob.glob("gifs/images" + str(folderCount) + "/" + "*.jpg"):
         files_in_folder += 1
    
-
     if image_magic_installed == False:
         for i in range(0, files_in_folder):
             if i < 10:
