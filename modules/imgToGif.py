@@ -54,7 +54,7 @@ def imgToGif(folderCount, image_list):
             wand.save(filename='gifs/out'+ str(folderCount) + '.gif')
 
 
-def folder_to_gif():
+def folder_to_gif(folderCount):
 
     # read images from files into imagelist while preserving the correct order
     images = []
@@ -92,7 +92,7 @@ def folder_to_gif():
 
         with ImageFromWand() as wand:
 
-            for i in range(0, len(finalNumberList), 1):
+            for i in range(0, len(wand.sequence), 1):
                 if i < 10:
                     for img in glob.glob("gifs/images" + str(folderCount) + "/image1000" + str(i) + "*.jpg"):
 

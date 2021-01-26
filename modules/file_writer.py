@@ -32,7 +32,6 @@ class File_writer:
         self.inactivityCounter = 0
         self.inactivity_limit = 4
 
-
         # handle modes
         self.mode = mode
 

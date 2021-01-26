@@ -49,22 +49,16 @@ background_image = None
 
 # Built upon: https://www.pyimagesearch.com/2019/09/02/opencv-stream-video-to-web-browser-html-page/
 def generate():
-    # grab global references to the output frame and lock variables
     
     global outputFrame, cap
-    # loop over frames from the output stream
     
-
-
     while True:
-
-
         if cap.stopped == True:
             time.sleep(1.0)
             cap = PiCam().start()
             print("PiCam restarted")
-            time.sleep(1.0)
-
+            time.sleep(0.5)
+        
         # check if the output frame is available, otherwise skip
         # the iteration of the loop
         outputFrame = cap.read()

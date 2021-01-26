@@ -134,7 +134,6 @@ while True:
         # view color frame
         cv2.imshow("video feed", analyzer.frame)
 
-        # todo: save processed frames to and fetch them from analyzer
         # # view gray_frame
         # cv2.imshow("gray_frame", gray_frame)
 

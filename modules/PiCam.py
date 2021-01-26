@@ -69,7 +69,6 @@ class PiCam:
                 self.stream.close()
                 self.rawCapture.close()
                 self.camera.close()
-                self.picam_fully_stopped == True
                 return
 
             # grab the frame from the stream and clear the stream in
