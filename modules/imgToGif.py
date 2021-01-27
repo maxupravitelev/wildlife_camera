@@ -28,8 +28,8 @@ def imgToGif(folderCount, image_list):
             im = Image.fromarray(image)
             pil_image_list.append(im)
 
-            pil_image_list[0].save('gifs/outTR'+ str(folderCount) + '.gif',
-                        save_all=True, append_images=pil_image_list[1:], optimize=True, duration=(gif_duration), loop=loop_gif)
+        pil_image_list[0].save('gifs/out_pil'+ str(folderCount) + '.gif',
+                    save_all=True, append_images=pil_image_list[1:], optimize=True, duration=(gif_duration), loop=loop_gif)
 
 
     else:
@@ -46,13 +46,14 @@ def imgToGif(folderCount, image_list):
             # Create progressive delay for each frame
             for cursor in range(len(wand.sequence)):
                 with wand.sequence[cursor] as frame:
-                    frame.delay = 1 * (cursor + 1)
+                    frame.delay = int(gif_duration / 7)
 
             # print(len(wand.sequence))
 
             # Set layer type
             wand.type = 'optimize'
             wand.save(filename='gifs/out'+ str(folderCount) + '.gif')
+
 
 
 def folder_to_gif(folderCount):
