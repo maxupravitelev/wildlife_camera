@@ -43,6 +43,8 @@ class File_writer:
 
         self.verbose = verbose
 
+        self.create_buffer = True
+
 
     def start(self):    
         lock = threading.Lock()
@@ -51,8 +53,18 @@ class File_writer:
 
 
     def handle_image_list(self, frame):
+
+        if self.create_buffer == True and self.motion_detected == False:
+            if len(self.image_list) < 10:
+                self.image_list.append(frame)
+            else:
+                self.image_list.pop(0)
+                self.image_list.append(frame)
+
         if self.image_counter < self.image_limit and self.motion_detected == True:
             
+            self.create_buffer = False
+
             if self.verbose == True:
                 print("[filewriter] Image count: " + str(self.image_counter))
 
@@ -140,6 +152,8 @@ class File_writer:
         self.background_image_set = False
         
         self.writing = False
+
+        self.create_buffer = True
 
     def stop(self):
         self.stopped = True

@@ -123,10 +123,10 @@ while True:
     analyzer.file_writing = File_writer.writing
 
     if File_writer.writing == False:
-
-        if analyzer.motion_detected == True or File_writer.file_done == False:
-            # pass current analyzer result to file creator, file creator writes frames to file if motion_detected returns true
-            File_writer.handle_image_list(frame)
+        File_writer.handle_image_list(frame)
+        # if analyzer.motion_detected == True or File_writer.file_done == False:
+        #     # pass current analyzer result to file creator, file creator writes frames to file if motion_detected returns true
+        #     File_writer.handle_image_list(frame)
    
 
     if debug_mode == True:
@@ -157,8 +157,6 @@ while True:
 cap.stop()
 # cap.close()
 
-if picamera_manual == True:
-    camera.close()
 
 if debug_mode == True:
     cv2.destroyAllWindows
