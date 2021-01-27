@@ -37,7 +37,7 @@ with open(config_path) as config_file:
 camera_mode = config["general_config"]["camera"]
 enable_timer = boolcheck(config["general_config"]["enable_fps_timer"])
 debug_mode = boolcheck(config["general_config"]["debug_mode"])
-
+buffer_mode = boolcheck(config["general_config"]["create_buffer"])
 
 # init videostream (separate thread)
 if camera_mode == "webcam":
@@ -123,10 +123,13 @@ while True:
     analyzer.file_writing = File_writer.writing
 
     if File_writer.writing == False:
-        File_writer.handle_image_list(frame)
-        # if analyzer.motion_detected == True or File_writer.file_done == False:
-        #     # pass current analyzer result to file creator, file creator writes frames to file if motion_detected returns true
-        #     File_writer.handle_image_list(frame)
+
+        if buffer_mode == True:
+            File_writer.handle_image_list(frame)
+        else:
+            if analyzer.motion_detected == True or File_writer.file_done == False:
+                # pass current analyzer result to file creator, file creator writes frames to file if motion_detected returns true
+                File_writer.handle_image_list(frame)
    
 
     if debug_mode == True:

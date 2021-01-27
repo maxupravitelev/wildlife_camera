@@ -4,9 +4,19 @@ from modules.imgToGif import imgToGif
 import numpy as np
 from threading import Thread
 import threading
+import json
+
+# function to parse bool value from config file
+from modules.utils import boolcheck
 
 class File_writer:
     def __init__(self, mode="gif", verbose=True, height=480, width=680):
+
+        # set setting from config file
+        config_path = 'config/config.json'
+
+        with open(config_path) as config_file:
+            config = json.load(config_file)
 
         # init file creation handling
         self.file_done = True
@@ -43,6 +53,9 @@ class File_writer:
 
         self.verbose = verbose
 
+        
+        # init buffer_mode
+        self.buffer_mode = boolcheck(config["general_config"]["create_buffer"])
         self.create_buffer = True
 
 

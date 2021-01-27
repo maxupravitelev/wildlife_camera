@@ -13,7 +13,8 @@
         "draw_bbox": "false",
         "enable_fps_timer": "false",
         "output_format": "gif",
-        "verbose": "true"
+        "verbose": "true",
+        "create_buffer": "true"
     },
     "gif_config": {
         "gif_duration": 50,
