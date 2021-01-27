@@ -1,5 +1,5 @@
 def boolcheck(string):
-    print(string)
+#     print(string)
     if string == 'True' or string == 'true' or string == '1':
          return True
     elif string == 'False' or string == 'false' or string == '0':

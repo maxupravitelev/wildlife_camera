@@ -25,7 +25,7 @@ args = vars(parser.parse_args())
 mode = args["mode"]
 verbose = args["verbose"]
 
-print("[init] startup settings | mode " + str(mode) + " verbose | " + str(verbose))
+print("[init] get startup settings from config.json file")
 
 # set setting from config file
 config_path = 'config/config.json'

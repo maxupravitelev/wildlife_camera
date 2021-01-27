@@ -13,25 +13,26 @@ with open(config_path) as config_file:
 
 gif_duration = config["gif_config"]['gif_duration']
 loop_gif = config["gif_config"]['loop_gif']
-image_magic_installed = boolcheck(config["gif_config"]['image_magic_installed'])
+imagemagick_installed = boolcheck(config["gif_config"]['imagemagick_installed'])
 
-if image_magic_installed == True:
+if imagemagick_installed == True:
     from wand.image import Image as ImageFromWand
 
 def imgToGif(folderCount, image_list):
     
-    
-    pil_image_list = []
+    if imagemagick_installed == False:
 
-    for image in image_list:
-        im = Image.fromarray(image)
-        pil_image_list.append(im)
+        pil_image_list = []
 
-        pil_image_list[0].save('gifs/outTR'+ str(folderCount) + '.gif',
-                    save_all=True, append_images=pil_image_list[1:], optimize=True, duration=(gif_duration), loop=loop_gif)
+        for image in image_list:
+            im = Image.fromarray(image)
+            pil_image_list.append(im)
+
+            pil_image_list[0].save('gifs/outTR'+ str(folderCount) + '.gif',
+                        save_all=True, append_images=pil_image_list[1:], optimize=True, duration=(gif_duration), loop=loop_gif)
 
 
-    if image_magic_installed == True:
+    else:
 
         # with ImageFromWand(filename='gifs/out'+ str(folderCount) + '.gif') as img:
         #     img.save(filename='gifs/outCompressed'+ str(folderCount) + '.gif')
@@ -47,7 +48,7 @@ def imgToGif(folderCount, image_list):
                 with wand.sequence[cursor] as frame:
                     frame.delay = 1 * (cursor + 1)
 
-            print(len(wand.sequence))
+            # print(len(wand.sequence))
 
             # Set layer type
             wand.type = 'optimize'
@@ -63,7 +64,7 @@ def folder_to_gif(folderCount):
     for path in glob.glob("gifs/images" + str(folderCount) + "/" + "*.jpg"):
         files_in_folder += 1
    
-    if image_magic_installed == False:
+    if imagemagick_installed == False:
         for i in range(0, files_in_folder):
             if i < 10:
                 for img in glob.glob("gifs/images" + str(folderCount) + "/image1000" + str(i) + "*.jpg"):
@@ -85,7 +86,7 @@ def folder_to_gif(folderCount):
         images[0].save('gifs/out'+ str(folderCount) + '.gif',
                     save_all=True, append_images=images[1:], optimize=True, duration=(gif_duration), loop=loop_gif)
 
-    if image_magic_installed == True:
+    if imagemagick_installed == True:
 
         # with ImageFromWand(filename='gifs/out'+ str(folderCount) + '.gif') as img:
         #     img.save(filename='gifs/outCompressed'+ str(folderCount) + '.gif')
