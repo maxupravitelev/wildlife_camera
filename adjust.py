@@ -7,22 +7,19 @@ from flask_cors import CORS
 
 import json
 
-import argparse
+# function to parse bool value from config file
+from modules.utils import boolcheck
 
-## parse args from command line
-parser = argparse.ArgumentParser()
+# set setting from config file
+config_path = 'config/config.json'
 
-parser.add_argument("--mode", type=str, default="picam",
-        help="run in gif or avi mode") 
+with open(config_path) as config_file:
+    config = json.load(config_file)
 
-parser.add_argument("--bbox", type=bool, default=False,
-        help="enable motion detection and draw bounding box around detected area")
 
-args = vars(parser.parse_args())
+camera_mode = config["general_config"]["camera"]
 
-mode = args["mode"]
-
-bbox_mode = args["bbox"]
+bbox_mode = boolcheck(config["adjust"]["bbox_mode"])
 
 
 # initialize the output frame and a lock used to ensure thread-safe
@@ -35,10 +32,10 @@ app = Flask(__name__)
 CORS(app)
 
 
-if mode == "webcam":
+if camera_mode == "webcam":
     from modules.cam import VideoStream
     cap = VideoStream(src=0).start()
-if mode == "picam":
+if camera_mode == "picam":
     from modules.PiCam import PiCam
     cap = PiCam().start()
 
@@ -50,7 +47,7 @@ background_image = None
 # Built upon: https://www.pyimagesearch.com/2019/09/02/opencv-stream-video-to-web-browser-html-page/
 def generate():
     
-    global outputFrame, cap
+    global outputFrame, cap, background_image
     
     while True:
         if cap.stopped == True:

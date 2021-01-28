@@ -29,7 +29,7 @@ def imgToGif(folderCount, image_list):
             pil_image_list.append(im)
 
         pil_image_list[0].save('gifs/out_pil'+ str(folderCount) + '.gif',
-                    save_all=True, append_images=pil_image_list[1:], optimize=True, duration=(gif_duration), loop=loop_gif)
+                    save_all=True, append_images=pil_image_list[1:], optimize=False, duration=(gif_duration), loop=loop_gif)
 
 
     else:

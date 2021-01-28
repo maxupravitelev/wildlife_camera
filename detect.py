@@ -1,7 +1,5 @@
 import cv2
-import os
 import time
-import argparse
 import numpy as np
 import json
 
@@ -15,17 +13,6 @@ from modules.file_writer import File_writer
 from modules.utils import boolcheck
 
 
-## parse args from command line
-parser = argparse.ArgumentParser()
-parser.add_argument("--mode", type=str, default="gif",
-        help="run in gif or avi mode")
-parser.add_argument("--verbose", type=bool, default=True,
-        help="activate status updates") 
-args = vars(parser.parse_args())
-mode = args["mode"]
-verbose = args["verbose"]
-
-print("[init] get startup settings from config.json file")
 
 # set setting from config file
 config_path = 'config/config.json'
@@ -33,11 +20,17 @@ config_path = 'config/config.json'
 with open(config_path) as config_file:
     config = json.load(config_file)
 
+print("[init] get startup settings from config.json file")
+
+
 # init different modes
 camera_mode = config["general_config"]["camera"]
 enable_timer = boolcheck(config["general_config"]["enable_fps_timer"])
 debug_mode = boolcheck(config["general_config"]["debug_mode"])
 buffer_mode = boolcheck(config["general_config"]["create_buffer"])
+
+verbose = boolcheck(config["general_config"]["verbose"])
+
 
 # init videostream (separate thread)
 if camera_mode == "webcam":
@@ -71,10 +64,10 @@ print("Approx. detection area: " + str(contour_threshold) + " (" + str(detection
 
 
 # init writing files (separate thread)
-File_writer = File_writer(mode=mode, verbose=verbose, height=frame_height, width=frame_width).start()
+File_writer = File_writer(height=frame_height, width=frame_width).start()
 
 # init analyzer for movement detection (separate thread)
-analyzer = Analyzer(frame, detection_area_factor=detection_area, verbose=verbose).start()
+analyzer = Analyzer(frame).start()
 
 
 # init timing FPS

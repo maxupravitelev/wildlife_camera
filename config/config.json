@@ -3,10 +3,15 @@
         "bbox_mode": "false",
         "detection_area_factor": 0.001,
         "gauss_blur_factor": 15,
-        "resize_width": 400,
-        "verbose": "true"
+        "resize_width": 400
     },
-    "file_writer_config": {},
+    
+        "adjust_config": {
+            "bbox_mode": "false"
+    },
+    "file_writer_config": {
+        "mode": "gif"
+    },
     "general_config": {
         "camera": "webcam",
         "debug_mode": "false",

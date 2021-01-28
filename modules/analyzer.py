@@ -1,15 +1,13 @@
 from threading import Thread
 import cv2
-import os
 import imutils
-import time
 import json
 
 # function to parse bool value from config file
 from modules.utils import boolcheck
 
 class Analyzer:
-    def __init__(self, frame, detection_area_factor=0.001, verbose=True):
+    def __init__(self, frame):
         
         # set setting from config file
         config_path = 'config/config.json'
@@ -39,7 +37,7 @@ class Analyzer:
         self.file_writing = False
 
         # set verbose mode
-        self.verbose = boolcheck(config["analyzer_config"]["verbose"])
+        self.verbose = boolcheck(config["general_config"]["verbose"])
 
     def start(self):    
         Thread(target=self.analyze, args=()).start()

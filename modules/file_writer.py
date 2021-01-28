@@ -10,7 +10,7 @@ import json
 from modules.utils import boolcheck
 
 class File_writer:
-    def __init__(self, mode="gif", verbose=True, height=480, width=680):
+    def __init__(self, height=480, width=680):
 
         # set setting from config file
         config_path = 'config/config.json'
@@ -43,7 +43,7 @@ class File_writer:
         self.inactivity_limit = 4
 
         # handle modes
-        self.mode = mode
+        self.mode = config["file_writer_config"]["mode"]
 
         if self.mode == "avi":
             self.fps = 30
@@ -51,7 +51,8 @@ class File_writer:
             self.frame_height = height
             self.writer = cv2.VideoWriter("avi/output"+ str(self.fileCount) + ".avi", cv2.VideoWriter_fourcc(*"MJPG"), self.fps,(self.frame_width,self.frame_height))
 
-        self.verbose = verbose
+        self.verbose = boolcheck(config["general_config"]["verbose"])
+
 
         
         # init buffer_mode
