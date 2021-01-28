@@ -2,6 +2,7 @@ from PIL import Image, ImageDraw
 import glob 
 import json
 import numpy as np
+import cv2
 
 # function to parse bool value from config file
 from modules.utils import boolcheck
@@ -24,9 +25,10 @@ def imgToGif(folderCount, image_list):
 
         pil_image_list = []
 
-        for image in image_list:
-            im = Image.fromarray(image)
-            pil_image_list.append(im)
+        for bgr_image in image_list:
+            rgb_image = cv2.cvtColor(bgr_image, cv2.COLOR_BGR2RGB)
+            image = Image.fromarray(rgb_image, mode="RGB")
+            pil_image_list.append(image)
 
         pil_image_list[0].save('gifs/out_pil'+ str(folderCount) + '.gif',
                     save_all=True, append_images=pil_image_list[1:], optimize=False, duration=(gif_duration), loop=loop_gif)
