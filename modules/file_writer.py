@@ -66,14 +66,15 @@ class File_writer:
         return self 
 
 
-    def handle_image_list(self, frame):
-
-        if self.create_buffer == True and self.motion_detected == False:
+    def write_buffer(self, frame):
+        # if self.create_buffer == True and self.motion_detected == False:
             if len(self.image_list) < 10:
                 self.image_list.append(frame)
             else:
                 self.image_list.pop(0)
                 self.image_list.append(frame)
+
+    def handle_image_list(self, frame):
 
         if self.image_counter < self.image_limit and self.motion_detected == True:
             

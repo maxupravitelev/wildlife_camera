@@ -19,7 +19,7 @@ with open(config_path) as config_file:
 
 camera_mode = config["general_config"]["camera"]
 
-bbox_mode = boolcheck(config["adjust"]["bbox_mode"])
+bbox_mode = boolcheck(config["adjust_config"]["bbox_mode"])
 
 
 # initialize the output frame and a lock used to ensure thread-safe

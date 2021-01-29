@@ -117,8 +117,8 @@ while True:
 
     if File_writer.writing == False:
 
-        if buffer_mode == True:
-            File_writer.handle_image_list(frame)
+        if buffer_mode == True and File_writer.motion_detected == False:
+            File_writer.write_buffer(frame)
         else:
             if analyzer.motion_detected == True or File_writer.file_done == False:
                 # pass current analyzer result to file creator, file creator writes frames to file if motion_detected returns true
