@@ -87,19 +87,19 @@ class File_writer:
             self.file_done = False
             self.image_list.append(frame)
             self.image_counter += 1
-        else:
-            if self.file_done == False and self.inactivityCounter <= self.inactivity_limit:
+        
+        if self.motion_detected == False and self.file_done == False and self.inactivityCounter <= self.inactivity_limit:
 
-                self.inactivityCounter += 1
+            self.inactivityCounter += 1
 
-                self.image_list.append(frame)
-                self.image_counter += 1
-                if self.verbose == True:
-                    print("[filewriter] append image while inactive | count: " + str(self.inactivityCounter))
+            self.image_list.append(frame)
+            self.image_counter += 1
+            if self.verbose == True:
+                print("[filewriter] append image while inactive | count: " + str(self.inactivityCounter))
 
-            if self.file_done == False and self.inactivityCounter > self.inactivity_limit:
+        if self.file_done == False and self.inactivityCounter > self.inactivity_limit:
 
-                self.writing = True
+            self.writing = True
 
 
     def write_to_file(self, lock):
