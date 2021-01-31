@@ -1,4 +1,4 @@
-from PIL import Image, ImageDraw
+from PIL import Image
 import glob 
 import json
 import cv2
@@ -35,9 +35,6 @@ def imgToGif(folderCount, image_list):
 
     else:
 
-        # with ImageFromWand(filename='gifs/out'+ str(folderCount) + '.gif') as img:
-        #     img.save(filename='gifs/outCompressed'+ str(folderCount) + '.gif')
-
         with ImageFromWand() as wand:
 
             for bgr_image in image_list:
@@ -45,74 +42,70 @@ def imgToGif(folderCount, image_list):
                 image = wand.from_array(rgb_image)
                 wand.sequence.append(image)
 
-            # Create progressive delay for each frame
+
             for cursor in range(len(wand.sequence)):
                 with wand.sequence[cursor] as frame:
                     frame.delay = int(gif_duration / 7)
 
-            # print(len(wand.sequence))
-
-            # Set layer type
             wand.type = 'optimize'
             wand.save(filename='gifs/out'+ str(folderCount) + '.gif')
 
 
 
-def folder_to_gif(folderCount):
+def folder_to_gif():
 
-    # read images from files into imagelist while preserving the correct order
+    # init image list
     images = []
+
+    # init counter to count total files in folder
     files_in_folder = 0
 
-    for path in glob.glob("gifs/images" + str(folderCount) + "/" + "*.jpg"):
+    # count total files in folder
+    for path in glob.glob("gifs/images" + "/" + "*.jpg"):
         files_in_folder += 1
    
     if imagemagick_installed == False:
         for i in range(0, files_in_folder):
             if i < 10:
-                for img in glob.glob("gifs/images" + str(folderCount) + "/image1000" + str(i) + "*.jpg"):
+                for img in glob.glob("gifs/images" + "/image1000" + str(i) + "*.jpg"):
                     #print(img)
                     newJpg = Image.open(img)
                     images.append(newJpg)
             if i >= 10 and i < 100: 
-                for img in glob.glob("gifs/images" + str(folderCount) + "/image100" + str(i) + "*.jpg"):
+                for img in glob.glob("gifs/images" + "/image100" + str(i) + "*.jpg"):
                     #print(img)
                     newJpg = Image.open(img)
                     images.append(newJpg)
             if i >= 100: 
-                for img in glob.glob("gifs/images" + str(folderCount) + "/image10" + str(i) + "*.jpg"):
+                for img in glob.glob("gifs/images" + "/image10" + str(i) + "*.jpg"):
                     #print(img)
                     newJpg = Image.open(img)
                     images.append(newJpg)
 
-
-        images[0].save('gifs/out'+ str(folderCount) + '.gif',
+        images[0].save('gifs/out'+ '.gif',
                     save_all=True, append_images=images[1:], optimize=True, duration=(gif_duration), loop=loop_gif)
 
     if imagemagick_installed == True:
-
-        # with ImageFromWand(filename='gifs/out'+ str(folderCount) + '.gif') as img:
-        #     img.save(filename='gifs/outCompressed'+ str(folderCount) + '.gif')
 
         with ImageFromWand() as wand:
 
             for i in range(0, len(wand.sequence), 1):
                 if i < 10:
-                    for img in glob.glob("gifs/images" + str(folderCount) + "/image1000" + str(i) + "*.jpg"):
+                    for img in glob.glob("gifs/images" + "/image1000" + str(i) + "*.jpg"):
 
                         with ImageFromWand(filename=img) as one:
                             wand.sequence.append(one)
                 if i >= 10 and i < 100: 
-                    for img in glob.glob("gifs/images" + str(folderCount) + "/image100" + str(i) + "*.jpg"):
+                    for img in glob.glob("gifs/images" + "/image100" + str(i) + "*.jpg"):
                         with ImageFromWand(filename=img) as two:
                             wand.sequence.append(two)
                 if i >= 100: 
-                    for img in glob.glob("gifs/images" + str(folderCount) + "/image10" + str(i) + "*.jpg"):
+                    for img in glob.glob("gifs/images" + "/image10" + str(i) + "*.jpg"):
                         with ImageFromWand(filename=img) as three:
                             wand.sequence.append(three)
 
             # Create progressive delay for each frame
-            for cursor in range(len(finalNumberList)):
+            for cursor in range(len(files_in_folder)):
                 with wand.sequence[cursor] as frame:
                     frame.delay = 1 * (cursor + 1)
 
