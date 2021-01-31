@@ -23,7 +23,7 @@
     },
     "gif_config": {
         "gif_duration": 50,
-        "imagemagick_installed": "false",
+        "imagemagick_installed": "true",
         "loop_gif": 0
     },
     "picam_config": {

@@ -41,9 +41,10 @@ def imgToGif(folderCount, image_list):
 
         with ImageFromWand() as wand:
 
-            for image in image_list:
-                im = ImageFromWand.from_array(image)
-                wand.sequence.append(im)
+            for bgr_image in image_list:
+                rgb_image = cv2.cvtColor(bgr_image, cv2.COLOR_BGR2RGB)
+                image = wand.from_array(rgb_image)
+                wand.sequence.append(image)
 
             # Create progressive delay for each frame
             for cursor in range(len(wand.sequence)):
