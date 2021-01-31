@@ -47,7 +47,11 @@ class VideoStream:
             (self.grabbed, self.frame) = self.stream.read()
             
             # set to check if frame was updated in main thread
-            self.frame_count +=1
+            if self.frame_count < 1000:
+                self.frame_count += 1
+            else:
+                # reset counter
+                self.frame_count = 0
 
     def read(self):
         return self.frame

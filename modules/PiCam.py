@@ -74,7 +74,14 @@ class PiCam:
             # grab the frame from the stream and clear the stream in
             # preparation for the next frame
             self.frame = f.array
-            self.frame_count += 1
+
+            # set to check if frame was updated in main thread 
+            if self.frame_count < 1000:
+                self.frame_count += 1
+            else:
+                # reset counter
+                self.frame_count = 0
+
             self.rawCapture.truncate(0)
 
 
