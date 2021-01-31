@@ -7,31 +7,24 @@ from flask_cors import CORS
 
 import json
 
-# function to parse bool value from config file
+# function to parse bool values from config file
 from modules.utils import boolcheck
 
-# set setting from config file
+# init settings
 config_path = 'config/config.json'
 
 with open(config_path) as config_file:
     config = json.load(config_file)
 
-
 camera_mode = config["general_config"]["camera"]
-
 bbox_mode = boolcheck(config["adjust_config"]["bbox_mode"])
 
 
-# initialize the output frame and a lock used to ensure thread-safe
-# exchanges of the output frames (useful when multiple browsers/tabs
-# are viewing the stream)
-outputFrame = None
-
-# initialize a flask object
+# init flask
 app = Flask(__name__)
 CORS(app)
 
-
+# init cam
 if camera_mode == "webcam":
     from modules.cam import VideoStream
     cap = VideoStream(src=0).start()
@@ -39,15 +32,19 @@ if camera_mode == "picam":
     from modules.PiCam import PiCam
     cap = PiCam().start()
 
-# warmup
+
+# warmup cam
+frame = cap.read()
 time.sleep(2.0)
 
+
+# init background image for bbox mode
 background_image = None
 
 # Built upon: https://www.pyimagesearch.com/2019/09/02/opencv-stream-video-to-web-browser-html-page/
 def generate():
     
-    global outputFrame, cap, background_image
+    global frame, cap, background_image
     
     while True:
         if cap.stopped == True:
@@ -56,15 +53,11 @@ def generate():
             print("PiCam restarted")
             time.sleep(0.5)
         
-        # check if the output frame is available, otherwise skip
-        # the iteration of the loop
-        outputFrame = cap.read()
-        if outputFrame is None:
-            continue
+        frame = cap.read()
 
         if bbox_mode == True:
 
-            gray_frame = cv2.cvtColor(outputFrame,cv2.COLOR_BGR2GRAY)
+            gray_frame = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
             gray_frame = cv2.GaussianBlur(gray_frame,(7,7),0)
 
             if background_image is None:
@@ -81,15 +74,12 @@ def generate():
                 for contour in contours:
                     # print(cv2.contourArea(contour))
                     if cv2.contourArea(contour) >= 0:
-                        
                         (x, y, w, h)=cv2.boundingRect(contour)
-                        
-                        cv2.rectangle(outputFrame, (x, y), (x+w, y+h), (255,255,255), 3)
-                        
-                        cv2.putText(outputFrame, str(cv2.contourArea(contour)), (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (255, 255, 255), 1)
+                        cv2.rectangle(frame, (x, y), (x+w, y+h), (255,255,255), 3)
+                        cv2.putText(frame, str(cv2.contourArea(contour)), (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (255, 255, 255), 1)
 
         # encode the frame in JPEG format
-        (flag, encodedImage) = cv2.imencode(".jpg", outputFrame)
+        (flag, encodedImage) = cv2.imencode(".jpg", frame)
         # ensure the frame was successfully encoded
         if not flag:
                 continue
@@ -97,6 +87,7 @@ def generate():
         # yield the output frame in the byte format
         yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + 
             bytearray(encodedImage) + b'\r\n')
+
 
 @app.route('/config', methods=['GET', 'POST'])
 def config():
@@ -111,7 +102,6 @@ def config():
         with open(config_path) as config_file:
             config = json.load(config_file)
 
-        # config.headers.add("Access-Control-Allow-Origin", "*")
         return config
     else:
         config = request.json
@@ -120,12 +110,7 @@ def config():
         
         cap.stop()
         
-
         return config
-
-
-
-
 
 
 @app.route("/")

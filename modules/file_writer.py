@@ -30,7 +30,7 @@ class File_writer:
 
         self.image_list = []     
         self.image_counter = 0
-        self.image_limit = 50
+        self.image_limit = config["file_writer_config"]["image_limit"]
         
         # init flag to handle reference background resetting after file is created
         self.background_image_set = False
@@ -40,13 +40,13 @@ class File_writer:
 
         # init inactivity handling; needed if frames are skipped or contours are not found in inbetween frames
         self.inactivityCounter = 0
-        self.inactivity_limit = 4
+        self.inactivity_limit = config["file_writer_config"]["inactivity_limit"]
 
         # handle modes
         self.mode = config["file_writer_config"]["mode"]
 
         if self.mode == "avi":
-            self.fps = 30
+            self.fps = config["file_writer_config"]["fps_in_avi_mode"]
             self.frame_width = width
             self.frame_height = height
             self.writer = cv2.VideoWriter("avi/output"+ str(self.fileCount) + ".avi", cv2.VideoWriter_fourcc(*"MJPG"), self.fps,(self.frame_width,self.frame_height))
@@ -58,6 +58,7 @@ class File_writer:
         # init buffer_mode
         self.buffer_mode = boolcheck(config["general_config"]["create_buffer"])
         self.create_buffer = True
+        self.buffer_length = config["file_writer_config"]["buffer_length"]
 
 
     def start(self):    

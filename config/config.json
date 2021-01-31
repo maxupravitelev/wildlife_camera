@@ -10,7 +10,11 @@
             "bbox_mode": "false"
     },
     "file_writer_config": {
-        "mode": "gif"
+        "mode": "gif",
+        "image_limit": 50,
+        "inactivity_limit": 4,
+        "fps_in_avi_mode": 30,
+        "buffer_length": 10
     },
     "general_config": {
         "camera": "webcam",

@@ -1,7 +1,6 @@
 from PIL import Image, ImageDraw
 import glob 
 import json
-import numpy as np
 import cv2
 
 # function to parse bool value from config file
