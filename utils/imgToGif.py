@@ -4,7 +4,7 @@ import json
 import cv2
 
 # function to parse bool value from config file
-from modules.utils import boolcheck
+from utils.boolcheck import boolcheck
 
 config_path = 'config/config.json'
 

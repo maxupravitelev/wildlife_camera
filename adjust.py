@@ -8,7 +8,7 @@ from flask_cors import CORS
 import json
 
 # function to parse bool values from config file
-from modules.utils import boolcheck
+from utils.boolcheck import boolcheck
 
 # init settings
 config_path = 'config/config.json'

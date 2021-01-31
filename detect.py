@@ -9,7 +9,7 @@ from modules.analyzer import Analyzer
 from modules.file_writer import File_writer
 
 # function to parse bool value from config file
-from modules.utils import boolcheck
+from utils.boolcheck import boolcheck
 
 
 

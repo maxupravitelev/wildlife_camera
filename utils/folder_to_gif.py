@@ -1,6 +1,5 @@
 from PIL import Image
 import glob 
-import json
 
 
 gif_duration = 50

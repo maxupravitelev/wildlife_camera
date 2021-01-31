@@ -1,13 +1,13 @@
 import cv2
 import os
-from modules.imgToGif import imgToGif
-import numpy as np
+from utils.imgToGif import imgToGif
+# import numpy as np
 from threading import Thread
 import threading
 import json
 
 # function to parse bool value from config file
-from modules.utils import boolcheck
+from utils.boolcheck import boolcheck
 
 class File_writer:
     def __init__(self, height=480, width=680):

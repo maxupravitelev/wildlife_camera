@@ -3,9 +3,9 @@
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 from threading import Thread
-import cv2
+# import cv2
 
-import numpy as np
+# import numpy as np
 import json
 
 

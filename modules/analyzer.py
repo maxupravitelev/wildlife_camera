@@ -4,7 +4,7 @@ import imutils
 import json
 
 # function to parse bool value from config file
-from modules.utils import boolcheck
+from utils.boolcheck import boolcheck
 
 class Analyzer:
     def __init__(self, frame):
