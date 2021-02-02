@@ -9,7 +9,8 @@
     },
     
         "adjust_config": {
-            "bbox_mode": "false"
+            "bbox_mode": "false",
+            "gpio_motor": "true"
     },
     "file_writer_config": {
         "mode": "gif",

@@ -10,6 +10,7 @@ import json
 # function to parse bool values from config file
 from utils.boolcheck import boolcheck
 
+
 # init settings
 config_path = 'config/config.json'
 
@@ -18,7 +19,11 @@ with open(config_path) as config_file:
 
 camera_mode = config["general_config"]["camera"]
 bbox_mode = boolcheck(config["adjust_config"]["bbox_mode"])
+gpio_motor = boolcheck(config["adjust_config"]["gpio_motor"])
 
+if gpio_motor == True:
+    from modules.gpio_motor import GPIO_motor
+    motor = GPIO_motor()
 
 # init flask
 app = Flask(__name__)
@@ -112,6 +117,21 @@ def config():
         
         return config
 
+@app.route('/move', methods=['POST'])
+def move_camera():
+
+    move_json = request.json
+    direction = move_json["direction"]
+    steps = move_json["steps"]
+
+    if direction == "left":
+        motor.move_left(steps)
+    else:
+        motor.move_right(steps)
+
+    return move_json
+
+    
 
 @app.route("/")
 def video_feed():

@@ -1,0 +1,7 @@
+POST http://0.0.0.0:8000/move
+Content-Type: application/json
+
+{
+  "steps": 256,
+  "direction": "left"
+}
