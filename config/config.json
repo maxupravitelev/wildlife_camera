@@ -2,8 +2,10 @@
     "analyzer_config": {
         "bbox_mode": "false",
         "detection_area_factor": 0.001,
-        "gauss_blur_factor": 3,
-        "resize_width": 200
+        "gauss_blur_factor": 7,
+        "resize_width": 400,
+        "threshold_black": 10,
+        "threshold_white": 255
     },
     
         "adjust_config": {
@@ -11,10 +13,10 @@
     },
     "file_writer_config": {
         "mode": "gif",
-        "image_limit": 70,
-        "inactivity_limit": 2,
+        "image_limit": 50,
+        "inactivity_limit": 4,
         "fps_in_avi_mode": 30,
-        "buffer_length": 15
+        "buffer_length": 10
     },
     "general_config": {
         "camera": "webcam",
