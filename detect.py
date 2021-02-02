@@ -107,11 +107,10 @@ while True:
 
 
     # set frame handled by analyzer
-    File_writer.frame = frame
     analyzer.frame = frame
     
     # sync threads
-    File_writer.motion_detected = analyzer.motion_detected
+    
     analyzer.file_writing = File_writer.writing
 
     if File_writer.writing == False:
@@ -121,6 +120,7 @@ while True:
         
         if analyzer.motion_detected == True or File_writer.file_done == False:
             # pass current analyzer result to file creator, file creator writes frames to file if motion_detected returns true
+            File_writer.motion_detected = analyzer.motion_detected
             File_writer.handle_image_list(frame)
    
 

@@ -2,6 +2,7 @@ from threading import Thread
 import cv2
 import imutils
 import json
+import time
 
 # function to parse bool value from config file
 from utils.boolcheck import boolcheck
@@ -59,7 +60,7 @@ class Analyzer:
                 gray_frame=cv2.GaussianBlur(gray_frame,(self.gauss_blur_factor,self.gauss_blur_factor),0)
 
                 delta=cv2.absdiff(self.background_image,gray_frame)
-                threshold=cv2.threshold(delta, 30, 255, cv2.THRESH_BINARY)[1]
+                threshold=cv2.threshold(delta, 80, 255, cv2.THRESH_BINARY)[1]
                 threshold = cv2.erode(threshold, None, iterations=2)
                 threshold = cv2.dilate(threshold, None, iterations=2)
                 (contours,_)=cv2.findContours(threshold,cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)

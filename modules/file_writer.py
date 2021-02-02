@@ -53,8 +53,6 @@ class File_writer:
 
         self.verbose = boolcheck(config["general_config"]["verbose"])
 
-
-        
         # init buffer_mode
         self.buffer_mode = boolcheck(config["general_config"]["create_buffer"])
         self.create_buffer = True
@@ -69,7 +67,7 @@ class File_writer:
 
     def write_buffer(self, frame):
         # if self.create_buffer == True and self.motion_detected == False:
-            if len(self.image_list) < 10:
+            if len(self.image_list) < self.buffer_length:
                 self.image_list.append(frame)
             else:
                 self.image_list.pop(0)
@@ -82,7 +80,7 @@ class File_writer:
             self.create_buffer = False
 
             if self.verbose == True:
-                print("[filewriter] Image count: " + str(self.image_counter))
+                print("[filewriter] Image count: " + str(len(self.image_list)))
 
             self.inactivityCounter = 0
             self.file_done = False
@@ -98,7 +96,7 @@ class File_writer:
             if self.verbose == True:
                 print("[filewriter] append image while inactive | count: " + str(self.inactivityCounter))
 
-        if self.file_done == False and self.inactivityCounter > self.inactivity_limit:
+        if self.inactivityCounter > self.inactivity_limit or self.image_counter >= self.image_limit:
 
             self.writing = True
 
