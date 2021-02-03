@@ -25,6 +25,14 @@ class Analyzer:
         self.detection_area = 0
         self.detection_area_factor = config["analyzer_config"]["detection_area_factor"]
 
+        # print current dimensions
+        frame_height = frame.shape[0]
+        frame_width = frame.shape[1]
+        contour_threshold = int((frame_height * frame_height) * (self.detection_area_factor))
+
+        print("Total area: " + str(frame_width * frame_height) + " (frame width: " + str(frame_width) + " x " + "frame height: " + str(frame_height) + ")")
+        print("Approx. detection area: " + str(contour_threshold) + " (" + str(self.detection_area_factor * 100) + " % of total area)")
+
         # init motion detection
         self.motion_detected = False
 
@@ -44,6 +52,8 @@ class Analyzer:
 
         self.preview = False
 
+        self.resize_factor = self.frame.shape[1] / self.resize_width
+
     def start(self):    
         Thread(target=self.analyze, args=()).start()
         return self    
@@ -51,19 +61,15 @@ class Analyzer:
     def analyze(self):
         while not self.stopped:
 
-            if self.preview == True:
 
-                cv2.imshow("video feed", self.frame)
 
             
             if self.file_writing == False:
             
-                # cv2.imshow("gray_frame", self.frame)
                 resized_frame = imutils.resize(self.frame, self.resize_width)
                 if self.detection_area == 0:
                     self.detection_area = int((resized_frame.shape[0] * resized_frame.shape[1]) * (self.detection_area_factor))
 
-                # print(self.detection_area)
 
                 gray_frame=cv2.cvtColor(resized_frame,cv2.COLOR_BGR2GRAY)
                 gray_frame=cv2.GaussianBlur(gray_frame,(self.gauss_blur_factor,self.gauss_blur_factor),0)
@@ -74,6 +80,10 @@ class Analyzer:
                 threshold = cv2.dilate(threshold, None, iterations=2)
                 (contours,_)=cv2.findContours(threshold,cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
                 
+                if self.preview == True:
+
+                    cv2.imshow("video feed", threshold)
+
                 if contours != []: 
                     for contour in contours:
                         if cv2.contourArea(contour) > self.detection_area:
@@ -82,10 +92,17 @@ class Analyzer:
 
                             self.motion_detected = True
                             
+
+
                             if self.bbox_mode == True:
 
                                 (x, y, w, h)=cv2.boundingRect(contour)
-                                        
+
+                                x = int(x*self.resize_factor)
+                                y = int(y*self.resize_factor)
+                                w = int(w*self.resize_factor)
+                                h = int(h*self.resize_factor)
+
                                 cv2.rectangle(self.frame, (x, y), (x+w, y+h), (255,255,255), 3)
                                 
                                 cv2.putText(self.frame, str(cv2.contourArea(contour)), (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (255, 255, 255), 1)

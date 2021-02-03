@@ -52,15 +52,9 @@ frame = cap.read()
 # get frame size from first frame making
 print("Frame resolution: " + str(frame.shape))
 
+# get current dimensions
 frame_height = frame.shape[0]
 frame_width = frame.shape[1]
-
-# set size of changed area that triggers movement detection
-detection_area = 0.003
-contour_threshold = int((frame_height * frame_height) * (detection_area))
-print("Total area: " + str(frame_width * frame_height) + " (frame width: " + str(frame_width) + " x " + "frame height: " + str(frame_height) + ")")
-print("Approx. detection area: " + str(contour_threshold) + " (" + str(detection_area * 100) + " % of total area)")
-
 
 # init writing files (separate thread)
 File_writer = File_writer(height=frame_height, width=frame_width).start()

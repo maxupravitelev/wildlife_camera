@@ -13,6 +13,9 @@ You can also use the companion app [picam-config](https://github.com/maxupravite
 
 `python capture.py` captures the video stream immediately without detecting motion. Produces AVI by default.
 
+`python preview.py` opens a preview window where you can see the current camera frame. If you want to preview the bounding box around the detected area, set `["analyzer_config"]["bbox_mode"]` to `true` in the [config.json file](https://github.com/maxupravitelev/wildlife_detection/tree/main/config)
+
+
 ## Hardware requirements
 
 The app was tested with usb webcams on a laptop and camera modules on a raspberry pi 4B. It takes advantage of multithreading and produces okay-ish results (around 12 FPS) running on a raspberry pi. This can be improved immensely by running a raspivid stream and reading it via TCP on the same device (or another). [Start raspivid on your raspberry](https://wiki.marcluerssen.de/index.php?title=Raspberry_Pi/Camera_streaming#direct_tcp_stream_with_netcat), change the config.json
