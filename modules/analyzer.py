@@ -106,10 +106,10 @@ class Analyzer:
                                 
                                 cv2.putText(self.frame, str(cv2.contourArea(contour)), (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (255, 255, 255), 1)
 
-                        # time.sleep(1.0)
-                        # break
+                            # time.sleep(1.0)
+                            break
 
-                    self.motion_detected = False
+                        self.motion_detected = False
                 
 
                 else:
