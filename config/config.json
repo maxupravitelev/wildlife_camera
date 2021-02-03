@@ -1,6 +1,6 @@
 {
     "analyzer_config": {
-        "bbox_mode": "false",
+        "bbox_mode": "true",
         "detection_area_factor": 0.001,
         "gauss_blur_factor": 7,
         "resize_width": 400,

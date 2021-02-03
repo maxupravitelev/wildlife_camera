@@ -42,12 +42,19 @@ class Analyzer:
         self.threshold_black = config["analyzer_config"]["threshold_black"]
         self.threshold_white = config["analyzer_config"]["threshold_white"]
 
+        self.preview = False
+
     def start(self):    
         Thread(target=self.analyze, args=()).start()
         return self    
 
     def analyze(self):
         while not self.stopped:
+
+            if self.preview == True:
+
+                cv2.imshow("video feed", self.frame)
+
             
             if self.file_writing == False:
             
