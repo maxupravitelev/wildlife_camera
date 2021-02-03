@@ -3,17 +3,22 @@
 from threading import Thread
 import cv2
 
-# import numpy as np
-
 import json
 
-config_path = 'config/config.json'
-
-with open(config_path) as config_file:
-    config = json.load(config_file)
+# function to parse bool value from config file
+from utils.boolcheck import boolcheck
 
 class VideoStream:
     def __init__(self, src=0, name="VideoStream"):
+
+        config_path = 'config/config.json'
+
+        with open(config_path) as config_file:
+            config = json.load(config_file)
+
+        if boolcheck(config["general_config"]["stream_via_url"]) == True:
+            src = config["general_config"]["stream_url"]
+
         # initialize the video camera stream and read the first frame
         # from the stream
         self.stream = cv2.VideoCapture(src)

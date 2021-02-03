@@ -21,6 +21,8 @@
     },
     "general_config": {
         "camera": "webcam",
+        "stream_via_url": "false",
+        "stream_url": "tcp://192.168.178.51:5000",
         "debug_mode": "false",
         "draw_bbox": "false",
         "enable_fps_timer": "false",
