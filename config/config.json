@@ -1,10 +1,10 @@
 {
     "analyzer_config": {
-        "bbox_mode": "true",
+        "bbox_mode": "false",
         "detection_area_factor": 0.002,
-        "gauss_blur_factor": 7,
-        "resize_width": 400,
-        "threshold_black": 10,
+        "gauss_blur_factor": 1,
+        "resize_width": 100,
+        "threshold_black": 20,
         "threshold_white": 255
     },
     

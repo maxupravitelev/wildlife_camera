@@ -42,18 +42,23 @@ class Analyzer:
         # set for drawing bounding box around detected area 
         self.bbox_mode = boolcheck(config["analyzer_config"]["bbox_mode"])
         
+        # bbox has to be resized according to original frame size
+        self.resize_factor = self.frame.shape[1] / self.resize_width
+
+        # flag to stop analyzing while file is being written
         self.file_writing = False
 
         # set verbose mode
         self.verbose = boolcheck(config["general_config"]["verbose"])
 
+        # fetch threshold values from config file
         self.threshold_black = config["analyzer_config"]["threshold_black"]
         self.threshold_white = config["analyzer_config"]["threshold_white"]
 
+        # init preview mode as false, set true to show frames in window
         self.preview = False
 
-        self.resize_factor = self.frame.shape[1] / self.resize_width
-
+        
     def start(self):    
         Thread(target=self.analyze, args=()).start()
         return self    
@@ -61,9 +66,6 @@ class Analyzer:
     def analyze(self):
         while not self.stopped:
 
-
-
-            
             if self.file_writing == False:
             
                 resized_frame = imutils.resize(self.frame, self.resize_width)
@@ -81,8 +83,7 @@ class Analyzer:
                 (contours,_)=cv2.findContours(threshold,cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
                 
                 if self.preview == True:
-
-                    cv2.imshow("video feed", threshold)
+                    cv2.imshow("video feed", self.frame)
 
                 if contours != []: 
                     for contour in contours:
@@ -92,8 +93,6 @@ class Analyzer:
 
                             self.motion_detected = True
                             
-
-
                             if self.bbox_mode == True:
 
                                 (x, y, w, h)=cv2.boundingRect(contour)
@@ -107,11 +106,10 @@ class Analyzer:
                                 
                                 cv2.putText(self.frame, str(cv2.contourArea(contour)), (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (255, 255, 255), 1)
 
-                            # time.sleep(1.0)
-                            break
+                        # time.sleep(1.0)
+                        # break
 
-                        else:
-                            self.motion_detected = False
+                    self.motion_detected = False
                 
 
                 else:
