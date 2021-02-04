@@ -11,10 +11,13 @@ Run `python detect.py` to start the app. The default mode is set to producing gi
 `python adjust.py` is meant to be run on a raspberry pi to help adjusting the camera position while viewing it in the browser of a different device in the local network. 
 You can also use the companion app [picam-config](https://github.com/maxupravitelev/picam-config) if you want to adjust the settings from a frontend GUI with a realtime preview. This app provides the possibility to move the camera from a frontend in case your Picam is utilizing a GPIO motor.
 
-`python capture.py` captures the video stream immediately without detecting motion. Produces AVI by default.
-
 `python preview.py` opens a preview window where you can see the current camera frame. If you want to preview the bounding box around the detected area, set `["analyzer_config"]["bbox_mode"]` to `true` in the [config.json file](https://github.com/maxupravitelev/wildlife_detection/tree/main/config)
 
+`python capture.py` captures the video stream immediately without detecting motion. Produces AVI by default.
+
+`python timelapse.py` captures the video stream immediately based on a timelapse value (the default is set to 5 seconds, can be set with - `--timelapse` flag). Produces GIF by default.
+
+The exit of all scripts is rather ungraceful at the moment and requires hitting CTRL+C.
 
 ## Hardware requirements
 
@@ -22,4 +25,4 @@ The app was tested with usb webcams on a laptop and camera modules on a raspberr
 
 ## current stage
 
-The app is in early stages and is not yet exactly user-friendly at this point :). GIF creation is not optimized yet, so the produced files are rather large.
+The app is in an early prototype stage.
