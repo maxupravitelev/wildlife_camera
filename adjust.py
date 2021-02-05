@@ -39,9 +39,9 @@ if camera_mode == "picam":
 
 
 # warmup cam
-frame = cap.read()
 time.sleep(2.0)
 
+frame = cap.read()
 
 # init background image for bbox mode
 background_image = None

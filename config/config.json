@@ -31,7 +31,7 @@
   },
   "gif_config": {
     "gif_duration": 50,
-    "imagemagick_installed": "true",
+    "imagemagick_installed": "false",
     "loop_gif": 0
   },
   "picam_config": {
