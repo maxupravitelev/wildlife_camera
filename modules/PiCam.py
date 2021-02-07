@@ -31,8 +31,7 @@ class PiCam:
         self.camera = PiCamera() 
 
         # set resolution
-        r = 0
-        resolution = config["picam_config"]["resolution_4:3"][r]
+        resolution = config["picam_config"]["resolution"]["set"]
         self.camera.resolution = (resolution[0], resolution[1])
         print(self.camera.resolution)
         
