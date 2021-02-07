@@ -42,7 +42,8 @@ class PiCam:
         self.camera.awb_mode = config["picam_config"]["awb_mode"]
         self.camera.awb_gains = config["picam_config"]["awb_gains"]
         self.camera.exposure_mode = config["picam_config"]["exposure_mode"]
-        print(self.camera.framerate)
+        self.camera.image_effect = config["picam_config"]["image_effect"]["set"]
+        print(self.camera.image_effect)
         
         self.rawCapture = PiRGBArray(self.camera, size=resolution)
         self.stream = self.camera.capture_continuous(self.rawCapture,

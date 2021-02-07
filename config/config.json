@@ -48,6 +48,10 @@
       [640, 480],
       [1024, 768],
       [1640, 1232]
-    ]
+    ],
+    "image_effect": {
+      "set": "none",
+      "options": ["none", "negative", "solarize", "sketch",  "denoise", "emboss", "oilpaint", "hatch", "gpen", "pastel", "watercolor", "film", "blur", "saturation", "colorswap", "washedout", "posterise", "colorpoint", "colorbalance", "cartoon", "deinterlace1","deinterlace2"]
+    }
   }
 }
