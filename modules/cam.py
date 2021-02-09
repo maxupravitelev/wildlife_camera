@@ -45,8 +45,8 @@ class VideoStream:
         while True:
             # if the thread indicator variable is set, stop the thread
 
-            if self.stopped:
-                return
+            # if self.stopped:
+            #     return
 
             # otherwise, read the next frame from the stream
             (self.grabbed, self.frame) = self.stream.read()

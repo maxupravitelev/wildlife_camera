@@ -104,7 +104,6 @@ while True:
     analyzer.frame = frame
     
     # sync threads
-    
     analyzer.file_writing = File_writer.writing
 
     if File_writer.writing == False:

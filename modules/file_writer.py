@@ -57,11 +57,12 @@ class File_writer:
         self.buffer_mode = boolcheck(config["general_config"]["create_buffer"])
         self.create_buffer = True
         self.buffer_length = config["file_writer_config"]["buffer_length"]
+        self.lock = threading.Lock()
 
 
     def start(self):    
-        lock = threading.Lock()
-        Thread(target=self.write_to_file, args=(lock,)).start()
+        # lock = threading.Lock()
+        # Thread(target=self.write_to_file, args=(lock,)).start()
         return self 
 
 
@@ -99,15 +100,15 @@ class File_writer:
         if self.inactivityCounter > self.inactivity_limit or self.image_counter >= self.image_limit:
 
             self.writing = True
-            self.start()
+            self.write_to_file()
 
 
-    def write_to_file(self, lock):
+    def write_to_file(self):
     # while not self.stopped:
     #     if self.writing == False:
     #         continue
 
-        with lock:
+        with self.lock:
             if self.verbose == True:
                 print("[filewriter] wrting to file...")
 
