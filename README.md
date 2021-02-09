@@ -1,4 +1,4 @@
-# wildlife_detection
+# wildlife_camera
 
 ## about
 

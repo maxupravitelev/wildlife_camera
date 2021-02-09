@@ -71,6 +71,8 @@ if enable_timer == True:
 # check if frame has been actually updated
 previous_frame_count = cap.frame_count
 
+fps_limit = 1/30
+max_fps_in_ms = int((fps_limit)*1000) 
 
 # main loop
 while True:
@@ -133,7 +135,7 @@ while True:
         # cv2.imshow("threshold", threshold)
 
     # loop breaking condition
-    key = cv2.waitKey(1) & 0xFF
+    key = cv2.waitKey(max_fps_in_ms) & 0xFF
 
     if key == ord("x"):
         break

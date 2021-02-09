@@ -4,6 +4,7 @@ from threading import Thread
 import cv2
 
 import json
+import time
 
 # function to parse bool value from config file
 from utils.boolcheck import boolcheck
@@ -23,6 +24,8 @@ class VideoStream:
         # from the stream
         self.stream = cv2.VideoCapture(src)
         # self.stream = cv2.VideoCapture("tcp://192.168.178.51:5000")  
+        # time.sleep(1.0)
+        self.stream.set(cv2.CAP_PROP_BUFFERSIZE, 2)
 
         (self.grabbed, self.frame) = self.stream.read()
 
@@ -42,15 +45,11 @@ class VideoStream:
 
     def update(self):
         # keep looping infinitely until the thread is stopped
-        while True:
-            # if the thread indicator variable is set, stop the thread
-
-            # if self.stopped:
-            #     return
-
-            # otherwise, read the next frame from the stream
-            (self.grabbed, self.frame) = self.stream.read()
+        while not self.stopped:
             
+            # read next frame from  stream
+            (self.grabbed, self.frame) = self.stream.read()
+
             # set to check if frame was updated in main thread
             if self.frame_count < 1000:
                 self.frame_count += 1

@@ -14,23 +14,23 @@
     "file_writer_config": {
         "buffer_length": 10,
         "fps_in_avi_mode": 30,
-        "image_limit": 50,
-        "inactivity_limit": 4,
+        "image_limit": 80,
+        "inactivity_limit": 10,
         "mode": "gif"
     },
     "general_config": {
-        "camera": "webcam",
+        "camera": "picam",
         "create_buffer": "true",
         "debug_mode": "false",
         "draw_bbox": "false",
-        "enable_fps_timer": "true",
+        "enable_fps_timer": "false",
         "stream_url": "tcp://192.168.178.50:5000",
         "stream_via_url": "false",
         "verbose": "true"
     },
     "gif_config": {
         "gif_duration": 50,
-        "imagemagick_installed": "false",
+        "imagemagick_installed": "true",
         "loop_gif": 0
     },
     "picam_config": {

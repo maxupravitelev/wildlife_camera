@@ -19,7 +19,7 @@ mode = args["mode"]
 
 ## mode selection
 debug_mode = False
-enable_timer = False
+enable_timer = True
 approx_fps = False
 
 ## init capture
@@ -92,7 +92,7 @@ if approx_fps == False:
         # check if frame has been actually updated
         frame_count = cap.frame_count
         if frame_count == previous_frame_count:
-            # print("same")
+            #print("same")
             continue
         previous_frame_count = frame_count
         
