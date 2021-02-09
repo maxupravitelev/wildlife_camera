@@ -1,5 +1,6 @@
 import RPi.GPIO as GPIO
 import time
+import threading 
 
 
 class GPIO_motor:
@@ -11,6 +12,7 @@ class GPIO_motor:
         self.P_B1 = 17 # ditto
         self.P_B2 = 22 # ditto
         self.delay = 0.005 # time to settle
+        self._lock = threading.Lock()
 
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.P_A1, GPIO.OUT)
@@ -38,19 +40,21 @@ class GPIO_motor:
         time.sleep(self.delay)
 
     def move_right(self, steps=256):
-        # 512 steps for 360 degrees, adapt to your motor
-        # while True:
-        print("right")
-        for i in range(steps):
-            self.forwardStep() 
+        with self._lock:
+            # 512 steps for 360 degrees, adapt to your motor
+            # while True:
+            print("right")
+            for i in range(steps):
+                self.forwardStep() 
 
 
     def move_left(self, steps=256):
-        # 512 steps for 360 degrees, adapt to your motor
-        # while True:
-        print("left")
-        for i in range(steps):
-            self.backwardStep() 
+        with self._lock:
+            # 512 steps for 360 degrees, adapt to your motor
+            # while True:
+            print("left")
+            for i in range(steps):
+                self.backwardStep() 
 
 
 # Built upon:
