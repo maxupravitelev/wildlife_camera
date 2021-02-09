@@ -1,33 +1,32 @@
 {
-  "analyzer_config": {
-    "bbox_mode": "false",
-    "detection_area_factor": 0.002,
-    "gauss_blur_factor": 1,
-    "resize_width": 100,
-    "threshold_black": 20,
-    "threshold_white": 255
-  },
-
   "adjust_config": {
     "bbox_mode": "false",
     "gpio_motor": "true"
   },
+  "analyzer_config": {
+    "bbox_mode": "false",
+    "detection_area_factor": 0.002,
+    "gauss_blur_factor": 1,
+    "resize_width": 200,
+    "threshold_black": 20,
+    "threshold_white": 255
+  },
   "file_writer_config": {
-    "mode": "gif",
+    "buffer_length": 10,
+    "fps_in_avi_mode": 30,
     "image_limit": 50,
     "inactivity_limit": 4,
-    "fps_in_avi_mode": 30,
-    "buffer_length": 10
+    "mode": "gif"
   },
   "general_config": {
-    "camera": "webcam",
-    "stream_via_url": "false",
-    "stream_url": "tcp://192.168.178.50:5000",
+    "camera": "picam",
+    "create_buffer": "true",
     "debug_mode": "false",
     "draw_bbox": "false",
     "enable_fps_timer": "false",
-    "verbose": "true",
-    "create_buffer": "true"
+    "stream_url": "tcp://0.0.0.0:5000",
+    "stream_via_url": "false",
+    "verbose": "true"
   },
   "gif_config": {
     "gif_duration": 50,
@@ -39,20 +38,64 @@
     "awb_mode": "off",
     "exposure_mode": "auto",
     "framerate": 30,
-    "resolution": { 
-      "set": [640, 480],
-      "options": [
-      [640, 480],
-      [1024, 768],
-      [1640, 1232],
-      [1280, 730],
-      [1640, 922],
-      [1920, 1080]
-    ]
-  },
     "image_effect": {
-      "set": "none",
-      "options": ["none", "negative", "solarize", "sketch",  "denoise", "emboss", "oilpaint", "hatch", "gpen", "pastel", "watercolor", "film", "blur", "saturation", "colorswap", "washedout", "posterise", "colorpoint", "colorbalance", "cartoon", "deinterlace1","deinterlace2"]
+      "options": [
+        "none",
+        "negative",
+        "solarize",
+        "sketch",
+        "denoise",
+        "emboss",
+        "oilpaint",
+        "hatch",
+        "gpen",
+        "pastel",
+        "watercolor",
+        "film",
+        "blur",
+        "saturation",
+        "colorswap",
+        "washedout",
+        "posterise",
+        "colorpoint",
+        "colorbalance",
+        "cartoon",
+        "deinterlace1",
+        "deinterlace2"
+      ],
+      "set": "none"
+    },
+    "resolution": {
+      "options": [
+        [
+          640,
+          480
+        ],
+        [
+          1024,
+          768
+        ],
+        [
+          1640,
+          1232
+        ],
+        [
+          1280,
+          730
+        ],
+        [
+          1640,
+          922
+        ],
+        [
+          1920,
+          1080
+        ]
+      ],
+      "set": [
+        640,
+        480
+      ]
     }
   }
 }

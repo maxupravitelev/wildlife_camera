@@ -99,64 +99,65 @@ class File_writer:
         if self.inactivityCounter > self.inactivity_limit or self.image_counter >= self.image_limit:
 
             self.writing = True
+            self.start()
 
 
     def write_to_file(self, lock):
-        while not self.stopped:
-            if self.writing == False:
-                continue
+    # while not self.stopped:
+    #     if self.writing == False:
+    #         continue
 
-            with lock:
+        with lock:
+            if self.verbose == True:
+                print("[filewriter] wrting to file...")
+
                 if self.verbose == True:
-                    print("[filewriter] wrting to file...")
+                    print("[filewriter] total images: " + str(len(self.image_list)))                    
 
-                    if self.verbose == True:
-                        print("[filewriter] total images: " + str(len(self.image_list)))                    
+            if self.mode == "gif":
 
-                if self.mode == "gif":
+                # create folder for images
+                newFolder = 'gifs/images' + str(self.fileCount)
+                if not os.path.isdir(newFolder):
+                    os.makedirs(newFolder)
 
-                    # create folder for images
-                    newFolder = 'gifs/images' + str(self.fileCount)
-                    if not os.path.isdir(newFolder):
-                        os.makedirs(newFolder)
+                # write individual images
+                for num, image in enumerate(self.image_list, start=0):
+                    if num < 10:
+                        localPath = newFolder + '/image1000'+str(num)+'.jpg'                
+                    if num >= 10 and num < 100: 
+                        localPath = newFolder + '/image100'+str(num)+'.jpg'                
+                    if num >= 100: 
+                        localPath = newFolder + '/image10'+str(num)+'.jpg'
+                    cv2.imwrite(localPath,image)  
 
-                    # write individual images
-                    for num, image in enumerate(self.image_list, start=0):
-                        if num < 10:
-                            localPath = newFolder + '/image1000'+str(num)+'.jpg'                
-                        if num >= 10 and num < 100: 
-                            localPath = newFolder + '/image100'+str(num)+'.jpg'                
-                        if num >= 100: 
-                            localPath = newFolder + '/image10'+str(num)+'.jpg'
-                        cv2.imwrite(localPath,image)  
+                # convert folder to gif
+                imgToGif(self.fileCount, self.image_list)
 
-                    # convert folder to gif
-                    imgToGif(self.fileCount, self.image_list)
-
-                    self.fileCount +=1
-                    print("[filewriter] GIFs created: " + str(self.fileCount))
+                self.fileCount +=1
+                print("[filewriter] GIFs created: " + str(self.fileCount))
+            
+                # reset values to handle next gif
+                self.reset_values()
+            
+            elif self.mode == "avi":
                 
-                    # reset values to handle next gif
-                    self.reset_values()
-                
-                elif self.mode == "avi":
+                # create folder for images
+                newFolder = 'avi'
+                if not os.path.isdir(newFolder):
+                    os.makedirs(newFolder)
+
+                for frame in self.image_list:
+
+                    self.writer.write(frame)
                     
-                    # create folder for images
-                    newFolder = 'avi'
-                    if not os.path.isdir(newFolder):
-                        os.makedirs(newFolder)
+                self.fileCount += 1
+                print("[filewriter] AVIs created: " + str(self.fileCount))
+                self.file_done = True
+                self.writer = cv2.VideoWriter("avi/output"+ str(self.fileCount) + ".avi", cv2.VideoWriter_fourcc(*"MJPG"), self.fps,(self.frame_width,self.frame_height))
 
-                    for frame in self.image_list:
-
-                        self.writer.write(frame)
-                        
-                    self.fileCount += 1
-                    print("[filewriter] AVIs created: " + str(self.fileCount))
-                    self.file_done = True
-                    self.writer = cv2.VideoWriter("avi/output"+ str(self.fileCount) + ".avi", cv2.VideoWriter_fourcc(*"MJPG"), self.fps,(self.frame_width,self.frame_height))
-
-                    # reset values to handle next avi
-                    self.reset_values()
+                # reset values to handle next avi
+                self.reset_values()
 
     def reset_values(self):
         self.image_list = []
@@ -166,6 +167,7 @@ class File_writer:
         self.background_image_set = False
         
         self.writing = False
+        self.stop()
 
         self.create_buffer = True
 

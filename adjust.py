@@ -109,6 +109,7 @@ def config():
 
         return config
     else:
+        print("config received")
         config = request.json
         with open('config/config.json', 'w') as outfile:
             json.dump(config, outfile)

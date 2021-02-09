@@ -57,7 +57,7 @@ frame_height = frame.shape[0]
 frame_width = frame.shape[1]
 
 # init writing files (separate thread)
-File_writer = File_writer(height=frame_height, width=frame_width).start()
+File_writer = File_writer(height=frame_height, width=frame_width)
 
 # init analyzer for movement detection (separate thread)
 analyzer = Analyzer(frame).start()

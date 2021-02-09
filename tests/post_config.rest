@@ -2,45 +2,61 @@ POST http://0.0.0.0:8000/config
 Content-Type: application/json
 
 {
-  "picam_config": {
-    
-    "framerate": 30,
-    "resolution_4:3": [
-      [640, 480],
-      [1024, 768],
-      [1640, 1232]
-    ],
-    "resolution_16:9": [
-      [1280, 730],
-      [1640, 922],
-      [1920, 1080]
-    ],
-    "awb_mode": "cloudy",
-    "awb_gains": 1.9,
-    "exposure_mode": "auto"
+  "analyzer_config": {
+    "bbox_mode": "false",
+    "detection_area_factor": 0.002,
+    "gauss_blur_factor": 1,
+    "resize_width": 100,
+    "threshold_black": 20,
+    "threshold_white": 255
+  },
+
+  "adjust_config": {
+    "bbox_mode": "false",
+    "gpio_motor": "true"
+  },
+  "file_writer_config": {
+    "mode": "gif",
+    "image_limit": 50,
+    "inactivity_limit": 4,
+    "fps_in_avi_mode": 30,
+    "buffer_length": 10
+  },
+  "general_config": {
+    "camera": "webcam",
+    "stream_via_url": "false",
+    "stream_url": "tcp://192.168.178.50:5000",
+    "debug_mode": "false",
+    "draw_bbox": "false",
+    "enable_fps_timer": "false",
+    "verbose": "true",
+    "create_buffer": "true"
   },
   "gif_config": {
     "gif_duration": 50,
-    "loop_gif": 0,
-    "image_magic_installed": "false"
+    "imagemagick_installed": "false",
+    "loop_gif": 0
   },
-  "general_config": {
-    "output_format": "gif",
-    "camera": "PiCam",
-    "draw_bbox": "false",
-    "verbose": "true",
-    "enable_fps_timer": "false",
-    "debug_mode": "false" 
+  "picam_config": {
+    "awb_gains": 2,
+    "awb_mode": "off",
+    "exposure_mode": "auto",
+    "framerate": 30,
+    "resolution": { 
+      "set": [640, 480],
+      "options": [
+      [640, 480],
+      [1024, 768],
+      [1640, 1232],
+      [1280, 730],
+      [1640, 922],
+      [1920, 1080]
+    ]
   },
-  "analyzer_config": {
-    "detection_area_factor": 0.001,
-    "resize_width": 400,
-    "gauss_blur_factor": 15,
-    "bbox_mode": "false",
-    "verbose": "true"
-
-  },
-  "file_writer_config": {
-
+    "image_effect": {
+      "set": "none",
+      "options": ["none", "negative", "solarize", "sketch",  "denoise", "emboss", "oilpaint", "hatch", "gpen", "pastel", "watercolor", "film", "blur", "saturation", "colorswap", "washedout", "posterise", "colorpoint", "colorbalance", "cartoon", "deinterlace1","deinterlace2"]
+    }
   }
 }
+
