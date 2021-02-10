@@ -125,10 +125,7 @@ def move_camera():
     direction = move_json["direction"]
     steps = move_json["steps"]
 
-    if direction == "left":
-        motor.move_left(steps)
-    else:
-        motor.move_right(steps)
+    motor.start(steps, direction)
 
     return move_json
 

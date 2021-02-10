@@ -3,6 +3,7 @@ import time
 import threading 
 
 
+
 class GPIO_motor:
     def __init__(self):
 
@@ -39,22 +40,25 @@ class GPIO_motor:
         GPIO.output(self.P_B2, in4)
         time.sleep(self.delay)
 
-    def move_right(self, steps=256):
+    def move(self, steps=256, direction="left"):
         with self._lock:
             # 512 steps for 360 degrees, adapt to your motor
             # while True:
-            print("right")
-            for i in range(steps):
-                self.forwardStep() 
 
+            if direction == "right":
+                print("right")
+                for i in range(steps):
+                    self.forwardStep()
+            else:
+                print("left")
+                for i in range(steps):
+                    self.backwardStep() 
 
-    def move_left(self, steps=256):
-        with self._lock:
-            # 512 steps for 360 degrees, adapt to your motor
-            # while True:
-            print("left")
-            for i in range(steps):
-                self.backwardStep() 
+    def start(self, steps, direction):
+        t = threading.Thread(target=self.move, args=(steps, direction))
+        t.daemon = True
+        t.start()
+
 
 
 # Built upon:

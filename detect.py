@@ -71,7 +71,7 @@ if enable_timer == True:
 # check if frame has been actually updated
 previous_frame_count = cap.frame_count
 
-fps_limit = 1/30
+fps_limit = 1/60
 max_fps_in_ms = int((fps_limit)*1000) 
 
 # main loop
@@ -115,7 +115,7 @@ while True:
         
         if analyzer.motion_detected == True or File_writer.file_done == False:
             # pass current analyzer result to file creator, file creator writes frames to file if motion_detected returns true
-            File_writer.motion_detected = analyzer.motion_detected
+            File_writer.motion_detected = True
             File_writer.handle_image_list(frame)
    
 

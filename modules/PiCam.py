@@ -47,7 +47,7 @@ class PiCam:
         self.rawCapture = PiRGBArray(self.camera, size=resolution)
         self.stream = self.camera.capture_continuous(self.rawCapture,
             format="bgr", use_video_port=True)
-
+        
         self.picam_fully_stopped = False
 
     # def update_values(self):

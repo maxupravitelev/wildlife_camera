@@ -25,7 +25,7 @@ class VideoStream:
         self.stream = cv2.VideoCapture(src)
         # self.stream = cv2.VideoCapture("tcp://192.168.178.51:5000")  
         # time.sleep(1.0)
-        self.stream.set(cv2.CAP_PROP_BUFFERSIZE, 2)
+        #self.stream.set(cv2.CAP_PROP_BUFFERSIZE, 2)
 
         (self.grabbed, self.frame) = self.stream.read()
 
