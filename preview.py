@@ -14,6 +14,7 @@ config_path = 'config/config.json'
 with open(config_path) as config_file:
     config = json.load(config_file)
 
+bbox_mode = False
 
 camera_mode = config["general_config"]["camera"]
 if camera_mode == "webcam":
@@ -32,19 +33,25 @@ frame = cap.read()
 print("Frame resolution: " + str(frame.shape))
 
 # init analyzer for movement detection (separate thread)
-analyzer = Analyzer(frame).start()
+if bbox_mode == True:
+    analyzer = Analyzer(frame).start()
+    analyzer.preview = True
 
-analyzer.preview = True
-
-while analyzer.stopped == False:
+while True:
 
     frame = cap.read()
 
-    # # set frame handled by analyzer
-    analyzer.frame = frame
+    if bbox_mode == False:
+        cv2.imshow("video feed", frame)
+    else:
+        # set frame handled by analyzer
+        analyzer.frame = frame
 
+    # loop breaking condition
+    key = cv2.waitKey(1) & 0xFF
 
-
+    if key == ord("x"):
+        break
 
 cap.release()
 cv2.destroyAllWindows()

@@ -15,16 +15,16 @@
         "buffer_length": 10,
         "fps_in_avi_mode": 30,
         "image_limit": 80,
-        "inactivity_limit": 10,
+        "inactivity_limit": 20,
         "mode": "gif"
     },
     "general_config": {
-        "camera": "picam",
+        "camera": "webcam",
         "create_buffer": "true",
         "debug_mode": "false",
         "draw_bbox": "false",
         "enable_fps_timer": "false",
-        "stream_url": "tcp://192.168.178.50:5000",
+        "stream_url": "tcp://0.0.0.0:5000",
         "stream_via_url": "true",
         "verbose": "true"
     },
