@@ -47,18 +47,17 @@ class VideoStream:
         # keep looping infinitely until the thread is stopped
         while True:
 
-            if self.stopped == True:
-                return
+            if not self.stopped:
             
-            # read next frame from  stream
-            (self.grabbed, self.frame) = self.stream.read()
+                # read next frame from  stream
+                (self.grabbed, self.frame) = self.stream.read()
 
-            # set to check if frame was updated in main thread
-            if self.frame_count < 1000:
-                self.frame_count += 1
-            else:
-                # reset counter
-                self.frame_count = 0
+                # set to check if frame was updated in main thread
+                if self.frame_count < 1000:
+                    self.frame_count += 1
+                else:
+                    # reset counter
+                    self.frame_count = 0
 
     def read(self):
         return self.frame
