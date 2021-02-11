@@ -45,7 +45,10 @@ class VideoStream:
 
     def update(self):
         # keep looping infinitely until the thread is stopped
-        while not self.stopped:
+        while True:
+
+            if self.stopped == True:
+                return
             
             # read next frame from  stream
             (self.grabbed, self.frame) = self.stream.read()

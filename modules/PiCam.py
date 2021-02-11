@@ -33,7 +33,7 @@ class PiCam:
         # set resolution
         resolution = config["picam_config"]["resolution"]["set"]
         self.camera.resolution = (resolution[0], resolution[1])
-        print(self.camera.resolution)
+        #print(self.camera.resolution)
         
         # set picamera setting
         # picamera settings https://picamera.readthedocs.io/en/release-1.10/api_camera.html
@@ -42,7 +42,7 @@ class PiCam:
         self.camera.awb_gains = config["picam_config"]["awb_gains"]
         self.camera.exposure_mode = config["picam_config"]["exposure_mode"]
         self.camera.image_effect = config["picam_config"]["image_effect"]["set"]
-        print(self.camera.image_effect)
+        #print(self.camera.image_effect)
         
         self.rawCapture = PiRGBArray(self.camera, size=resolution)
         self.stream = self.camera.capture_continuous(self.rawCapture,

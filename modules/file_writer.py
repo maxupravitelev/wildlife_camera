@@ -5,6 +5,8 @@ from utils.imgToGif import imgToGif
 from threading import Thread
 import threading
 import json
+import time
+import numpy as np
 
 # function to parse bool value from config file
 from utils.boolcheck import boolcheck
@@ -63,6 +65,9 @@ class File_writer:
     def start(self):    
         # lock = threading.Lock()
         # Thread(target=self.write_to_file, args=(lock,)).start()
+        t = threading.Thread(target=self.write_to_file, args=())
+        t.daemon = True
+        t.start()        
         return self 
 
 
@@ -74,9 +79,9 @@ class File_writer:
                 self.image_list.pop(0)
                 self.image_list.append(frame)
 
-    def handle_image_list(self, frame):
+    def handle_image_list(self, frame, motion_detected):
 
-        if self.image_counter < self.image_limit and self.motion_detected == True:
+        if self.image_counter < self.image_limit and motion_detected == True:
             
             self.create_buffer = False
 
@@ -88,7 +93,7 @@ class File_writer:
             self.image_list.append(frame)
             self.image_counter += 1
         
-        if self.motion_detected == False and self.file_done == False and self.inactivityCounter <= self.inactivity_limit:
+        elif motion_detected == False and self.file_done == False and self.inactivityCounter <= self.inactivity_limit:
 
             self.inactivityCounter += 1
 
@@ -100,7 +105,7 @@ class File_writer:
         if self.inactivityCounter > self.inactivity_limit or self.image_counter >= self.image_limit:
 
             self.writing = True
-            self.write_to_file()
+            self.start()
 
 
     def write_to_file(self):
@@ -122,8 +127,23 @@ class File_writer:
                 if not os.path.isdir(newFolder):
                     os.makedirs(newFolder)
 
+                last_frame = self.image_list[0]
+
+                final_image_list = []
+                final_image_list.append(last_frame)
+
+                for i, frame in enumerate(self.image_list, start=1):
+                    if np.array_equal(frame, last_frame):
+                        continue
+                    else:
+                        final_image_list.append(frame)
+                        last_frame = frame
+                
+                print("''''")
+                print(len(final_image_list))
+
                 # write individual images
-                for num, image in enumerate(self.image_list, start=0):
+                for num, image in enumerate(final_image_list, start=0):
                     if num < 10:
                         localPath = newFolder + '/image1000'+str(num)+'.jpg'                
                     if num >= 10 and num < 100: 
@@ -133,7 +153,7 @@ class File_writer:
                     cv2.imwrite(localPath,image)  
 
                 # convert folder to gif
-                imgToGif(self.fileCount, self.image_list)
+                imgToGif(self.fileCount, final_image_list)
 
                 self.fileCount +=1
                 print("[filewriter] GIFs created: " + str(self.fileCount))

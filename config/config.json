@@ -5,17 +5,17 @@
     },
     "analyzer_config": {
         "bbox_mode": "false",
-        "detection_area_factor": 0.002,
+        "detection_area_factor": 0.001,
         "gauss_blur_factor": 1,
         "resize_width": 200,
         "threshold_black": 20,
         "threshold_white": 255
     },
     "file_writer_config": {
-        "buffer_length": 10,
+        "buffer_length": 30,
         "fps_in_avi_mode": 30,
         "image_limit": 80,
-        "inactivity_limit": 20,
+        "inactivity_limit": 10,
         "mode": "gif"
     },
     "general_config": {

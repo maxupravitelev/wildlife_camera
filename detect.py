@@ -115,8 +115,8 @@ while True:
         
         if analyzer.motion_detected == True or File_writer.file_done == False:
             # pass current analyzer result to file creator, file creator writes frames to file if motion_detected returns true
-            File_writer.motion_detected = True
-            File_writer.handle_image_list(frame)
+            #File_writer.motion_detected = analyzer.motion_detected
+            File_writer.handle_image_list(frame, analyzer.motion_detected)
    
 
     if debug_mode == True:
@@ -135,7 +135,7 @@ while True:
         # cv2.imshow("threshold", threshold)
 
     # loop breaking condition
-    key = cv2.waitKey(max_fps_in_ms) & 0xFF
+    key = cv2.waitKey(1) & 0xFF
 
     if key == ord("x"):
         break
