@@ -103,22 +103,22 @@ class File_writer:
                 print("[filewriter] append image while inactive | count: " + str(self.inactivityCounter))
 
         if self.inactivityCounter > self.inactivity_limit or self.image_counter >= self.image_limit:
-
             self.writing = True
             self.start()
 
 
     def write_to_file(self):
-    # while not self.stopped:
-    #     if self.writing == False:
-    #         continue
 
         with self.lock:
             if self.verbose == True:
                 print("[filewriter] wrting to file...")
 
-                if self.verbose == True:
-                    print("[filewriter] total images: " + str(len(self.image_list)))                    
+                print(self.check_for_duplicates())
+
+                if self.check_for_duplicates() == "image list is empty":
+                    return
+
+                print("[filewriter] total images: " + str(len(self.image_list)))                    
 
             if self.mode == "gif":
 
@@ -126,21 +126,6 @@ class File_writer:
                 newFolder = 'gifs/images' + str(self.fileCount)
                 if not os.path.isdir(newFolder):
                     os.makedirs(newFolder)
-
-                # last_frame = self.image_list[0]
-
-                # final_image_list = []
-                # final_image_list.append(last_frame)
-
-                # for i, frame in enumerate(self.image_list, start=1):
-                #     if np.array_equal(frame, last_frame):
-                #         continue
-                #     else:
-                #         final_image_list.append(frame)
-                #         last_frame = frame
-                
-                # print("''''")
-                # print(len(final_image_list))
 
                 # write individual images
                 for num, image in enumerate(self.image_list, start=0):
@@ -194,3 +179,26 @@ class File_writer:
 
     def stop(self):
         self.stopped = True
+
+    def check_for_duplicates(self):
+        if len(self.image_list) > 0:
+            last_frame = self.image_list[0]
+
+            final_image_list = []
+            final_image_list.append(last_frame)
+
+            for i, frame in enumerate(self.image_list, start=1):
+                if np.array_equal(frame, last_frame):
+                    continue
+                else:
+                    final_image_list.append(frame)
+                    last_frame = frame
+            
+            if (len(self.image_list) == len(final_image_list)):
+                return "No duplicates detected!"
+            elif (len(self.image_list) != len(final_image_list)):
+                delta = (len(self.image_list) - len(final_image_list))
+                #self.image_list = final_image_list
+                return str(delta) + " duplicates detected and removed."
+        else:
+            return "image list is empty"

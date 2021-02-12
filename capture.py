@@ -19,7 +19,7 @@ mode = args["mode"]
 
 ## mode selection
 debug_mode = False
-enable_timer = True
+enable_timer = False
 approx_fps = False
 
 ## init capture
@@ -68,7 +68,7 @@ if approx_fps == True:
 if approx_fps == False:
 
     if debug_mode == False:
-        File_writer = File_writer(height=frame_height, width=frame_width).start()
+        File_writer = File_writer(height=frame_height, width=frame_width)
         File_writer.motion_detected = True
 
     if enable_timer == True:
@@ -97,7 +97,8 @@ if approx_fps == False:
         previous_frame_count = frame_count
         
         if debug_mode == False:
-            File_writer.handle_image_list(frame)
+            if File_writer.writing == False:
+                File_writer.handle_image_list(frame)
 
         if debug_mode == True:
             # view color frame
