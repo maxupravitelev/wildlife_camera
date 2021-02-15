@@ -21,9 +21,9 @@ class File_writer:
             config = json.load(config_file)
 
         # init file creation handling
-        self.file_done = True
+        self.writing_to_image_list = False
         self.fileCount = 0
-        self.writing = False
+        self.writing_to_file = False
 
         # init thread handling flag
         self.stopped = False
@@ -89,11 +89,11 @@ class File_writer:
                 print("[filewriter] Image count: " + str(len(self.image_list)))
 
             self.inactivityCounter = 0
-            self.file_done = False
+            self.writing_to_image_list = True
             self.image_list.append(frame)
             self.image_counter += 1
         
-        if self.motion_detected == False and self.file_done == False and self.inactivityCounter <= self.inactivity_limit:
+        if self.motion_detected == False and self.writing_to_image_list == True and self.inactivityCounter <= self.inactivity_limit:
 
             self.inactivityCounter += 1
 
@@ -103,7 +103,7 @@ class File_writer:
                 print("[filewriter] append image while inactive | count: " + str(self.inactivityCounter))
 
         if self.inactivityCounter > self.inactivity_limit or self.image_counter >= self.image_limit:
-            self.writing = True
+            self.writing_to_file = True
             self.start()
 
 
@@ -159,7 +159,7 @@ class File_writer:
                     
                 self.fileCount += 1
                 print("[filewriter] AVIs created: " + str(self.fileCount))
-                self.file_done = True
+
                 self.writer = cv2.VideoWriter("avi/output"+ str(self.fileCount) + ".avi", cv2.VideoWriter_fourcc(*"MJPG"), self.fps,(self.frame_width,self.frame_height))
 
                 # reset values to handle next avi
@@ -169,10 +169,10 @@ class File_writer:
         self.image_list = []
         self.image_counter = 0
 
-        self.file_done = True
+        self.writing_to_image_list = False
         self.background_image_set = False
         
-        self.writing = False
+        self.writing_to_file = False
         self.stop()
 
         self.create_buffer = True
@@ -198,7 +198,7 @@ class File_writer:
                 return "No duplicates detected!"
             elif (len(self.image_list) != len(final_image_list)):
                 delta = (len(self.image_list) - len(final_image_list))
-                #self.image_list = final_image_list
+                self.image_list = final_image_list
                 return str(delta) + " duplicates detected and removed."
         else:
             return "image list is empty"

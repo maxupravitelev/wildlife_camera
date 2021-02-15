@@ -14,7 +14,7 @@
     "file_writer_config": {
         "buffer_length": 10,
         "fps_in_avi_mode": 30,
-        "image_limit": 30,
+        "image_limit": 50,
         "inactivity_limit": 10,
         "mode": "gif"
     },
@@ -24,8 +24,8 @@
         "debug_mode": "false",
         "draw_bbox": "false",
         "enable_fps_timer": "false",
-        "stream_url": "tcp://192.168.178.51:5000",
-        "stream_via_url": "false",
+        "stream_url": "tcp://192.168.178.50:5000",
+        "stream_via_url": "true",
         "verbose": "true"
     },
     "gif_config": {

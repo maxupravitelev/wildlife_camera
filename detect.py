@@ -106,14 +106,14 @@ while True:
     analyzer.frame = frame
     
     # sync threads
-    analyzer.file_writing = File_writer.writing
+    analyzer.file_writing = File_writer.writing_to_file
 
-    if File_writer.writing == False:
+    if File_writer.writing_to_file == False:
 
-        if buffer_mode == True and File_writer.motion_detected == False:
+        if buffer_mode == True and File_writer.writing_to_image_list == False:
             File_writer.write_buffer(frame)
         
-        if analyzer.motion_detected == True or File_writer.file_done == False:
+        if analyzer.motion_detected == True or File_writer.writing_to_image_list == True:
             # pass current analyzer result to file creator, file creator writes frames to file if motion_detected returns true
             File_writer.motion_detected = analyzer.motion_detected
             File_writer.handle_image_list(frame)
