@@ -25,7 +25,6 @@ print("[init] get startup settings from config.json file")
 # init different modes
 camera_mode = config["general_config"]["camera"]
 enable_timer = boolcheck(config["general_config"]["enable_fps_timer"])
-debug_mode = boolcheck(config["general_config"]["debug_mode"])
 buffer_mode = boolcheck(config["general_config"]["create_buffer"])
 
 verbose = boolcheck(config["general_config"]["verbose"])
@@ -117,21 +116,6 @@ while True:
             # pass current analyzer result to file creator, file creator writes frames to file if motion_detected returns true
             File_writer.motion_detected = analyzer.motion_detected
             File_writer.handle_image_list(frame)
-
-    if debug_mode == True:
-
-        # view color frame
-        cv2.imshow("video feed", analyzer.frame)
-
-        # # view gray_frame
-        # cv2.imshow("gray_frame", gray_frame)
-
-        # # view delta between background and gray_frame
-
-        # cv2.imshow("delta", delta)
-        
-        # # view threshold of delta frame
-        # cv2.imshow("threshold", threshold)
 
     # loop breaking condition
     key = cv2.waitKey(max_fps_in_ms) & 0xFF
