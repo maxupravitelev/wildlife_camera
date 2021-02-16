@@ -5,8 +5,10 @@ import argparse
 import numpy as np
 import json
 
-
 from modules.file_writer import File_writer
+
+# function to parse bool value from config file
+from utils.boolcheck import boolcheck
 
 # set setting from config file
 config_path = 'config/config.json'
@@ -18,7 +20,7 @@ camera_mode = config["general_config"]["camera"]
 
 
 ## mode selection
-enable_fps_timer = config["general_config"]["enable_fps_timer"]
+enable_fps_timer = boolcheck(config["general_config"]["enable_fps_timer"])
 debug_mode = False
 approx_fps = False
 
@@ -26,7 +28,7 @@ approx_fps = False
 frame_width = 1024
 frame_height = 768
 
-print(camera_mode)
+print(enable_fps_timer)
 
 if camera_mode == "webcam":
     from modules.cam import VideoStream
@@ -74,7 +76,6 @@ if approx_fps == False:
         File_writer.motion_detected = True
 
     if enable_fps_timer == True:
-        timer2 = time.time()
         timer2 = time.time()
 
     # check if frame has been actually updated
