@@ -117,13 +117,15 @@ class Analyzer:
                     self.motion_detected = False
 
 
-            if cv2.waitKey(1) == ord("x"):
-                if self.verbose == True:
-                    print("analyzer stopped")
-                self.stopped = True
+            # if cv2.waitKey(1) == ord("x"):
+            #     if self.verbose == True:
+            #         print("analyzer stopped")
+            #     self.stopped = True
 
     def set_background(self, image):
         self.background_image = imutils.resize(cv2.cvtColor(image, cv2.COLOR_BGR2GRAY), self.resize_width)
+        self.background_image=cv2.GaussianBlur(self.background_image,(self.gauss_blur_factor,self.gauss_blur_factor),0)
+
         self.motion_detected = False
 
     def stop(self):

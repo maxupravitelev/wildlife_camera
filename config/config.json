@@ -5,8 +5,8 @@
     },
     "analyzer_config": {
         "bbox_mode": "false",
-        "detection_area_factor": 0.001,
-        "gauss_blur_factor": 1,
+        "detection_area_factor": 0.008,
+        "gauss_blur_factor": 7,
         "resize_width": 200,
         "threshold_black": 20,
         "threshold_white": 255
@@ -19,13 +19,13 @@
         "mode": "gif"
     },
     "general_config": {
-        "camera": "picam",
+        "camera": "webcam",
         "create_buffer": "true",
         "debug_mode": "false",
         "draw_bbox": "false",
-        "enable_fps_timer": "true",
-        "stream_url": "tcp://0.0.0.0:5000",
-        "stream_via_url": "true",
+        "enable_fps_timer": "false",
+        "stream_url": "tcp://192.168.178.51:5000",
+        "stream_via_url": "false",
         "verbose": "true"
     },
     "gif_config": {
