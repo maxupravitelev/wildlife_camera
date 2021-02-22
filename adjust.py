@@ -50,21 +50,29 @@ background_image = None
 # Built upon: https://www.pyimagesearch.com/2019/09/02/opencv-stream-video-to-web-browser-html-page/
 def generate():
     
-    global frame, cap, background_image
+    global frame, cap, background_image, config_path, preview_mode
     
     with open(config_path) as config_file:
         config = json.load(config_file)
 
     while True:
         if cap.stopped == True:
+            # re-read config file after post config request
             with open(config_path) as config_file:
                 config = json.load(config_file)
+
+            # fetch preview mode
+            preview_mode = config["adjust_config"]["preview_mode"]["set"]
+
+            # start camera based on mode
             time.sleep(1.0)
             if camera_mode == "webcam":
-                cap = VideoStream(src=0).start()
+                cap.start()                
+                print("Webcam restarted")
+
             if camera_mode == "picam":
                 cap = PiCam().start()
-            print("PiCam restarted")
+                print("PiCam restarted")
             time.sleep(0.5)
         
         frame = cap.read()

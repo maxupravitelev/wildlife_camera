@@ -56,6 +56,7 @@ class PiCam:
         # start the thread to read frames from the video stream
         t = Thread(target=self.update, args=())
         t.daemon = True
+        self.stopped = False
         t.start()
         return self
 
