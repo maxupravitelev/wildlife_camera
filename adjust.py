@@ -57,8 +57,13 @@ def generate():
 
     while True:
         if cap.stopped == True:
+            with open(config_path) as config_file:
+                config = json.load(config_file)
             time.sleep(1.0)
-            cap = PiCam().start()
+            if camera_mode == "webcam":
+                cap = VideoStream(src=0).start()
+            if camera_mode == "picam":
+                cap = PiCam().start()
             print("PiCam restarted")
             time.sleep(0.5)
         
