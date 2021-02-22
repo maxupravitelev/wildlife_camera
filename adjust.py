@@ -20,6 +20,7 @@ with open(config_path) as config_file:
 camera_mode = config["general_config"]["camera"]
 bbox_mode = boolcheck(config["adjust_config"]["bbox_mode"])
 gpio_motor = boolcheck(config["adjust_config"]["gpio_motor"])
+preview_mode = config["adjust_config"]["preview_mode"]["set"]
 
 if gpio_motor == True:
     from modules.gpio_motor import GPIO_motor
@@ -51,6 +52,9 @@ def generate():
     
     global frame, cap, background_image
     
+    with open(config_path) as config_file:
+        config = json.load(config_file)
+
     while True:
         if cap.stopped == True:
             time.sleep(1.0)
@@ -83,11 +87,26 @@ def generate():
                         cv2.rectangle(frame, (x, y), (x+w, y+h), (255,255,255), 3)
                         cv2.putText(frame, str(cv2.contourArea(contour)), (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (255, 255, 255), 1)
 
-        # encode the frame in JPEG format
-        (flag, encodedImage) = cv2.imencode(".jpg", frame)
+        if preview_mode == "standard":
+            # encode the frame in JPEG format
+            (flag, encodedImage) = cv2.imencode(".jpg", frame)
+        if preview_mode == "threshold":
+
+            # fetch threshold values from config file
+            threshold_black = config["analyzer_config"]["threshold_black"]
+            threshold_white = config["analyzer_config"]["threshold_white"]
+            gauss_blur_factor = config["analyzer_config"]["gauss_blur_factor"]
+
+            gray_frame=cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
+            gray_frame = cv2.GaussianBlur(gray_frame,(gauss_blur_factor,gauss_blur_factor),0)
+
+            threshold = cv2.threshold(gray_frame, threshold_black, threshold_white, cv2.THRESH_BINARY)[1]
+
+            (flag, encodedImage) = cv2.imencode(".jpg", threshold)
+
         # ensure the frame was successfully encoded
         if not flag:
-                continue
+            continue
        
         # yield the output frame in the byte format
         yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + 
