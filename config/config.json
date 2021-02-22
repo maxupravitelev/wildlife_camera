@@ -5,16 +5,16 @@
     },
     "analyzer_config": {
         "bbox_mode": "false",
-        "detection_area_factor": 0.008,
-        "gauss_blur_factor": 7,
+        "detection_area_factor": 0.002,
+        "gauss_blur_factor": 1,
         "resize_width": 200,
         "threshold_black": 20,
         "threshold_white": 255
     },
     "file_writer_config": {
-        "buffer_length": 10,
+        "buffer_length": 20,
         "fps_in_avi_mode": 30,
-        "image_limit": 50,
+        "image_limit": 60,
         "inactivity_limit": 10,
         "mode": "gif"
     },
@@ -25,7 +25,7 @@
         "draw_bbox": "false",
         "enable_fps_timer": "false",
         "stream_url": "tcp://192.168.178.51:5000",
-        "stream_via_url": "false",
+        "stream_via_url": "true",
         "verbose": "true"
     },
     "gif_config": {
