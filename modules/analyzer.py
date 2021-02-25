@@ -29,7 +29,7 @@ class Analyzer:
         # print current dimensions
         frame_height = frame.shape[0]
         frame_width = frame.shape[1]
-        contour_threshold = int((frame_height * frame_height) * (self.detection_area_factor))
+        contour_threshold = int((frame_width * frame_height) * (self.detection_area_factor))
 
         print("Total area: " + str(frame_width * frame_height) + " (frame width: " + str(frame_width) + " x " + "frame height: " + str(frame_height) + ")")
         print("Approx. detection area: " + str(contour_threshold) + " (" + str(self.detection_area_factor * 100) + " % of total area)")
