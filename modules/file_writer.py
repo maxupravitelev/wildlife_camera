@@ -1,11 +1,8 @@
 import cv2
 import os
 from utils.imgToGif import imgToGif
-# import numpy as np
-from threading import Thread
 import threading
 import json
-import time
 import numpy as np
 
 # function to parse bool value from config file
@@ -46,6 +43,7 @@ class File_writer:
 
         # handle modes
         self.mode = config["file_writer_config"]["mode"]
+        self.create_jpg_only = boolcheck(config["file_writer_config"]["create_jpg_only"])
 
         if self.mode == "avi":
             self.fps = config["file_writer_config"]["fps_in_avi_mode"]
@@ -138,11 +136,12 @@ class File_writer:
                     cv2.imwrite(localPath,image)  
 
                 # convert folder to gif
-                imgToGif(self.fileCount, self.image_list)
+                if self.create_jpg_only == False:
+                    imgToGif(self.fileCount, self.image_list)
+                    print("[filewriter] GIFs created: " + str(self.fileCount))
 
                 self.fileCount +=1
-                print("[filewriter] GIFs created: " + str(self.fileCount))
-            
+
                 # reset values to handle next gif
                 self.reset_values()
             
@@ -166,6 +165,9 @@ class File_writer:
                 self.reset_values()
 
     def reset_values(self):
+        if self.verbose == True:
+                print("[filewriter] all values have been resetted")
+
         self.image_list = []
         self.image_counter = 0
 
