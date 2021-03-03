@@ -6,7 +6,8 @@
   },
   "analyzer_config": {
     "bbox_mode": "false",
-    "detection_area_factor": 0.002,
+    "detection_area_factor_min": 0.002,
+    "detection_area_factor_max": 0.4,
     "gauss_blur_factor": 1,
     "resize_width": 200,
     "threshold_black": 20,

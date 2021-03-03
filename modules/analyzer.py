@@ -23,16 +23,20 @@ class Analyzer:
         self.background_image = imutils.resize(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY), self.resize_width)
 
         # set detection area
-        self.detection_area = 0
-        self.detection_area_factor = config["analyzer_config"]["detection_area_factor"]
+        self.detection_area_min = 0
+        self.detection_area_max = 0
+        self.detection_area_factor_min = config["analyzer_config"]["detection_area_factor_min"]
+        self.detection_area_factor_max = config["analyzer_config"]["detection_area_factor_max"]
 
         # print current dimensions
         frame_height = frame.shape[0]
         frame_width = frame.shape[1]
-        contour_threshold = int((frame_width * frame_height) * (self.detection_area_factor))
+        contour_threshold_min = int((frame_width * frame_height) * (self.detection_area_factor_min))
+        contour_threshold_max = int((frame_width * frame_height) * (self.detection_area_factor_max))
 
         print("Total area: " + str(frame_width * frame_height) + " (frame width: " + str(frame_width) + " x " + "frame height: " + str(frame_height) + ")")
-        print("Approx. detection area: " + str(contour_threshold) + " (" + str(self.detection_area_factor * 100) + " % of total area)")
+        print("Minimum detection area: " + str(contour_threshold_min) + " (" + str(self.detection_area_factor_min * 100) + " % of total area)")
+        print("Maximum detection area: " + str(contour_threshold_max) + " (" + str(self.detection_area_factor_max * 100) + " % of total area)")
 
         # init motion detection
         self.motion_detected = False
@@ -40,7 +44,7 @@ class Analyzer:
         # init thread handling
         self.stopped = False
 
-        # set for drawing bounding box around detected area 
+        # set for drawing bounding box around detected area contour_threshold_min = int((frame_width * frame_height) * (self.detection_area_factor_min))
         self.bbox_mode = boolcheck(config["analyzer_config"]["bbox_mode"])
         
         # bbox has to be resized according to original frame size
@@ -70,8 +74,9 @@ class Analyzer:
             if self.file_writing == False:
             
                 resized_frame = imutils.resize(self.frame, self.resize_width)
-                if self.detection_area == 0:
-                    self.detection_area = int((resized_frame.shape[0] * resized_frame.shape[1]) * (self.detection_area_factor))
+                if self.detection_area_min == 0:
+                    self.detection_area_min = int((resized_frame.shape[0] * resized_frame.shape[1]) * (self.detection_area_factor_min))
+                    self.detection_area_max = int((resized_frame.shape[0] * resized_frame.shape[1]) * (self.detection_area_factor_max))
 
 
                 gray_frame=cv2.cvtColor(resized_frame,cv2.COLOR_BGR2GRAY)
@@ -82,21 +87,28 @@ class Analyzer:
                 threshold = cv2.erode(threshold, None, iterations=2)
                 threshold = cv2.dilate(threshold, None, iterations=2)
                 (contours,_)=cv2.findContours(threshold,cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-                
+                contours = sorted(contours, key=lambda x:cv2.contourArea(x), reverse=True)
+
+
                 if self.preview == True:
                     cv2.imshow("video feed", self.frame)
 
+                # if len(contours ) > 0:
+                #     x, y, w, _ = cv2.boundingRect(contours[0])
+
                 if contours != []: 
-                    for contour in contours:
-                        if cv2.contourArea(contour) > self.detection_area:
+                    # for contour in contours:
+                        # if cv2.contourArea(contour) > self.detection_area_min and cv2.contourArea(contour) < self.detection_area_max:
+                        if cv2.contourArea(contours[0]) > self.detection_area_min and cv2.contourArea(contours[0]) < self.detection_area_max:
+
                             if self.verbose == True:
-                                print("[analyzer] motion detected: " + str(cv2.contourArea(contour)))
+                                print("[analyzer] motion detected: " + str(cv2.contourArea(contours[0])))
 
                             self.motion_detected = True
                             
                             if self.bbox_mode == True:
 
-                                (x, y, w, h)=cv2.boundingRect(contour)
+                                (x, y, w, h)=cv2.boundingRect(contours[0])
 
                                 x = int(x*self.resize_factor)
                                 y = int(y*self.resize_factor)
@@ -105,10 +117,10 @@ class Analyzer:
 
                                 cv2.rectangle(self.frame, (x, y), (x+w, y+h), (255,255,255), 3)
                                 
-                                cv2.putText(self.frame, str(cv2.contourArea(contour)), (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (255, 255, 255), 1)
+                                cv2.putText(self.frame, str(cv2.contourArea(contours[0])), (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (255, 255, 255), 1)
 
-                            #time.sleep(1.0)
-                            break
+                            time.sleep(0.2)
+                            # break
 
                         self.motion_detected = False
                 
