@@ -129,7 +129,3 @@ while True:
 
 cap.stop()
 # cap.close()
-
-
-if debug_mode == True:
-    cv2.destroyAllWindows

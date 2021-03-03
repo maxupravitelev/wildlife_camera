@@ -38,6 +38,9 @@ class Analyzer:
         print("Minimum detection area: " + str(contour_threshold_min) + " (" + str(self.detection_area_factor_min * 100) + " % of total area)")
         print("Maximum detection area: " + str(contour_threshold_max) + " (" + str(self.detection_area_factor_max * 100) + " % of total area)")
 
+        # limit contours while detecting motion, ignore results with to many contours (e.g. detecting leaves in the wind)
+        self.contours_limit = config["analyzer_config"]["contours_limit"]
+
         # init motion detection
         self.motion_detected = False
 
@@ -99,10 +102,17 @@ class Analyzer:
                 if contours != []: 
                     # for contour in contours:
                         # if cv2.contourArea(contour) > self.detection_area_min and cv2.contourArea(contour) < self.detection_area_max:
+
+                        if len(contours) > self.contours_limit:
+                            print("[analyzer] contours detected: " + str(len(contours)))
+                            self.set_background(self.frame)
+                            continue
+
                         if cv2.contourArea(contours[0]) > self.detection_area_min and cv2.contourArea(contours[0]) < self.detection_area_max:
 
                             if self.verbose == True:
-                                print("[analyzer] motion detected: " + str(cv2.contourArea(contours[0])))
+                                print("[analyzer] contours detected: " + str(len(contours)))
+                                print("[analyzer] motion detected, area: " + str(cv2.contourArea(contours[0])))
 
                             self.motion_detected = True
                             
