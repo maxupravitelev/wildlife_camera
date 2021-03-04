@@ -5,14 +5,14 @@
     "preview_mode": { "options": ["standard", "threshold"], "set": "threshold" }
   },
   "analyzer_config": {
-    "bbox_mode": "false",
+    "bbox_mode": "true",
     "detection_area_factor_min": 0.002,
     "detection_area_factor_max": 0.4,
     "gauss_blur_factor": 1,
     "resize_width": 200,
     "threshold_black": 20,
     "threshold_white": 255,
-    "contours_limit": 4
+    "contours_limit": 8
   },
   "file_writer_config": {
     "buffer_length": 20,
@@ -29,7 +29,7 @@
     "draw_bbox": "false",
     "enable_fps_timer": "false",
     "stream_url": "tcp://192.168.178.59:5000",
-    "stream_via_url": "false",
+    "stream_via_url": "true",
     "verbose": "true"
   },
   "gif_config": {

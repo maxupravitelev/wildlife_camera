@@ -112,7 +112,7 @@ class Analyzer:
 
                             if self.verbose == True:
                                 print("[analyzer] contours detected: " + str(len(contours)))
-                                print("[analyzer] motion detected, area: " + str(cv2.contourArea(contours[0])))
+                                print("[analyzer] motion detected, area: " + str(int(cv2.contourArea(contours[0])*self.resize_factor)))
 
                             self.motion_detected = True
                             
