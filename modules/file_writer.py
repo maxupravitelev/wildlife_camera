@@ -166,7 +166,7 @@ class File_writer:
 
     def reset_values(self):
         if self.verbose == True:
-                print("[filewriter] all values have been resetted")
+                print("[filewriter] all values have been reset")
 
         self.image_list = []
         self.image_counter = 0

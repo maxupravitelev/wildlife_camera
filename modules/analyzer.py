@@ -96,12 +96,10 @@ class Analyzer:
                 if self.preview == True:
                     cv2.imshow("video feed", self.frame)
 
-                # if len(contours ) > 0:
-                #     x, y, w, _ = cv2.boundingRect(contours[0])
 
                 if contours != []: 
                     # for contour in contours:
-                        # if cv2.contourArea(contour) > self.detection_area_min and cv2.contourArea(contour) < self.detection_area_max:
+                    #     if cv2.contourArea(contour) > self.detection_area_min and cv2.contourArea(contour) < self.detection_area_max:
 
                         if len(contours) > self.contours_limit:
                             print("[analyzer] contours detected: " + str(len(contours)))
@@ -110,9 +108,11 @@ class Analyzer:
 
                         if cv2.contourArea(contours[0]) > self.detection_area_min and cv2.contourArea(contours[0]) < self.detection_area_max:
 
+                            resized_contour_area = int(cv2.contourArea(contours[0])*self.resize_factor)
+
                             if self.verbose == True:
                                 print("[analyzer] contours detected: " + str(len(contours)))
-                                print("[analyzer] motion detected, area: " + str(int(cv2.contourArea(contours[0])*self.resize_factor)))
+                                print("[analyzer] motion detected, area: " + str(resized_contour_area))
 
                             self.motion_detected = True
                             
@@ -127,9 +127,9 @@ class Analyzer:
 
                                 cv2.rectangle(self.frame, (x, y), (x+w, y+h), (255,255,255), 3)
                                 
-                                cv2.putText(self.frame, str(cv2.contourArea(contours[0])), (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (255, 255, 255), 1)
+                                cv2.putText(self.frame, str(resized_contour_area), (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (255, 255, 255), 1)
 
-                            time.sleep(0.2)
+                            time.sleep(0.01)
                             # break
 
                         self.motion_detected = False
