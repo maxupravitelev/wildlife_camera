@@ -28,7 +28,7 @@
     "debug_mode": "false",
     "draw_bbox": "false",
     "enable_fps_timer": "false",
-    "stream_url": "tcp://192.168.178.59:5000",
+    "stream_url": "tcp://0.0.0.0:5000",
     "stream_via_url": "true",
     "verbose": "true"
   },

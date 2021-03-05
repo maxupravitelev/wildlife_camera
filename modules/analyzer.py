@@ -89,7 +89,7 @@ class Analyzer:
                 threshold=cv2.threshold(delta, self.threshold_black, self.threshold_white, cv2.THRESH_BINARY)[1]
                 threshold = cv2.erode(threshold, None, iterations=2)
                 threshold = cv2.dilate(threshold, None, iterations=2)
-                (contours,_)=cv2.findContours(threshold,cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+                (contours,_)=cv2.findContours(threshold,cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2:]
                 contours = sorted(contours, key=lambda x:cv2.contourArea(x), reverse=True)
 
 
