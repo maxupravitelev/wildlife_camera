@@ -12,7 +12,7 @@
     "resize_width": 200,
     "threshold_black": 20,
     "threshold_white": 255,
-    "contours_limit": 4
+    "contours_limit": 0
   },
   "file_writer_config": {
     "buffer_length": 20,

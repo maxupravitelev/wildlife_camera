@@ -101,7 +101,7 @@ class Analyzer:
                     # for contour in contours:
                     #     if cv2.contourArea(contour) > self.detection_area_min and cv2.contourArea(contour) < self.detection_area_max:
 
-                        if len(contours) > self.contours_limit:
+                        if len(contours) > self.contours_limit and self.contours_limit != 0:
                             print("[analyzer] contours detected: " + str(len(contours)))
                             self.set_background(self.frame)
                             continue
@@ -129,7 +129,7 @@ class Analyzer:
                                 
                                 cv2.putText(self.frame, str(resized_contour_area), (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (255, 255, 255), 1)
 
-                            time.sleep(0.01)
+                            time.sleep(0.1)
                             # break
 
                         self.motion_detected = False
